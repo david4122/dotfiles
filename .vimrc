@@ -70,12 +70,15 @@ nnoremap :wd :w\|:bn\|:bd #<CR>
 " Autoclosing brackets
 let g:closing = {'{':'}', '[':']', '(':')'}
 
-function! InsertOnce(key)
+function! InsertOnce(chr)
 	let a:nextChar = matchstr(getline('.'), '\%'.(col('.')+1).'c.')
-	if a:key != a:nextChar
-		exe "normal! i".a:key
+	if a:chr != a:nextChar
+		exe "normal! a".a:chr
+		return 1
+	else
+		exe "normal! l"
+		return 0
 	endif
-	exe "normal! l"
 endfunction
 
 for i in keys(closing)
@@ -86,6 +89,16 @@ for i in keys(closing)
 	exe "inoremap ".i."<Right> ".i."<Right>"
 endfor
 
+" Handle quotes
+function! InsertQuotes(chr)
+	if InsertOnce(a:chr)
+		exe "normal! a".a:chr
+		exe "normal! h"
+	endif
+endfunction
+
+inoremap " <ESC>:call InsertQuotes('"')<CR>a
+inoremap ' <ESC>:call InsertQuotes("'")<CR>a
 
 function! BreakLines()
 	let &l:tw = winwidth('%') - 10
