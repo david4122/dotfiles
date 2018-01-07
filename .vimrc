@@ -44,6 +44,7 @@ highlight Folded ctermbg=235 ctermfg=green
 highlight SpecialKey ctermfg=darkgray
 highlight VertSplit cterm=none ctermbg=darkgray
 highlight DiffDelete ctermbg=235
+highlight DiffText ctermbg=darkgreen
 
 inoremap <S-Left> <C-o>gT
 inoremap <S-Right> <C-o>gt
@@ -55,13 +56,13 @@ inoremap <C-d> <C-o>:wa<CR>
 inoremap <A-Up> <ESC>:m-2<CR>==a
 inoremap <A-Down> <ESC>:m+1<CR>==a
 
-map <S-Left> gT
-map <S-Right> gt
-map <A-Left> :bp<CR>
-map <A-Right> :bn<CR>
-map <C-h> :set hlsearch! hlsearch?<CR>
-map <c-d> :wa<CR>
-map ;; :wqa<CR>
+noremap <S-Left> gT
+noremap <S-Right> gt
+noremap <A-Left> :bp<CR>
+noremap <A-Right> :bn<CR>
+noremap <C-h> :set hlsearch! hlsearch?<CR>
+noremap <c-d> :wa<CR>
+noremap ;; :wqa<CR>
 
 nnoremap :bd :bn\|:bd #<CR>
 nnoremap :wd :w\|:bn\|:bd #<CR>
@@ -123,7 +124,6 @@ let g:airline_symbols.linenr = '␊'
 let g:airline_symbols.linenr = '␤'
 let g:airline_symbols.linenr = '¶'
 let g:airline_symbols.maxlinenr = '☰'
-let g:airline_symbols.maxlinenr = ''
 let g:airline_symbols.branch = '⎇'
 let g:airline_symbols.paste = 'ρ'
 let g:airline_symbols.paste = 'Þ'
@@ -140,6 +140,7 @@ let g:ctrlp_dotfiles = 1
 " NERDTree
 autocmd VimEnter * NERDTree
 autocmd VimEnter * wincmd p
+noremap <C-n> :NERDTreeToggle<CR><C-w><C-w>
 
 " VCoolor
 inoremap <kEnter> <C-o>:VCoolor<CR>
@@ -155,9 +156,6 @@ let g:UltiSnipsJumpBackwardTrigger="<C-z>"
 
 " emmet
 let g:user_emmet_leader_key = '<C-e>'
-
-" auto-pairs
-let g:AutoPairsMapCh = '<M-h>'
 
 
 set background=dark
