@@ -79,46 +79,24 @@ endfunction
 let g:closing = {'{':'}', '[':']', '(':')'}
 
 function! InsertOnce(key)
-	let a:currChar = matchstr(getline('.'), '\%'.col('.').'c.')
-	if a:key == a:currChar
-		if col('.') == col('$')-1
-			exe "startinsert!"
-		else
-			exe "normal! l"
-		endif
+	let a:nextChar = matchstr(getline('.'), '\%'.(col('.')+1).'c.')
+	if a:key == a:nextChar
+		exe "normal! l"
 		return 0
 	else
-		if col('.') == col('$')-1
-			exe "normal! a".a:key
-		else
-			exe "normal! i".a:key
-		endif
+		exe "normal! i".a:key
+		exe "normal! l"
 		return 1
 	endif
 endfunction
 
 for i in keys(closing)
 	exe "inoremap ".i." ".i.closing[i]."<Left>"
-	exe "inoremap ".closing[i]." <C-o>:call InsertOnce('".closing[i]."')<CR>"
+	exe "inoremap ".closing[i]." <ESC>:call InsertOnce('".closing[i]."')<CR>a"
 	exe "inoremap ".i."<CR> ".i."<CR>".closing[i]."<C-o>O"
 	exe "inoremap ".i."<Down> ".i."<Down>"
+	exe "inoremap ".i."<Right> ".i."<Right>"
 endfor
-
-" Handle quotes
-function! InsertQuote(q)
-	let a:currChar = matchstr(getline('.'), '\%'.col('.').'c.')
-	if a:q == a:currChar
-		if col('.') == col('$')-1
-			exe "startinsert!"
-		else
-			exe "normal! l"
-		endif
-	else
-		exe "normal! 2i".a:q
-	endif
-endfunction
-
-inoremap " <C-o>:call InsertQuote('"')<CR>
 
 
 function! BreakLines()
@@ -167,8 +145,10 @@ let g:airline_symbols.spell = 'Ꞩ'
 let g:airline_symbols.notexists = '∄'
 let g:airline_symbols.whitespace = 'Ξ'
 
+" CtrlP
 let g:ctrlp_map = '<C-p>'
 let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_dotfiles = 1
 
 " NERDTree
 autocmd VimEnter * NERDTree
