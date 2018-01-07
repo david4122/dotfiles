@@ -25,6 +25,7 @@ set listchars=tab:⇢\
 " set listchars=tab:⟶\ 
 set list
 set autoindent
+set nohlsearch
 set omnifunc=syntaxcomplete#Complete
 
 highlight String ctermfg=green
@@ -42,6 +43,7 @@ highlight javaAnnotation ctermfg=blue
 highlight Folded ctermbg=235 ctermfg=green
 highlight SpecialKey ctermfg=darkgray
 highlight VertSplit cterm=none ctermbg=darkgray
+highlight DiffDelete ctermbg=235
 
 inoremap <S-Left> <C-o>gT
 inoremap <S-Right> <C-o>gt
@@ -49,9 +51,9 @@ inoremap <A-Left> <C-o>:bp<CR>
 inoremap <A-Right> <C-o>:bn<CR>
 inoremap <C-l> <ESC>mmYp`ma
 inoremap <C-h> <C-o>:set hlsearch! hlsearch?<CR>
-inoremap <C-S-d> <C-o>:wa<CR>
-inoremap <A-Up> <C-o>:m-2<CR>
-inoremap <A-Down> <C-o>:m+1<CR>
+inoremap <C-d> <C-o>:wa<CR>
+inoremap <A-Up> <ESC>:m-2<CR>==a
+inoremap <A-Down> <ESC>:m+1<CR>==a
 
 map <S-Left> gT
 map <S-Right> gt
@@ -64,30 +66,15 @@ map ;; :wqa<CR>
 nnoremap :bd :bn\|:bd #<CR>
 nnoremap :wd :w\|:bn\|:bd #<CR>
 
-
-function! Multiply(str, times)
-	let a:result = ''
-	let a:i = 0
-	while a:i < a:times
-		let a:result .= a:str
-		let a:i += 1
-	endwhile
-	return a:result
-endfunction
-
 " Autoclosing brackets
 let g:closing = {'{':'}', '[':']', '(':')'}
 
 function! InsertOnce(key)
 	let a:nextChar = matchstr(getline('.'), '\%'.(col('.')+1).'c.')
-	if a:key == a:nextChar
-		exe "normal! l"
-		return 0
-	else
+	if a:key != a:nextChar
 		exe "normal! i".a:key
-		exe "normal! l"
-		return 1
 	endif
+	exe "normal! l"
 endfunction
 
 for i in keys(closing)
