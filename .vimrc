@@ -27,6 +27,7 @@ set list
 set autoindent
 set nohlsearch
 set omnifunc=syntaxcomplete#Complete
+set whichwrap+=[,]
 
 highlight String ctermfg=green
 highlight Statement ctermfg=darkgreen
