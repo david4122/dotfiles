@@ -174,5 +174,8 @@ let g:UltiSnipsJumpBackwardTrigger="<C-z>"
 " emmet
 let g:user_emmet_leader_key = '<C-e>'
 
+" Tagbar
+autocmd VimEnter * TagbarToggle
+
 
 set background=dark
