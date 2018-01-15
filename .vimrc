@@ -1,7 +1,4 @@
-syntax on
-filetype plugin on
-filetype indent on
-
+set nocompatible 
 set number
 set tabstop=4
 set shiftwidth=4
@@ -28,6 +25,10 @@ set autoindent
 set nohlsearch
 set omnifunc=syntaxcomplete#Complete
 set whichwrap+=[,]
+
+syntax on
+filetype plugin on
+filetype indent on
 
 highlight String ctermfg=green
 highlight Statement ctermfg=darkgreen
