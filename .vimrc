@@ -156,8 +156,8 @@ let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_dotfiles = 1
 
 " NERDTree
-autocmd VimEnter * NERDTree
-autocmd VimEnter * wincmd p
+autocmd VimEnter * NERDTree | vertical resize 25 | wincmd p
+let g:NERDTreeMouseMode = 3 " open with single click
 noremap <C-n> :NERDTreeToggle<CR><C-w><C-w>
 
 " VCoolor
@@ -176,7 +176,7 @@ let g:UltiSnipsJumpBackwardTrigger="<C-z>"
 let g:user_emmet_leader_key = '<C-e>'
 
 " Tagbar
-autocmd VimEnter * TagbarToggle
+autocmd VimEnter * if winwidth(0) > 100 | TagbarToggle
 
 
 set background=dark
