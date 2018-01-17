@@ -66,8 +66,8 @@ noremap <C-h> :set hlsearch! hlsearch?<CR>
 noremap <c-d> :wa<CR>
 noremap ;; :wqa<CR>
 
-nnoremap :bd :bn\|:bd #<CR>
-nnoremap :wd :w\|:bn\|:bd #<CR>
+" nnoremap :bd :bn\|:bd #<CR>
+nnoremap :wd :w\|:bd #<CR>
 
 " Autoclosing brackets
 let g:closing = {'{':'}', '[':']', '(':')', '<':'>'}
@@ -89,8 +89,9 @@ for i in keys(closing)
 	exe "inoremap ".i."<CR> ".i."<CR>".closing[i]."<C-o>O"
 	exe "inoremap ".i."<Down> ".i."<Down>"
 	exe "inoremap ".i."<Right> ".i."<Right>"
-	exe "inoremap ".i."<BS> <Nul>"
+	exe "inoremap ".i."<BS> <Nop>"
 endfor
+
 
 " Handle quotes
 function! InsertQuotes(chr)
@@ -101,9 +102,10 @@ function! InsertQuotes(chr)
 endfunction
 
 inoremap " <ESC>:call InsertQuotes('"')<CR>a
-inoremap "<BS> <Nul>
+inoremap "<BS> <Nop>
 inoremap ' <ESC>:call InsertQuotes("'")<CR>a
-inoremap '<BS> <Nul>
+inoremap '<BS> <Nop>
+
 
 function! BreakLines()
 	let &l:tw = winwidth('%') - 10
@@ -119,9 +121,6 @@ function! RemoveTrailingWS()
 	%s/\s\+$//ge
 	exe "normal! `m"
 endfunction
-
-inoremap <silent> <C-t> <C-o>:call RemoveTrailingWS()<CR>
-map <silent> <C-t> :call RemoveTrailingWS()<CR>
 
 
 " PLUGINS
