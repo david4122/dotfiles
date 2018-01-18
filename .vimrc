@@ -1,30 +1,31 @@
-set nocompatible 
+set nocompatible
 set number
 set tabstop=4
 set shiftwidth=4
+set softtabstop=4
 set mouse=a
 set noswapfile
 set hlsearch
 set incsearch
 set noswapfile
-set softtabstop=4
 set cursorline
 set laststatus=2
 set autowrite
 set splitbelow
+set splitright
 set nostartofline
-set noexpandtab
 set hidden
 set wildmode=longest,list,full
 set completeopt=longest,menuone
-set fillchars=vert:\ 
-set listchars=tab:⇢\ 
-" set listchars=tab:⟶\ 
-set list
 set autoindent
 set nohlsearch
 set omnifunc=syntaxcomplete#Complete
 set whichwrap+=[,]
+
+set fillchars=vert:\ 
+set listchars=tab:⇢\ 
+" set listchars=tab:⟶\ 
+set list
 
 syntax on
 filetype plugin on
@@ -70,7 +71,7 @@ noremap ;; :wqa<CR>
 nnoremap :wd :w\|:bd #<CR>
 
 " Autoclosing brackets
-let g:closing = {'{':'}', '[':']', '(':')', '<':'>'}
+let g:closing = {'{':'}', '[':']', '(':')'}
 
 function! InsertOnce(chr)
 	let a:nextChar = matchstr(getline('.'), '\%'.(col('.')+1).'c.')
