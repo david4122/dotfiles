@@ -21,6 +21,7 @@ set autoindent
 set nohlsearch
 set omnifunc=syntaxcomplete#Complete
 set whichwrap+=[,]
+set lazyredraw
 
 set fillchars=vert:\ 
 set listchars=tab:⇢\ 
@@ -65,10 +66,10 @@ noremap <A-Left> :bp<CR>
 noremap <A-Right> :bn<CR>
 noremap <C-h> :set hlsearch! hlsearch?<CR>
 noremap <c-d> :wa<CR>
-noremap ;; :wqa<CR>
 
-" nnoremap :bd :bn\|:bd #<CR>
-nnoremap :wd :w\|:bd #<CR>
+nnoremap :bd<CR> :bn\|:bd #<CR>
+nnoremap :bd! :bn\|:bd! #<CR>
+nnoremap :wd :w\|:bn\|:bd #<CR>
 
 " Autoclosing brackets
 let g:closing = {'{':'}', '[':']', '(':')'}
@@ -84,7 +85,7 @@ function! InsertOnce(chr)
 	endif
 endfunction
 
-for i in keys(closing)
+for i in keys(g:closing)
 	exe "inoremap ".i." ".i.closing[i]."<Left>"
 	exe "inoremap ".closing[i]." <ESC>:call InsertOnce('".closing[i]."')<CR>a"
 	exe "inoremap ".i."<CR> ".i."<CR>".closing[i]."<C-o>O"
@@ -102,10 +103,14 @@ function! InsertQuotes(chr)
 	endif
 endfunction
 
-inoremap " <ESC>:call InsertQuotes('"')<CR>a
-inoremap "<BS> <Nop>
-inoremap ' <ESC>:call InsertQuotes("'")<CR>a
-inoremap '<BS> <Nop>
+let g:quotes = ['"', "'"]
+
+for q in g:quotes
+	exe "inoremap ".q." <ESC>:call InsertQuotes(\"\\".q."\")<CR>a"
+	exe "inoremap ".q."<BS> <Nop>"
+	exe "inoremap ".q."<Right> ".q
+	exe "inoremap ".q."<Down> ".q
+endfor
 
 
 function! BreakLines()
@@ -158,6 +163,7 @@ let g:ctrlp_dotfiles = 1
 " NERDTree
 autocmd VimEnter * NERDTree | vertical resize 25 | wincmd p
 let g:NERDTreeMouseMode = 3 " open with single click
+let g:NERDTreeShowHidden = 1
 noremap <C-n> :NERDTreeToggle<CR><C-w><C-w>
 
 " VCoolor
@@ -176,6 +182,7 @@ let g:UltiSnipsJumpBackwardTrigger="<C-z>"
 let g:user_emmet_leader_key = '<C-e>'
 
 " Tagbar
+let g:tagbar_width = 30
 autocmd VimEnter * if winwidth(0) > 100 | TagbarToggle
 
 
