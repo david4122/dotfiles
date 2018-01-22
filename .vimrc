@@ -21,7 +21,6 @@ set autoindent
 set nohlsearch
 set omnifunc=syntaxcomplete#Complete
 set whichwrap+=[,]
-set lazyredraw
 
 set fillchars=vert:\ 
 set listchars=tab:⇢\ 
@@ -67,9 +66,9 @@ noremap <A-Right> :bn<CR>
 noremap <C-h> :set hlsearch! hlsearch?<CR>
 noremap <c-d> :wa<CR>
 
-nnoremap :bd<CR> :bn\|:bd #<CR>
-nnoremap :bd! :bn\|:bd! #<CR>
-nnoremap :wd :w\|:bn\|:bd #<CR>
+nnoremap :bd<CR> :bp\|:bd #<CR>
+nnoremap :bd! :bp\|:bd! #<CR>
+nnoremap :wd :w\|:bp\|:bd #<CR>
 
 " Autoclosing brackets
 let g:closing = {'{':'}', '[':']', '(':')'}
@@ -96,14 +95,14 @@ endfor
 
 
 " Handle quotes
+let g:quotes = ['"', "'"]
+
 function! InsertQuotes(chr)
 	if InsertOnce(a:chr)
 		exe "normal! a".a:chr
 		exe "normal! h"
 	endif
 endfunction
-
-let g:quotes = ['"', "'"]
 
 for q in g:quotes
 	exe "inoremap ".q." <ESC>:call InsertQuotes(\"\\".q."\")<CR>a"
@@ -184,6 +183,11 @@ let g:user_emmet_leader_key = '<C-e>'
 " Tagbar
 let g:tagbar_width = 30
 autocmd VimEnter * if winwidth(0) > 100 | TagbarToggle
+
+" MatchTagAlways
+let g:mta_use_matchparen_group = 0
+let g:mta_set_default_matchtag_color = 0
+hi MatchTag cterm=underline ctermbg=none ctermfg=none
 
 
 set background=dark
