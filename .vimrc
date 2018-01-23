@@ -66,9 +66,9 @@ noremap <A-Right> :bn<CR>
 noremap <C-h> :set hlsearch! hlsearch?<CR>
 noremap <c-d> :wa<CR>
 
-nnoremap :bd<CR> :bp\|:bd #<CR>
-nnoremap :bd! :bp\|:bd! #<CR>
-nnoremap :wd :w\|:bp\|:bd #<CR>
+cabbrev bd bp\|bd #
+cabbrev bd! bp\|bd! #
+cabbrev wd w\|bp\|bd #
 
 " Autoclosing brackets
 let g:closing = {'{':'}', '[':']', '(':')'}
