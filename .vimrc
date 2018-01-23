@@ -160,9 +160,11 @@ let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_dotfiles = 1
 
 " NERDTree
-autocmd VimEnter * NERDTree | vertical resize 25 | wincmd p
 let g:NERDTreeMouseMode = 3 " open with single click
 let g:NERDTreeShowHidden = 1
+if !exists('t:NERDTreeBufName') || bufwinnr(t:NERDTreeBufName) == -1
+	autocmd VimEnter * NERDTree | vertical resize 25 | wincmd p
+endif
 noremap <C-n> :NERDTreeToggle<CR><C-w><C-w>
 
 " VCoolor
@@ -182,12 +184,28 @@ let g:user_emmet_leader_key = '<C-e>'
 
 " Tagbar
 let g:tagbar_width = 30
-autocmd VimEnter * if winwidth(0) > 100 | TagbarToggle
+let g:window_tagbar_threshold = 115
+autocmd VimEnter * if &columns > g:window_tagbar_threshold | TagbarOpen
+
+function! ToggleTagbar()
+	if &columns > g:window_tagbar_threshold
+		TagbarOpen
+	else
+		TagbarClose
+	endif
+endfunction
+
+autocmd VimResized * call ToggleTagbar()
 
 " MatchTagAlways
 let g:mta_use_matchparen_group = 0
 let g:mta_set_default_matchtag_color = 0
 hi MatchTag cterm=underline ctermbg=none ctermfg=none
 
+" WebDevIcons
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:DevIconsEnableFoldersOpenClose = 1
+let g:webdevicons_enable = 1
 
 set background=dark
