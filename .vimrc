@@ -156,14 +156,14 @@ let g:airline_symbols.whitespace = 'Ξ'
 
 " CtrlP
 let g:ctrlp_map = '<C-p>'
-let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_cmd = 'CtrlPBuffer'
 let g:ctrlp_dotfiles = 1
 
 " NERDTree
 let g:NERDTreeMouseMode = 3 " open with single click
 let g:NERDTreeShowHidden = 1
 if !exists('t:NERDTreeBufName') || bufwinnr(t:NERDTreeBufName) == -1
-	autocmd VimEnter * NERDTree | vertical resize 25 | wincmd p
+	autocmd VimEnter * NERDTree | vertical resize 30 | wincmd p
 endif
 noremap <C-n> :NERDTreeToggle<CR><C-w><C-w>
 
@@ -183,7 +183,7 @@ let g:UltiSnipsJumpBackwardTrigger="<C-z>"
 let g:user_emmet_leader_key = '<C-e>'
 
 " Tagbar
-let g:tagbar_width = 30
+let g:tagbar_width = 35
 let g:window_tagbar_threshold = 115
 autocmd VimEnter * if &columns > g:window_tagbar_threshold | TagbarOpen
 
