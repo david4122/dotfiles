@@ -67,7 +67,7 @@ noremap <C-h> :set hlsearch! hlsearch?<CR>
 noremap <c-d> :wa<CR>
 
 cabbrev bd bp\|bd #
-cabbrev bd! bp\|bd! #
+cabbrev bdf bp\|bd! #
 cabbrev wd w\|bp\|bd #
 
 " Autoclosing brackets
@@ -162,10 +162,16 @@ let g:ctrlp_dotfiles = 1
 " NERDTree
 let g:NERDTreeMouseMode = 3 " open with single click
 let g:NERDTreeShowHidden = 1
-if !exists('t:NERDTreeBufName') || bufwinnr(t:NERDTreeBufName) == -1
-	autocmd VimEnter * NERDTree | vertical resize 30 | wincmd p
-endif
-noremap <C-n> :NERDTreeToggle<CR><C-w><C-w>
+
+function! OpenNERDTree()
+	if !exists('t:NERDTreeBufName') || bufwinnr(t:NERDTreeBufName) == -1
+		NERDTree
+		wincmd p
+	endif
+endfunction
+
+autocmd VimEnter * call OpenNERDTree()
+noremap <C-n> :NERDTreeToggle<CR>
 
 " VCoolor
 inoremap <kEnter> <C-o>:VCoolor<CR>
@@ -198,6 +204,15 @@ endfunction
 autocmd VimResized * call ToggleTagbar()
 
 " MatchTagAlways
+
+let g:mta_filetypes = {
+	\ 'html' : 1,
+	\ 'xhtml' : 1,
+	\ 'xml' : 1,
+	\ 'jinja' : 1,
+	\ 'php' : 1,
+	\}
+
 let g:mta_use_matchparen_group = 0
 let g:mta_set_default_matchtag_color = 0
 hi MatchTag cterm=underline ctermbg=none ctermfg=none
