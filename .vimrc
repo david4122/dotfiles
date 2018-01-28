@@ -21,6 +21,7 @@ set autoindent
 set nohlsearch
 set omnifunc=syntaxcomplete#Complete
 set whichwrap+=[,]
+set lazyredraw
 
 set fillchars=vert:\ 
 set listchars=tab:⇢\ 
@@ -66,8 +67,8 @@ noremap <A-Right> :bn<CR>
 noremap <C-h> :set hlsearch! hlsearch?<CR>
 noremap <c-d> :wa<CR>
 
-cabbrev bd bp\|bd #
-cabbrev bdf bp\|bd! #
+cabbrev db bp\|bd #
+cabbrev dbf bp\|bd! #
 cabbrev wd w\|bp\|bd #
 
 " Autoclosing brackets
@@ -163,14 +164,7 @@ let g:ctrlp_dotfiles = 1
 let g:NERDTreeMouseMode = 3 " open with single click
 let g:NERDTreeShowHidden = 1
 
-function! OpenNERDTree()
-	if !exists('t:NERDTreeBufName') || bufwinnr(t:NERDTreeBufName) == -1
-		NERDTree
-		wincmd p
-	endif
-endfunction
-
-autocmd VimEnter * call OpenNERDTree()
+autocmd VimEnter * NERDTree | vertical resize 25 | wincmd p
 noremap <C-n> :NERDTreeToggle<CR>
 
 " VCoolor
