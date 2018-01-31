@@ -21,7 +21,6 @@ set autoindent
 set nohlsearch
 set omnifunc=syntaxcomplete#Complete
 set whichwrap+=[,]
-set lazyredraw
 
 set fillchars=vert:\ 
 set listchars=tab:⇢\ 
@@ -71,47 +70,6 @@ cabbrev db bp\|bd #
 cabbrev dbf bp\|bd! #
 cabbrev wd w\|bp\|bd #
 
-" Autoclosing brackets
-let g:closing = {'{':'}', '[':']', '(':')'}
-
-function! InsertOnce(chr)
-	let a:nextChar = matchstr(getline('.'), '\%'.(col('.')+1).'c.')
-	if a:chr != a:nextChar
-		exe "normal! a".a:chr
-		return 1
-	else
-		exe "normal! l"
-		return 0
-	endif
-endfunction
-
-for i in keys(g:closing)
-	exe "inoremap ".i." ".i.closing[i]."<Left>"
-	exe "inoremap ".closing[i]." <ESC>:call InsertOnce('".closing[i]."')<CR>a"
-	exe "inoremap ".i."<CR> ".i."<CR>".closing[i]."<C-o>O"
-	exe "inoremap ".i."<Down> ".i."<Down>"
-	exe "inoremap ".i."<Right> ".i."<Right>"
-	exe "inoremap ".i."<BS> <Nop>"
-endfor
-
-
-" Handle quotes
-let g:quotes = ['"', "'"]
-
-function! InsertQuotes(chr)
-	if InsertOnce(a:chr)
-		exe "normal! a".a:chr
-		exe "normal! h"
-	endif
-endfunction
-
-for q in g:quotes
-	exe "inoremap ".q." <ESC>:call InsertQuotes(\"\\".q."\")<CR>a"
-	exe "inoremap ".q."<BS> <Nop>"
-	exe "inoremap ".q."<Right> ".q
-	exe "inoremap ".q."<Down> ".q
-endfor
-
 
 function! BreakLines()
 	let &l:tw = winwidth('%') - 10
@@ -127,6 +85,52 @@ function! RemoveTrailingWS()
 	%s/\s\+$//ge
 	exe "normal! `m"
 endfunction
+
+
+function! UnimapArrows(key)
+	exe "inoremap ".a:key."<Left> ".a:key."<Left>"
+	exe "inoremap ".a:key."<Right> ".a:key."<Right>"
+	exe "inoremap ".a:key."<Up> ".a:key."<Up>"
+	exe "inoremap ".a:key."<Down> ".a:key."<Down>"
+endfunction
+
+" Autoclosing brackets
+let g:closing = {'{':'}', '[':']', '(':')'}
+
+function! InsertOnce(chr)
+	let a:nextChar = matchstr(getline('.'), '\%'.(col('.')).'c.')
+	if a:chr != a:nextChar
+		return a:chr
+	else
+		return "\<Right>"
+	endif
+endfunction
+
+for i in keys(g:closing)
+	exe "inoremap <expr> ".closing[i]." InsertOnce('".closing[i]."')"
+	exe "inoremap ".i." ".i.closing[i]."<Left>"
+	exe "inoremap ".i."<CR> ".i."<CR>".closing[i]."<C-o>O"
+	exe "inoremap ".i."<BS> <Nop>"
+	call UnimapArrows(i)
+endfor
+
+" Handle quotes
+let g:quotes = ['"', "'"]
+
+function! InsertQuotes(chr)
+	if InsertOnce(a:chr) == a:chr
+		return a:chr.a:chr."\<Left>"
+	else
+		return "\<Right>"
+	endif
+endfunction
+
+for q in g:quotes
+	exe "inoremap <expr> ".q." InsertQuotes(\"\\".q."\")"
+	exe "inoremap ".q."<BS> <Nop>"
+	exe "inoremap ".q."<Right> ".q
+	exe "inoremap ".q."<Down> ".q
+endfor
 
 
 " PLUGINS
