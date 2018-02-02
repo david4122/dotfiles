@@ -87,7 +87,7 @@ function! RemoveTrailingWS()
 endfunction
 
 
-function! UnimapArrows(key)
+function! IunmapArrows(key)
 	exe "inoremap ".a:key."<Left> ".a:key."<Left>"
 	exe "inoremap ".a:key."<Right> ".a:key."<Right>"
 	exe "inoremap ".a:key."<Up> ".a:key."<Up>"
@@ -111,7 +111,7 @@ for i in keys(g:closing)
 	exe "inoremap ".i." ".i.closing[i]."<Left>"
 	exe "inoremap ".i."<CR> ".i."<CR>".closing[i]."<C-o>O"
 	exe "inoremap ".i."<BS> <Nop>"
-	call UnimapArrows(i)
+	call IunmapArrows(i)
 endfor
 
 " Handle quotes
@@ -128,8 +128,7 @@ endfunction
 for q in g:quotes
 	exe "inoremap <expr> ".q." InsertQuotes(\"\\".q."\")"
 	exe "inoremap ".q."<BS> <Nop>"
-	exe "inoremap ".q."<Right> ".q
-	exe "inoremap ".q."<Down> ".q
+	call IunmapArrows(q)
 endfor
 
 
