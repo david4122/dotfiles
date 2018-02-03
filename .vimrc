@@ -77,15 +77,11 @@ function! BreakLines()
 	exe "normal! ggVGgq"
 endfunction
 
-inoremap <C-S-b> <C-o>:call BreakLines()<CR>
-map <C-S-b> :call BreakLines()<CR>
-
 function! RemoveTrailingWS()
 	exe "normal! mm"
 	%s/\s\+$//ge
 	exe "normal! `m"
 endfunction
-
 
 function! IunmapArrows(key)
 	exe "inoremap ".a:key."<Left> ".a:key."<Left>"
@@ -186,7 +182,7 @@ let g:UltiSnipsJumpBackwardTrigger="<C-z>"
 let g:user_emmet_leader_key = '<C-e>'
 
 " Tagbar
-let g:tagbar_width = 35
+let g:tagbar_width = 30
 let g:window_tagbar_threshold = 115
 autocmd VimEnter * if &columns > g:window_tagbar_threshold | TagbarOpen
 
