@@ -21,6 +21,7 @@ set autoindent
 set nohlsearch
 set omnifunc=syntaxcomplete#Complete
 set whichwrap+=[,]
+set backspace=indent,eol,start
 
 set fillchars=vert:\ 
 set listchars=tab:⇢\ 
@@ -65,6 +66,8 @@ noremap <A-Left> :bp<CR>
 noremap <A-Right> :bn<CR>
 noremap <C-h> :set hlsearch! hlsearch?<CR>
 noremap <c-d> :wa<CR>
+
+vnoremap <C-f> :fold<CR>
 
 cabbrev db bp\|bd #
 cabbrev dbf bp\|bd! #
