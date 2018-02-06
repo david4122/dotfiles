@@ -221,7 +221,9 @@ let g:webdevicons_enable = 1
 
 " javacomplete2
 autocmd FileType java setlocal omnifunc=javacomplete#Complete
-nmap <F6> <Plug>(JavaComplete-Imports-AddMissing)
-nmap <F7> <Plug>(JavaComplete-Imports-RemoveUnused)
+nnoremap <F6> <Plug>(JavaComplete-Imports-AddMissing)
+inoremap <F6> <Plug>(JavaComplete-Imports-AddMissing)
+nnoremap <F7> <Plug>(JavaComplete-Imports-RemoveUnused)
+inoremap <F7> <Plug>(JavaComplete-Imports-RemoveUnused)
 
 set background=dark
