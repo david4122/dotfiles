@@ -49,6 +49,7 @@ highlight SpecialKey ctermfg=darkgray
 highlight VertSplit cterm=none ctermbg=darkgray
 highlight DiffDelete ctermbg=235
 highlight DiffText ctermbg=darkgreen
+highlight SignColumn ctermbg=none
 
 inoremap <S-Left> <C-o>gT
 inoremap <S-Right> <C-o>gt
@@ -69,9 +70,9 @@ noremap <c-d> :wa<CR>
 
 vnoremap <C-f> :fold<CR>
 
-cabbrev db bp\|bd #
-cabbrev dbf bp\|bd! #
-cabbrev wd w\|bp\|bd #
+cabbrev db b#\|bd #
+cabbrev dbf b#\|bd! #
+cabbrev wd w\|b#\|bd #
 
 
 function! BreakLines()
@@ -217,7 +218,10 @@ hi MatchTag cterm=underline ctermbg=none ctermfg=none
 let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 let g:DevIconsEnableFoldersOpenClose = 1
-let g:webdevicons_enable = 1
+if exists('g:loaded_webdevicons')
+    call webdevicons#refresh()
+	wincmd p
+endif
 
 " javacomplete2
 autocmd FileType java setlocal omnifunc=javacomplete#Complete
@@ -225,5 +229,11 @@ nnoremap <F6> <Plug>(JavaComplete-Imports-AddMissing)
 inoremap <F6> <Plug>(JavaComplete-Imports-AddMissing)
 nnoremap <F7> <Plug>(JavaComplete-Imports-RemoveUnused)
 inoremap <F7> <Plug>(JavaComplete-Imports-RemoveUnused)
+
+" Signify
+autocmd VimEnter * highlight SignifySignAdd ctermbg=none
+autocmd VimEnter * highlight SignifySignDelete ctermbg=none
+autocmd VimEnter * highlight SignifySignChange ctermbg=none
+let g:signify_sign_change = '~'
 
 set background=dark
