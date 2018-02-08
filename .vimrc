@@ -60,13 +60,17 @@ inoremap <C-h> <C-o>:set hlsearch! hlsearch?<CR>
 inoremap <C-d> <C-o>:wa<CR>
 inoremap <A-Up> <ESC>:m-2<CR>==a
 inoremap <A-Down> <ESC>:m+1<CR>==a
+inoremap <C-b> <C-o>:make %<CR>
 
 noremap <S-Left> gT
 noremap <S-Right> gt
 noremap <A-Left> :bp<CR>
 noremap <A-Right> :bn<CR>
 noremap <C-h> :set hlsearch! hlsearch?<CR>
-noremap <c-d> :wa<CR>
+noremap <C-d> :wa<CR>
+noremap <C-b> :make %<CR>
+noremap ]e :cnext<CR>
+noremap [e :cprev<CR>
 
 vnoremap <C-f> :fold<CR>
 
@@ -74,6 +78,8 @@ cabbrev db b#\|bd #
 cabbrev dbf b#\|bd! #
 cabbrev wd w\|b#\|bd #
 
+autocmd BufEnter *.php compiler! php
+autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
 
 function! BreakLines()
 	let &l:tw = winwidth('%') - 10
@@ -231,9 +237,9 @@ nnoremap <F7> <Plug>(JavaComplete-Imports-RemoveUnused)
 inoremap <F7> <Plug>(JavaComplete-Imports-RemoveUnused)
 
 " Signify
-autocmd VimEnter * highlight SignifySignAdd ctermbg=none
-autocmd VimEnter * highlight SignifySignDelete ctermbg=none
-autocmd VimEnter * highlight SignifySignChange ctermbg=none
+autocmd BufEnter * highlight SignifySignAdd ctermbg=none ctermfg=121
+autocmd BufEnter * highlight SignifySignDelete ctermbg=none ctermfg=blue
+autocmd BufEnter * highlight SignifySignChange ctermbg=none ctermfg=lightgray
 let g:signify_sign_change = '~'
 
 set background=dark
