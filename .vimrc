@@ -61,6 +61,8 @@ inoremap <C-d> <C-o>:wa<CR>
 inoremap <A-Up> <ESC>:m-2<CR>==a
 inoremap <A-Down> <ESC>:m+1<CR>==a
 inoremap <C-b> <C-o>:make %<CR>
+inoremap <C-Up> :cprev<CR>
+inoremap <C-Down> :cnext<CR>
 
 noremap <S-Left> gT
 noremap <S-Right> gt
@@ -69,17 +71,35 @@ noremap <A-Right> :bn<CR>
 noremap <C-h> :set hlsearch! hlsearch?<CR>
 noremap <C-d> :wa<CR>
 noremap <C-b> :make %<CR>
-noremap ]e :cnext<CR>
-noremap [e :cprev<CR>
+noremap <C-Up> :cprev<CR>
+noremap <C-Down> :cnext<CR>
 
 vnoremap <C-f> :fold<CR>
 
-cabbrev db b#\|bd #
-cabbrev dbf b#\|bd! #
-cabbrev wd w\|b#\|bd #
-
 autocmd BufEnter *.php compiler! php
 autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
+
+" close buffer and jump to last opened/previus one
+" 0 - default
+" 1 - write
+" 2 - force
+function! JumpAndClose(action)
+	if a:action == 1 | w | endif
+	if len(getbufinfo({'buflisted':1})) > 1
+		if &mod && a:action != 2
+			echoerr "No write since last change!"
+			return
+		endif
+		if buflisted(@#) | b# | else | bp | endif
+		if a:action == 2 | bd! # | else | bd # | endif
+	else
+		if a:action == 2 | bd! | else | bd | endif
+	endif
+endfunction
+
+cnoreabbrev db call JumpAndClose(0)
+cnoreabbrev dbf call JumpAndClose(2)
+cnoreabbrev wd call JumpAndClose(1)
 
 function! BreakLines()
 	let &l:tw = winwidth('%') - 10
@@ -164,6 +184,9 @@ let g:airline_symbols.spell = 'Ꞩ'
 let g:airline_symbols.notexists = '∄'
 let g:airline_symbols.whitespace = 'Ξ'
 
+" fix problems with Tagbar
+autocmd VimEnter * AirlineRefresh 
+
 " CtrlP
 let g:ctrlp_map = '<C-p>'
 let g:ctrlp_cmd = 'CtrlPBuffer'
@@ -184,17 +207,17 @@ map <kEnter> :VCoolor<CR>
 set diffopt+=vertical
 
 " Ultisnips
-let g:UltiSnipsExpandTrigger="<TAB>"
+let g:UltiSnipsExpandTrigger="<Tab>"
 let g:UltiSnipsJumpForwardTrigger="<C-d>"
 let g:UltiSnipsJumpBackwardTrigger="<C-z>"
 
 " emmet
-let g:user_emmet_leader_key = '<C-e>'
+let g:user_emmet_leader_key = '<C-m>'
 
 " Tagbar
 let g:tagbar_width = 30
 let g:window_tagbar_threshold = 115
-autocmd VimEnter * if &columns > g:window_tagbar_threshold | TagbarOpen
+autocmd VimEnter * call ToggleTagbar()
 
 function! ToggleTagbar()
 	if &columns > g:window_tagbar_threshold
@@ -207,7 +230,6 @@ endfunction
 autocmd VimResized * call ToggleTagbar()
 
 " MatchTagAlways
-
 let g:mta_filetypes = {
 	\ 'html' : 1,
 	\ 'xhtml' : 1,
@@ -229,17 +251,13 @@ if exists('g:loaded_webdevicons')
 	wincmd p
 endif
 
-" javacomplete2
-autocmd FileType java setlocal omnifunc=javacomplete#Complete
-nnoremap <F6> <Plug>(JavaComplete-Imports-AddMissing)
-inoremap <F6> <Plug>(JavaComplete-Imports-AddMissing)
-nnoremap <F7> <Plug>(JavaComplete-Imports-RemoveUnused)
-inoremap <F7> <Plug>(JavaComplete-Imports-RemoveUnused)
-
 " Signify
 autocmd BufEnter * highlight SignifySignAdd ctermbg=none ctermfg=121
 autocmd BufEnter * highlight SignifySignDelete ctermbg=none ctermfg=blue
 autocmd BufEnter * highlight SignifySignChange ctermbg=none ctermfg=lightgray
 let g:signify_sign_change = '~'
+
+" YouCompleteMe
+let g:ycm_key_list_select_completion = ['<Down>']
 
 set background=dark
