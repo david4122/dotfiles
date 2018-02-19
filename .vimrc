@@ -61,8 +61,8 @@ inoremap <C-d> <C-o>:wa<CR>
 inoremap <A-Up> <ESC>:m-2<CR>==a
 inoremap <A-Down> <ESC>:m+1<CR>==a
 inoremap <C-b> <C-o>:make %<CR>
-inoremap <C-Up> :cprev<CR>
-inoremap <C-Down> :cnext<CR>
+inoremap <C-Up> <C-o>:cprev<CR>
+inoremap <C-Down> <C-o>:cnext<CR>
 
 noremap <S-Left> gT
 noremap <S-Right> gt
@@ -216,6 +216,7 @@ let g:user_emmet_leader_key = '<C-m>'
 
 " Tagbar
 let g:tagbar_width = 30
+let g:tagbar_singleclick = 1
 let g:window_tagbar_threshold = 115
 autocmd VimEnter * call ToggleTagbar()
 
@@ -252,7 +253,7 @@ if exists('g:loaded_webdevicons')
 endif
 
 " Signify
-autocmd BufEnter * highlight SignifySignAdd ctermbg=none ctermfg=121
+autocmd BufEnter * highlight SignifySignAdd ctermbg=none ctermfg=green
 autocmd BufEnter * highlight SignifySignDelete ctermbg=none ctermfg=blue
 autocmd BufEnter * highlight SignifySignChange ctermbg=none ctermfg=lightgray
 let g:signify_sign_change = '~'
