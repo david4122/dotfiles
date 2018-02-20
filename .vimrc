@@ -184,9 +184,6 @@ let g:airline_symbols.spell = 'Ꞩ'
 let g:airline_symbols.notexists = '∄'
 let g:airline_symbols.whitespace = 'Ξ'
 
-" fix problems with Tagbar
-autocmd VimEnter * AirlineRefresh 
-
 " CtrlP
 let g:ctrlp_map = '<C-p>'
 let g:ctrlp_cmd = 'CtrlPBuffer'
@@ -212,7 +209,8 @@ let g:UltiSnipsJumpForwardTrigger="<C-d>"
 let g:UltiSnipsJumpBackwardTrigger="<C-z>"
 
 " emmet
-let g:user_emmet_leader_key = '<C-m>'
+noremap <C-u> <C-e>
+let g:user_emmet_leader_key = '<C-e>'
 
 " Tagbar
 let g:tagbar_width = 30
@@ -262,3 +260,5 @@ let g:signify_sign_change = '~'
 let g:ycm_key_list_select_completion = ['<Down>']
 
 set background=dark
+" Fix problems with Tagbar
+autocmd VimEnter * AirlineRefresh
