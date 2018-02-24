@@ -32,15 +32,15 @@ syntax on
 filetype plugin on
 filetype indent on
 
-highlight String ctermfg=green
+highlight String ctermfg=136
 highlight Statement ctermfg=darkgreen
 highlight Type ctermfg=121
 highlight Typedef cterm=bold
 highlight LineNr cterm=none ctermfg=brown
 highlight CursorLine cterm=none ctermbg=235
 highlight CursorLineNr cterm=bold ctermfg=10 ctermbg=235
-highlight Pmenu ctermbg=black ctermfg=yellow
-highlight PmenuSel ctermbg=green ctermfg=black
+highlight Pmenu ctermbg=233 ctermfg=242
+highlight PmenuSel ctermbg=234 ctermfg=121
 highlight Todo ctermbg=green ctermfg=blue
 highlight Constant cterm=bold
 highlight javaAnnotation ctermfg=blue
@@ -50,6 +50,10 @@ highlight VertSplit cterm=none ctermbg=darkgray
 highlight DiffDelete ctermbg=235
 highlight DiffText ctermbg=darkgreen
 highlight SignColumn ctermbg=none
+highlight phpMethodsVar cterm=italic
+
+autocmd BufEnter * syntax match Method "\(\.\|->\)\@<=\w\+(\@="
+highlight Method cterm=italic
 
 inoremap <S-Left> <C-o>gT
 inoremap <S-Right> <C-o>gt
@@ -205,8 +209,8 @@ set diffopt+=vertical
 
 " Ultisnips
 let g:UltiSnipsExpandTrigger="<Tab>"
-let g:UltiSnipsJumpForwardTrigger="<C-d>"
-let g:UltiSnipsJumpBackwardTrigger="<C-z>"
+let g:UltiSnipsJumpForwardTrigger="<Tab>"
+let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 
 " emmet
 noremap <C-u> <C-e>
@@ -239,7 +243,7 @@ let g:mta_filetypes = {
 
 let g:mta_use_matchparen_group = 0
 let g:mta_set_default_matchtag_color = 0
-hi MatchTag cterm=underline ctermbg=none ctermfg=none
+highlight MatchTag cterm=underline ctermbg=none ctermfg=none
 
 " WebDevIcons
 let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
@@ -258,6 +262,15 @@ let g:signify_sign_change = '~'
 
 " YouCompleteMe
 let g:ycm_key_list_select_completion = ['<Down>']
+let g:ycm_add_preview_to_completeopt = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
+
+" dbext
+if file_readable('dbdata.vim')
+	let g:dbext_default_profile = 'local'
+	let db_data = readfile('dbdata.vim')
+	let g:dbext_default_profile_local = 'type='.db_data[0].':user='.db_data[1].':passwd='.db_data[2].':dbname='.db_data[3]
+endif
 
 set background=dark
 " Fix problems with Tagbar
