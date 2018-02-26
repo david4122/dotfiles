@@ -22,6 +22,7 @@ set nohlsearch
 set omnifunc=syntaxcomplete#Complete
 set whichwrap+=[,]
 set backspace=indent,eol,start
+set nofixendofline
 
 set fillchars=vert:\ 
 set listchars=tab:⇢\ ,nbsp:•
@@ -32,7 +33,7 @@ syntax on
 filetype plugin on
 filetype indent on
 
-highlight String ctermfg=136
+highlight String ctermfg=142
 highlight Statement ctermfg=darkgreen
 highlight Type ctermfg=121
 highlight Typedef cterm=bold
@@ -49,7 +50,7 @@ highlight SpecialKey ctermfg=darkgray
 highlight VertSplit cterm=none ctermbg=darkgray
 highlight DiffDelete ctermbg=235
 highlight DiffText ctermbg=darkgreen
-highlight SignColumn ctermbg=none
+highlight SignColumn ctermbg=233
 highlight phpMethodsVar cterm=italic
 
 autocmd BufEnter * syntax match Method "\(\.\|->\)\@<=\w\+(\@="
@@ -255,9 +256,9 @@ if exists('g:loaded_webdevicons')
 endif
 
 " Signify
-autocmd BufEnter * highlight SignifySignAdd ctermbg=none ctermfg=green
-autocmd BufEnter * highlight SignifySignDelete ctermbg=none ctermfg=blue
-autocmd BufEnter * highlight SignifySignChange ctermbg=none ctermfg=lightgray
+autocmd BufEnter * highlight SignifySignAdd ctermbg=233 ctermfg=green
+autocmd BufEnter * highlight SignifySignDelete ctermbg=233 ctermfg=blue
+autocmd BufEnter * highlight SignifySignChange ctermbg=233 ctermfg=lightgray
 let g:signify_sign_change = '~'
 
 " YouCompleteMe
@@ -270,7 +271,7 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 if file_readable('dbdata.vim')
 	let g:dbext_default_profile = 'local'
 	let db_data = readfile('dbdata.vim')
-	let g:dbext_default_profile_local = 'type='.db_data[0].':user='.db_data[1].':passwd='.db_data[2].':dbname='.db_data[3]
+	let g:dbext_default_profile_local = 'type='.db_data[0].':host='.db_data[1].':user='.db_data[2].':passwd='.db_data[3].':dbname='.db_data[4]
 endif
 
 set background=dark
