@@ -271,7 +271,7 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 if file_readable('dbdata.vim')
 	let g:dbext_default_profile = 'local'
 	let db_data = readfile('dbdata.vim')
-	let g:dbext_default_profile_local = 'type='.db_data[0].':host='.db_data[1].':user='.db_data[2].':passwd='.db_data[3].':dbname='.db_data[4]
+	let g:dbext_default_profile_local = join(db_data, ':')
 endif
 
 set background=dark
