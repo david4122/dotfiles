@@ -37,23 +37,26 @@ highlight String ctermfg=142
 highlight Statement ctermfg=darkgreen
 highlight Type ctermfg=121
 highlight Typedef cterm=bold
-highlight LineNr cterm=none ctermfg=brown
-highlight CursorLine cterm=none ctermbg=235
-highlight CursorLineNr cterm=bold ctermfg=10 ctermbg=235
+highlight LineNr cterm=none ctermfg=237
+highlight CursorLine cterm=none ctermbg=233
+highlight CursorLineNr cterm=none ctermfg=242 ctermbg=233
 highlight Pmenu ctermbg=233 ctermfg=242
 highlight PmenuSel ctermbg=234 ctermfg=121
 highlight Todo ctermbg=green ctermfg=blue
 highlight Constant cterm=bold
 highlight javaAnnotation ctermfg=blue
-highlight Folded ctermbg=235 ctermfg=green
-highlight SpecialKey ctermfg=darkgray
-highlight VertSplit cterm=none ctermbg=darkgray
+highlight Folded ctermbg=234 ctermfg=121
+highlight FoldColumn ctermbg=236
+highlight SpecialKey ctermfg=235
+highlight VertSplit cterm=none ctermbg=237
 highlight DiffDelete ctermbg=235
-highlight DiffText ctermbg=darkgreen
-highlight SignColumn ctermbg=233
+highlight DiffText cterm=none ctermbg=130 ctermfg=white
+highlight DiffChange ctermbg=17
+highlight DiffAdd ctermbg=94
+highlight SignColumn ctermbg=234
 highlight phpMethodsVar cterm=italic
 
-autocmd BufEnter * syntax match Method "\(\.\|->\)\@<=\w\+(\@="
+autocmd BufEnter * syntax match Method "\(\.\|->\)\@<=\s*\w\+\s*(\@="
 highlight Method cterm=italic
 
 inoremap <S-Left> <C-o>gT
@@ -78,8 +81,6 @@ noremap <C-d> :wa<CR>
 noremap <C-b> :make %<CR>
 noremap <C-Up> :cprev<CR>
 noremap <C-Down> :cnext<CR>
-
-vnoremap <C-f> :fold<CR>
 
 autocmd BufEnter *.php compiler! php
 autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
@@ -240,7 +241,7 @@ let g:mta_filetypes = {
 	\ 'xml' : 1,
 	\ 'jinja' : 1,
 	\ 'php' : 1,
-	\}
+\}
 
 let g:mta_use_matchparen_group = 0
 let g:mta_set_default_matchtag_color = 0
@@ -256,9 +257,9 @@ if exists('g:loaded_webdevicons')
 endif
 
 " Signify
-autocmd BufEnter * highlight SignifySignAdd ctermbg=233 ctermfg=green
-autocmd BufEnter * highlight SignifySignDelete ctermbg=233 ctermfg=blue
-autocmd BufEnter * highlight SignifySignChange ctermbg=233 ctermfg=lightgray
+autocmd BufEnter * highlight SignifySignAdd ctermbg=234 ctermfg=green
+autocmd BufEnter * highlight SignifySignDelete ctermbg=234 ctermfg=blue
+autocmd BufEnter * highlight SignifySignChange ctermbg=234 ctermfg=lightgray
 let g:signify_sign_change = '~'
 
 " YouCompleteMe
@@ -273,6 +274,7 @@ if file_readable('dbdata.vim')
 	let db_data = readfile('dbdata.vim')
 	let g:dbext_default_profile_local = join(db_data, ':')
 endif
+let g:dbext_default_history_file = '~/.dbext_history'
 
 set background=dark
 " Fix problems with Tagbar
