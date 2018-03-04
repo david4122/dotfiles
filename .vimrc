@@ -37,33 +37,36 @@ highlight String ctermfg=142
 highlight Statement ctermfg=darkgreen
 highlight Type ctermfg=121
 highlight Typedef cterm=bold
-highlight LineNr cterm=none ctermfg=237
-highlight CursorLine cterm=none ctermbg=233
-highlight CursorLineNr cterm=none ctermfg=242 ctermbg=233
+highlight LineNr cterm=none ctermfg=240
+highlight CursorLine cterm=none ctermbg=234
+highlight CursorLineNr cterm=none ctermfg=250 ctermbg=234
 highlight Pmenu ctermbg=233 ctermfg=242
 highlight PmenuSel ctermbg=234 ctermfg=121
 highlight Todo ctermbg=green ctermfg=blue
 highlight Constant cterm=bold
 highlight javaAnnotation ctermfg=blue
 highlight Folded ctermbg=234 ctermfg=121
-highlight FoldColumn ctermbg=236
-highlight SpecialKey ctermfg=235
+highlight FoldColumn ctermbg=236 ctermfg=252
+highlight SpecialKey ctermfg=237
 highlight VertSplit cterm=none ctermbg=237
 highlight DiffDelete ctermbg=235
 highlight DiffText cterm=none ctermbg=130 ctermfg=white
 highlight DiffChange ctermbg=17
-highlight DiffAdd ctermbg=94
-highlight SignColumn ctermbg=234
+highlight DiffAdd ctermbg=22
+highlight SignColumn ctermbg=235
 highlight phpMethodsVar cterm=italic
 
 autocmd BufEnter * syntax match Method "\(\.\|->\)\@<=\s*\w\+\s*(\@="
 highlight Method cterm=italic
 
+" Mark to use by functions
+let g:functions_mark = 'f'
+
 inoremap <S-Left> <C-o>gT
 inoremap <S-Right> <C-o>gt
 inoremap <A-Left> <C-o>:bp<CR>
 inoremap <A-Right> <C-o>:bn<CR>
-inoremap <C-l> <ESC>mmYp`ma
+inoremap <C-l> <C-\><C-o>:exe "normal! m".g:functions_mark."Yp`".g:functions_mark."a"<CR>
 inoremap <C-h> <C-o>:set hlsearch! hlsearch?<CR>
 inoremap <C-d> <C-o>:wa<CR>
 inoremap <A-Up> <ESC>:m-2<CR>==a
@@ -84,6 +87,30 @@ noremap <C-Down> :cnext<CR>
 
 autocmd BufEnter *.php compiler! php
 autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
+
+function! Mark()
+	exe "normal! m".g:functions_mark."H"
+	let s:mark_top_line = line('.')
+	echo s:mark_top_line
+endfunction
+
+function! Return()
+	exe "normal! ".s:mark_top_line."Gzt"
+	exe "normal! `".g:functions_mark
+endfunction
+
+function! BreakLines()
+	let &l:tw = winwidth('%') - 10
+	call Mark()
+	exe "normal! gq"
+	call Return()
+endfunction
+
+function! RemoveTrailingWS()
+	call Mark()
+	%s/\s\+$//ge
+	call Return()
+endfunction
 
 " close buffer and jump to last opened/previus one
 " 0 - default
@@ -107,23 +134,13 @@ cnoreabbrev db call JumpAndClose(0)
 cnoreabbrev dbf call JumpAndClose(2)
 cnoreabbrev wd call JumpAndClose(1)
 
-function! BreakLines()
-	let &l:tw = winwidth('%') - 10
-	exe "normal! mm"
-	exe "normal! ggVGgq"
-endfunction
-
-function! RemoveTrailingWS()
-	exe "normal! mm"
-	%s/\s\+$//ge
-	exe "normal! `m"
-endfunction
-
-function! IunmapArrows(key)
+function! IunmapMoving(key)
 	exe "inoremap ".a:key."<Left> ".a:key."<Left>"
 	exe "inoremap ".a:key."<Right> ".a:key."<Right>"
 	exe "inoremap ".a:key."<Up> ".a:key."<Up>"
 	exe "inoremap ".a:key."<Down> ".a:key."<Down>"
+	exe "inoremap ".a:key."<kHome> ".a:key."<kHome>"
+	exe "inoremap ".a:key."<kEnd> ".a:key."<kEnd>"
 endfunction
 
 " Autoclosing brackets
@@ -142,8 +159,7 @@ for i in keys(g:closing)
 	exe "inoremap <expr> ".closing[i]." InsertOnce('".closing[i]."')"
 	exe "inoremap ".i." ".i.closing[i]."<Left>"
 	exe "inoremap ".i."<CR> ".i."<CR>".closing[i]."<C-o>O"
-	exe "inoremap ".i."<BS> <Nop>"
-	call IunmapArrows(i)
+	call IunmapMoving(i)
 endfor
 
 " Handle quotes
@@ -159,9 +175,18 @@ endfunction
 
 for q in g:quotes
 	exe "inoremap <expr> ".q." InsertQuotes(\"\\".q."\")"
-	exe "inoremap ".q."<BS> <Nop>"
-	call IunmapArrows(q)
+	call IunmapMoving(q)
 endfor
+
+function! RemovePairs(chrs)
+	if get(g:closing, nr2char(strgetchar(a:chrs, 0)), '-') == nr2char(strgetchar(a:chrs, 1)) || index(g:quotes, nr2char(strgetchar(a:chrs, 0))) >= 0
+		return "\<Del>\<BS>"
+	else
+		return "\<BS>"
+	endif
+endfunction
+
+inoremap <expr> <BS> RemovePairs(matchstr(getline('.'), '.\%'.(col('.')).'c.'))
 
 
 " PLUGINS
@@ -201,6 +226,9 @@ let g:NERDTreeShowHidden = 1
 
 autocmd VimEnter * NERDTree | vertical resize 25 | wincmd p
 noremap <C-n> :NERDTreeToggle<CR>
+
+" NERDCommenter
+let g:NERDSpaceDelims = 1
 
 " VCoolor
 inoremap <kEnter> <C-o>:VCoolor<CR>
@@ -257,9 +285,9 @@ if exists('g:loaded_webdevicons')
 endif
 
 " Signify
-autocmd BufEnter * highlight SignifySignAdd ctermbg=234 ctermfg=green
-autocmd BufEnter * highlight SignifySignDelete ctermbg=234 ctermfg=blue
-autocmd BufEnter * highlight SignifySignChange ctermbg=234 ctermfg=lightgray
+autocmd BufEnter * highlight SignifySignAdd ctermbg=235 ctermfg=green
+autocmd BufEnter * highlight SignifySignDelete ctermbg=235 ctermfg=blue
+autocmd BufEnter * highlight SignifySignChange ctermbg=235 ctermfg=lightgray
 let g:signify_sign_change = '~'
 
 " YouCompleteMe
