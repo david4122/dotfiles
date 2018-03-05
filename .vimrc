@@ -179,7 +179,10 @@ for q in g:quotes
 endfor
 
 function! RemovePairs(chrs)
-	if get(g:closing, nr2char(strgetchar(a:chrs, 0)), '-') == nr2char(strgetchar(a:chrs, 1)) || index(g:quotes, nr2char(strgetchar(a:chrs, 0))) >= 0
+	if get(g:closing, nr2char(strgetchar(a:chrs, 0)), '-')
+				\ == nr2char(strgetchar(a:chrs, 1))
+				\ || (strgetchar(a:chrs, 0) == strgetchar(a:chrs, 1)
+				\ && index(g:quotes, nr2char(strgetchar(a:chrs, 0))) >= 0)
 		return "\<Del>\<BS>"
 	else
 		return "\<BS>"
