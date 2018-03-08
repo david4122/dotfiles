@@ -306,6 +306,7 @@ if file_readable('dbdata.vim')
 	let g:dbext_default_profile_local = join(db_data, ':')
 endif
 let g:dbext_default_history_file = '~/.dbext_history'
+autocmd BufEnter Result setlocal nobuflisted
 
 set background=dark
 " Fix problems with Tagbar
