@@ -88,6 +88,9 @@ noremap <C-Down> :cnext<CR>
 autocmd BufEnter *.php compiler! php
 autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
 
+	autocmd TerminalOpen * set nobuflisted
+
+
 function! Mark()
 	exe "normal! m".g:functions_mark."H"
 	let s:mark_top_line = line('.')
