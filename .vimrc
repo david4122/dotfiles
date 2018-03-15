@@ -301,6 +301,7 @@ let ycm_key_list_select_completion = ['<Down>', '`']
 let ycm_key_list_previous_completion = ['<Up>', '~']
 let g:ycm_add_preview_to_completeopt = 1
 let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:airline#extensions#ycm#enabled = 1
 
 " dbext
 if file_readable('dbdata.vim')
@@ -310,6 +311,7 @@ if file_readable('dbdata.vim')
 endif
 let g:dbext_default_history_file = '~/.dbext_history'
 autocmd BufEnter Result setlocal nobuflisted
+autocmd BufEnter Result set winfixheight
 
 set background=dark
 " Fix problems with Tagbar
