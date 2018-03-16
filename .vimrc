@@ -85,6 +85,10 @@ noremap <C-b> :make %<CR>
 noremap <C-Up> :cprev<CR>
 noremap <C-Down> :cnext<CR>
 
+if &diff
+	nnoremap ;; :qa<CR>
+endif
+
 autocmd BufEnter *.php compiler! php
 autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
 
@@ -239,12 +243,14 @@ let g:ctrlp_map = '<C-p>'
 let g:ctrlp_cmd = 'CtrlPBuffer'
 let g:ctrlp_dotfiles = 1
 
-" NERDTree
-let g:NERDTreeMouseMode = 3 " open with single click
-let g:NERDTreeShowHidden = 1
+if !&diff
+	" NERDTree
+	let g:NERDTreeMouseMode = 3 " open with single click
+	let g:NERDTreeShowHidden = 1
 
-autocmd VimEnter * NERDTree | vertical resize 25 | wincmd p
-noremap <C-n> :NERDTreeToggle<CR>
+	autocmd VimEnter * NERDTree | vertical resize 25 | wincmd p
+	noremap <C-n> :NERDTreeToggle<CR>
+endif
 
 " NERDCommenter
 let g:NERDSpaceDelims = 1
@@ -266,20 +272,22 @@ noremap <C-u> <C-e>
 let g:user_emmet_leader_key = '<C-e>'
 
 " Tagbar
-let g:tagbar_width = 30
-let g:tagbar_singleclick = 1
-let g:window_tagbar_threshold = 115
-autocmd VimEnter * call ToggleTagbar()
+if !&diff
+	let g:tagbar_width = 30
+	let g:tagbar_singleclick = 1
+	let g:window_tagbar_threshold = 115
 
-function! ToggleTagbar()
-	if &columns > g:window_tagbar_threshold
-		TagbarOpen
-	else
-		TagbarClose
-	endif
-endfunction
+	function! ToggleTagbar()
+		if &columns > g:window_tagbar_threshold
+			TagbarOpen
+		else
+			TagbarClose
+		endif
+	endfunction
 
-autocmd VimResized * call ToggleTagbar()
+	autocmd VimEnter * call ToggleTagbar()
+	autocmd VimResized * call ToggleTagbar()
+endif
 
 " MatchTagAlways
 let g:mta_filetypes = {
@@ -304,10 +312,14 @@ if exists('g:loaded_webdevicons')
 endif
 
 " Signify
-autocmd BufEnter * highlight SignifySignAdd ctermbg=235 ctermfg=green
-autocmd BufEnter * highlight SignifySignDelete ctermbg=235 ctermfg=blue
-autocmd BufEnter * highlight SignifySignChange ctermbg=235 ctermfg=lightgray
-let g:signify_sign_change = '~'
+if !&diff
+	autocmd BufEnter * highlight SignifySignAdd ctermbg=235 ctermfg=green
+	autocmd BufEnter * highlight SignifySignDelete ctermbg=235 ctermfg=blue
+	autocmd BufEnter * highlight SignifySignChange ctermbg=235 ctermfg=lightgray
+	let g:signify_sign_change = '~'
+else
+	set signcolumn=no
+endif
 
 " YouCompleteMe
 let ycm_key_list_select_completion = ['<Down>', '`']
