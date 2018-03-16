@@ -161,7 +161,6 @@ endfunction
 for i in keys(g:closing)
 	exe "inoremap <expr> ".closing[i]." InsertOnce('".closing[i]."')"
 	exe "inoremap ".i." ".i.closing[i]."<Left>"
-	exe "inoremap ".i."<CR> ".i."<CR>".closing[i]."<C-o>O"
 	call IunmapMoving(i)
 endfor
 
@@ -181,11 +180,15 @@ for q in g:quotes
 	call IunmapMoving(q)
 endfor
 
-function! RemovePairs(chrs)
-	if get(g:closing, nr2char(strgetchar(a:chrs, 0)), '-')
+function! InQuotesOrBrackets(chrs)
+	return get(g:closing, nr2char(strgetchar(a:chrs, 0)), '-')
 				\ == nr2char(strgetchar(a:chrs, 1))
 				\ || (strgetchar(a:chrs, 0) == strgetchar(a:chrs, 1)
 				\ && index(g:quotes, nr2char(strgetchar(a:chrs, 0))) >= 0)
+endfunction
+
+function! RemovePairs(chrs)
+	if InQuotesOrBrackets(a:chrs)
 		return "\<Del>\<BS>"
 	else
 		return "\<BS>"
@@ -193,6 +196,16 @@ function! RemovePairs(chrs)
 endfunction
 
 inoremap <expr> <BS> RemovePairs(matchstr(getline('.'), '.\%'.(col('.')).'c.'))
+
+function! InsertBlock(chrs)
+	if InQuotesOrBrackets(a:chrs)
+		return "\<CR>\<C-o>O"
+	else
+		return "\<CR>"
+	endif
+endfunction
+
+inoremap <expr> <CR> InsertBlock(matchstr(getline('.'), '.\%'.(col('.')).'c.'))
 
 
 " PLUGINS
