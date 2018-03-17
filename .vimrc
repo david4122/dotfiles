@@ -23,6 +23,7 @@ set omnifunc=syntaxcomplete#Complete
 set whichwrap+=[,]
 set backspace=indent,eol,start
 set nofixendofline
+set encoding=utf8
 
 set fillchars=vert:\ 
 set listchars=tab:⇢\ ,nbsp:•
@@ -92,8 +93,16 @@ endif
 autocmd BufEnter *.php compiler! php
 autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
 
-	autocmd TerminalOpen * set nobuflisted
+autocmd TerminalOpen * set nobuflisted
 
+function! SaveAs(fname)
+	let a:dir = fnamemodify(a:fname, ':p:h')
+	silent exe "!mkdir -p ".a:dir
+	exe "w ".a:fname
+	redraw!
+endfunction
+
+command! -nargs=1 -complete=file Saveas call SaveAs(<f-args>)
 
 function! Mark()
 	exe "normal! m".g:functions_mark."H"
@@ -327,6 +336,9 @@ let ycm_key_list_previous_completion = ['<Up>', '~']
 let g:ycm_add_preview_to_completeopt = 1
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:airline#extensions#ycm#enabled = 1
+
+inoremap <F7> <C-o>:YcmCompleter FixIt<CR>
+nnoremap <F7> :YcmCompleter FixIt<CR>
 
 " dbext
 if file_readable('dbdata.vim')
