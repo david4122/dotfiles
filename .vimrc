@@ -86,6 +86,9 @@ noremap <C-b> :make %<CR>
 noremap <C-Up> :cprev<CR>
 noremap <C-Down> :cnext<CR>
 
+tnoremap <kHome> <Home>
+tnoremap <kEnd> <End>
+
 if &diff
 	nnoremap ;; :qa<CR>
 endif
@@ -220,6 +223,20 @@ endfunction
 
 inoremap <expr> <CR> InsertBlock(matchstr(getline('.'), '.\%'.(col('.')).'c.'))
 
+function! OpenGDiffInTab()
+	if(!exists(':Gdiff'))
+		echoerr 'Git repository not found'
+		return
+	endif
+
+	let a:line = line('.')
+	tabe %
+	Gdiff
+	call cursor(a:line, 0)
+endfunction
+
+command! ShowGdiff call OpenGDiffInTab()
+
 
 " PLUGINS
 execute pathogen#infect()
@@ -300,12 +317,12 @@ endif
 
 " MatchTagAlways
 let g:mta_filetypes = {
-	\ 'html' : 1,
-	\ 'xhtml' : 1,
-	\ 'xml' : 1,
-	\ 'jinja' : 1,
-	\ 'php' : 1,
-\}
+			\ 'html' : 1,
+			\ 'xhtml' : 1,
+			\ 'xml' : 1,
+			\ 'jinja' : 1,
+			\ 'php' : 1,
+			\}
 
 let g:mta_use_matchparen_group = 0
 let g:mta_set_default_matchtag_color = 0
@@ -316,7 +333,7 @@ let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 let g:DevIconsEnableFoldersOpenClose = 1
 if exists('g:loaded_webdevicons')
-    call webdevicons#refresh()
+	call webdevicons#refresh()
 	wincmd p
 endif
 
@@ -335,6 +352,8 @@ let ycm_key_list_select_completion = ['<Down>', '`']
 let ycm_key_list_previous_completion = ['<Up>', '~']
 let g:ycm_add_preview_to_completeopt = 1
 let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_complete_in_strings = 1
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
 let g:airline#extensions#ycm#enabled = 1
 
 inoremap <F7> <C-o>:YcmCompleter FixIt<CR>
