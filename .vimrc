@@ -102,6 +102,9 @@ function! SaveAs(fname)
 	let a:dir = fnamemodify(a:fname, ':p:h')
 	silent exe "!mkdir -p ".a:dir
 	exe "w ".a:fname
+	exe "e ".a:fname
+	silent exe "!rm #"
+	bd #
 	redraw!
 endfunction
 
