@@ -60,6 +60,11 @@ highlight phpMethodsVar cterm=italic
 autocmd BufEnter * syntax match Method "\(\.\|->\)\@<=\s*\w\+\s*(\@="
 highlight Method cterm=italic
 
+autocmd BufEnter *.php compiler! php
+autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
+
+autocmd TerminalOpen * set nobuflisted
+
 " Mark to use by functions
 let g:functions_mark = 'f'
 
@@ -93,52 +98,46 @@ if &diff
 	nnoremap ;; :qa<CR>
 endif
 
-autocmd BufEnter *.php compiler! php
-autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
-
-autocmd TerminalOpen * set nobuflisted
-
-function! SaveAs(fname)
+function! s:saveAs(fname, bang)
 	let a:dir = fnamemodify(a:fname, ':p:h')
-	silent exe "!mkdir -p ".a:dir
-	exe "w ".a:fname
+	call system("mkdir -p ".a:dir)
+	if a:bang | exe "w ".a:fname | else | exe "w! ".a:fname | endif
 	exe "e ".a:fname
-	silent exe "!rm #"
 	bd #
-	redraw!
+	call system("rm ".bufname('#'))
 endfunction
 
-command! -nargs=1 -complete=file Saveas call SaveAs(<f-args>)
+command! -nargs=1 -complete=file Saveas call <SID>saveAs(<f-args>, <bang>0)
 
-function! Mark()
+function! s:mark()
 	exe "normal! m".g:functions_mark."H"
 	let s:mark_top_line = line('.')
 	echo s:mark_top_line
 endfunction
 
-function! Return()
+function! s:return()
 	exe "normal! ".s:mark_top_line."Gzt"
 	exe "normal! `".g:functions_mark
 endfunction
 
 function! BreakLines()
 	let &l:tw = winwidth('%') - 10
-	call Mark()
+	call <SID>mark()
 	exe "normal! gq"
-	call Return()
+	call <SID>return()
 endfunction
 
 function! RemoveTrailingWS()
-	call Mark()
+	call <SID>mark()
 	%s/\s\+$//ge
-	call Return()
+	call <SID>return()
 endfunction
 
 " close buffer and jump to last opened/previus one
 " 0 - default
 " 1 - write
 " 2 - force
-function! JumpAndClose(action)
+function! s:jumpAndClose(action)
 	if a:action == 1 | w | endif
 	if len(getbufinfo({'buflisted':1})) > 1
 		if &mod && a:action != 2
@@ -152,11 +151,11 @@ function! JumpAndClose(action)
 	endif
 endfunction
 
-cnoreabbrev db call JumpAndClose(0)
-cnoreabbrev dbf call JumpAndClose(2)
-cnoreabbrev wd call JumpAndClose(1)
+cnoreabbrev db call <SID>jumpAndClose(0)
+cnoreabbrev dbf call <SID>jumpAndClose(2)
+cnoreabbrev wd call <SID>jumpAndClose(1)
 
-function! IunmapMoving(key)
+function! s:iunmapMoving(key)
 	exe "inoremap ".a:key."<Left> ".a:key."<Left>"
 	exe "inoremap ".a:key."<Right> ".a:key."<Right>"
 	exe "inoremap ".a:key."<Up> ".a:key."<Up>"
@@ -168,7 +167,7 @@ endfunction
 " Autoclosing brackets
 let g:closing = {'{':'}', '[':']', '(':')'}
 
-function! InsertOnce(chr)
+function! s:insertOnce(chr)
 	let a:nextChar = matchstr(getline('.'), '\%'.(col('.')).'c.')
 	if a:chr != a:nextChar
 		return a:chr
@@ -178,16 +177,16 @@ function! InsertOnce(chr)
 endfunction
 
 for i in keys(g:closing)
-	exe "inoremap <expr> ".closing[i]." InsertOnce('".closing[i]."')"
+	exe "inoremap <expr> ".closing[i]." <SID>insertOnce('".closing[i]."')"
 	exe "inoremap ".i." ".i.closing[i]."<Left>"
-	call IunmapMoving(i)
+	call <SID>iunmapMoving(i)
 endfor
 
 " Handle quotes
 let g:quotes = ['"', "'"]
 
-function! InsertQuotes(chr)
-	if InsertOnce(a:chr) == a:chr
+function! s:insertQuotes(chr)
+	if <SID>insertOnce(a:chr) == a:chr
 		return a:chr.a:chr."\<Left>"
 	else
 		return "\<Right>"
@@ -195,38 +194,38 @@ function! InsertQuotes(chr)
 endfunction
 
 for q in g:quotes
-	exe "inoremap <expr> ".q." InsertQuotes(\"\\".q."\")"
-	call IunmapMoving(q)
+	exe "inoremap <expr> ".q." <SID>insertQuotes(\"\\".q."\")"
+	call <SID>iunmapMoving(q)
 endfor
 
-function! InQuotesOrBrackets(chrs)
+function! s:inQuotesOrBrackets(chrs)
 	return get(g:closing, nr2char(strgetchar(a:chrs, 0)), '-')
 				\ == nr2char(strgetchar(a:chrs, 1))
 				\ || (strgetchar(a:chrs, 0) == strgetchar(a:chrs, 1)
 				\ && index(g:quotes, nr2char(strgetchar(a:chrs, 0))) >= 0)
 endfunction
 
-function! RemovePairs(chrs)
-	if InQuotesOrBrackets(a:chrs)
+function! s:removePairs(chrs)
+	if <SID>inQuotesOrBrackets(a:chrs)
 		return "\<Del>\<BS>"
 	else
 		return "\<BS>"
 	endif
 endfunction
 
-inoremap <expr> <BS> RemovePairs(matchstr(getline('.'), '.\%'.(col('.')).'c.'))
+inoremap <expr> <BS> <SID>removePairs(matchstr(getline('.'), '.\%'.(col('.')).'c.'))
 
-function! InsertBlock(chrs)
-	if InQuotesOrBrackets(a:chrs)
+function! s:insertBlock(chrs)
+	if <SID>inQuotesOrBrackets(a:chrs)
 		return "\<CR>\<C-o>O"
 	else
 		return "\<CR>"
 	endif
 endfunction
 
-inoremap <expr> <CR> InsertBlock(matchstr(getline('.'), '.\%'.(col('.')).'c.'))
+inoremap <expr> <CR> <SID>insertBlock(matchstr(getline('.'), '.\%'.(col('.')).'c.'))
 
-function! OpenGDiffInTab()
+function! s:openGDiffInTab()
 	if(!exists(':Gdiff'))
 		echoerr 'Git repository not found'
 		return
@@ -238,7 +237,7 @@ function! OpenGDiffInTab()
 	call cursor(a:line, 0)
 endfunction
 
-command! ShowGdiff call OpenGDiffInTab()
+command! ShowGdiff call <SID>openGDiffInTab()
 
 
 " PLUGINS
@@ -306,7 +305,7 @@ if !&diff
 	let g:tagbar_singleclick = 1
 	let g:window_tagbar_threshold = 115
 
-	function! ToggleTagbar()
+	function! s:toggleTagbar()
 		if &columns > g:window_tagbar_threshold
 			TagbarOpen
 		else
@@ -314,8 +313,8 @@ if !&diff
 		endif
 	endfunction
 
-	autocmd VimEnter * call ToggleTagbar()
-	autocmd VimResized * call ToggleTagbar()
+	autocmd VimEnter * call <SID>toggleTagbar()
+	autocmd VimResized * call <SID>toggleTagbar()
 endif
 
 " MatchTagAlways
