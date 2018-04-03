@@ -30,6 +30,12 @@ set listchars=tab:⇢\ ,nbsp:•
 " set listchars=tab:⟶\ 
 set list
 
+if !isdirectory('~/.vim/undo')
+	call system('mkdir ~/.vim/undo')
+endif
+set undodir=~/.vim/undo
+set undofile
+
 syntax on
 filetype plugin on
 filetype indent on
@@ -88,8 +94,12 @@ noremap <A-Right> :bn<CR>
 noremap <C-h> :set hlsearch! hlsearch?<CR>
 noremap <C-d> :wa<CR>
 noremap <C-b> :make %<CR>
-noremap <C-Up> :cprev<CR>
-noremap <C-Down> :cnext<CR>
+
+noremap ]e :cnext<CR>
+noremap [e :cprev<CR>
+
+noremap ]l :lnext<CR>
+noremap [l :lprev<CR>
 
 tnoremap <kHome> <Home>
 tnoremap <kEnd> <End>
@@ -356,6 +366,7 @@ let g:ycm_add_preview_to_completeopt = 1
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_complete_in_strings = 1
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
+let g:ycm_always_populate_location_list = 1
 let g:airline#extensions#ycm#enabled = 1
 
 inoremap <F7> <C-o>:YcmCompleter FixIt<CR>
