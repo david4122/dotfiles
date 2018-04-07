@@ -64,3 +64,6 @@
 [submodule ".vim/bundle/vim-gradle"]
 	path = .vim/bundle/vim-gradle
 	url = https://github.com/tfnico/vim-gradle.git
+[submodule ".tmux/plugins/tpm"]
+	path = .tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm

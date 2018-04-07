@@ -84,8 +84,6 @@ inoremap <C-d> <C-o>:wa<CR>
 inoremap <A-Up> <ESC>:m-2<CR>==a
 inoremap <A-Down> <ESC>:m+1<CR>==a
 inoremap <C-b> <C-o>:make %<CR>
-inoremap <C-Up> <C-o>:cprev<CR>
-inoremap <C-Down> <C-o>:cnext<CR>
 
 noremap <S-Left> gT
 noremap <S-Right> gt
@@ -281,8 +279,8 @@ let g:ctrlp_map = '<C-p>'
 let g:ctrlp_cmd = 'CtrlPBuffer'
 let g:ctrlp_dotfiles = 1
 
+" NERDTree
 if !&diff
-	" NERDTree
 	let g:NERDTreeMouseMode = 3 " open with single click
 	let g:NERDTreeShowHidden = 1
 
