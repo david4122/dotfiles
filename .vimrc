@@ -118,14 +118,13 @@ endfunction
 command! -nargs=1 -complete=file Saveas call <SID>saveAs(<f-args>, <bang>0)
 
 function! s:mark()
-	exe "normal! m".g:functions_mark."H"
-	let s:mark_top_line = line('.')
-	echo s:mark_top_line
+	let s:mark_cursor_pos = getcurpos()
+	let s:mark_top_line = line('w0')
 endfunction
 
 function! s:return()
 	exe "normal! ".s:mark_top_line."Gzt"
-	exe "normal! `".g:functions_mark
+	call setpos('.', s:mark_cursor_pos)
 endfunction
 
 function! BreakLines()
