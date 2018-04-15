@@ -71,14 +71,11 @@ autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
 
 autocmd TerminalOpen * set nobuflisted
 
-" Mark to use by functions
-let g:functions_mark = 'f'
-
 inoremap <S-Left> <C-o>gT
 inoremap <S-Right> <C-o>gt
 inoremap <A-Left> <C-o>:bp<CR>
 inoremap <A-Right> <C-o>:bn<CR>
-inoremap <C-l> <C-\><C-o>:exe "normal! m".g:functions_mark."Yp`".g:functions_mark."a"<CR>
+inoremap <C-l> <C-\><C-o>:exe "normal! mfYp`fa"<CR>
 inoremap <C-h> <C-o>:set hlsearch! hlsearch?<CR>
 inoremap <C-d> <C-o>:wa<CR>
 inoremap <A-Up> <ESC>:m-2<CR>==a
@@ -205,32 +202,33 @@ for q in g:quotes
 	call <SID>iunmapMoving(q)
 endfor
 
-function! s:inQuotesOrBrackets(chrs)
+function! s:inQuotesOrBrackets()
+	let a:chrs = matchstr(getline('.'), '.\%'.(col('.')).'c.')
 	return get(g:closing, nr2char(strgetchar(a:chrs, 0)), '-')
 				\ == nr2char(strgetchar(a:chrs, 1))
 				\ || (strgetchar(a:chrs, 0) == strgetchar(a:chrs, 1)
 				\ && index(g:quotes, nr2char(strgetchar(a:chrs, 0))) >= 0)
 endfunction
 
-function! s:removePairs(chrs)
-	if <SID>inQuotesOrBrackets(a:chrs)
+function! s:removePairs()
+	if <SID>inQuotesOrBrackets()
 		return "\<Del>\<BS>"
 	else
 		return "\<BS>"
 	endif
 endfunction
 
-inoremap <expr> <BS> <SID>removePairs(matchstr(getline('.'), '.\%'.(col('.')).'c.'))
+inoremap <expr> <BS> <SID>removePairs()
 
-function! s:insertBlock(chrs)
-	if <SID>inQuotesOrBrackets(a:chrs)
+function! s:insertBlock()
+	if <SID>inQuotesOrBrackets()
 		return "\<CR>\<C-o>O"
 	else
 		return "\<CR>"
 	endif
 endfunction
 
-inoremap <expr> <CR> <SID>insertBlock(matchstr(getline('.'), '.\%'.(col('.')).'c.'))
+inoremap <expr> <CR> <SID>insertBlock()
 
 function! s:openGDiffInTab()
 	if(!exists(':Gdiff'))
