@@ -24,6 +24,7 @@ set whichwrap+=[,]
 set backspace=indent,eol,start
 set nofixendofline
 set encoding=utf8
+set wildignore+=tags,dbdata.vim,session.vim
 
 set fillchars=vert:\ 
 set listchars=tab:⇢\ ,nbsp:•
