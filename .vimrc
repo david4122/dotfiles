@@ -83,37 +83,35 @@ inoremap <A-Up> <ESC>:m-2<CR>==a
 inoremap <A-Down> <ESC>:m+1<CR>==a
 inoremap <C-b> <C-o>:make %<CR>
 
-noremap <S-Left> gT
-noremap <S-Right> gt
-noremap <A-Left> :bp<CR>
-noremap <A-Right> :bn<CR>
-noremap <C-h> :set hlsearch! hlsearch?<CR>
-noremap <C-d> :wa<CR>
-noremap <C-b> :make %<CR>
+nnoremap <S-Left> gT
+nnoremap <S-Right> gt
+nnoremap <A-Left> :bp<CR>
+nnoremap <A-Right> :bn<CR>
+nnoremap <C-h> :set hlsearch! hlsearch?<CR>
+nnoremap <C-d> :wa<CR>
+nnoremap <C-b> :make %<CR>
+nnoremap <C-Up> <C-e>
+nnoremap <C-Down> <C-y>
 
-noremap ]e :cnext<CR>
-noremap [e :cprev<CR>
+nnoremap ]e :cnext<CR>
+nnoremap [e :cprev<CR>
 
-noremap ]l :lnext<CR>
-noremap [l :lprev<CR>
+nnoremap ]l :lnext<CR>
+nnoremap [l :lprev<CR>
 
 tnoremap <kHome> <Home>
 tnoremap <kEnd> <End>
 
-if &diff
-	nnoremap ;; :qa<CR>
-endif
-
 function! s:saveAs(fname, bang)
 	let a:dir = fnamemodify(a:fname, ':p:h')
 	call system("mkdir -p ".a:dir)
-	if a:bang | exe "w ".a:fname | else | exe "w! ".a:fname | endif
+	if a:bang | exe "w! ".a:fname | else | exe "w ".a:fname | endif
 	exe "e ".a:fname
 	bd #
 	call system("rm ".bufname('#'))
 endfunction
 
-command! -nargs=1 -complete=file Saveas call <SID>saveAs(<f-args>, <bang>0)
+command! -nargs=1 -complete=file -bang Saveas call <SID>saveAs(<f-args>, <bang>0)
 
 function! s:mark()
 	let s:mark_cursor_pos = getcurpos()
@@ -159,6 +157,11 @@ endfunction
 cnoreabbrev db call <SID>jumpAndClose(0)
 cnoreabbrev dbf call <SID>jumpAndClose(2)
 cnoreabbrev wd call <SID>jumpAndClose(1)
+
+function! s:openedInCurrentTab(bufname)
+	let a:bufnr = bufnr(a:bufname)
+	return index(tabpagebuflist(), a:bufnr) > 0
+endfunction
 
 function! s:iunmapMoving(key)
 	exe "inoremap ".a:key."<Left> ".a:key."<Left>"
@@ -249,6 +252,67 @@ command! ShowGdiff call <SID>openGDiffInTab()
 " PLUGINS
 execute pathogen#infect()
 
+if !&diff
+	nnoremap ;; :qa<CR>
+
+	" Tagbar
+	let g:tagbar_width = 30
+	let g:tagbar_singleclick = 1
+	let g:window_right_pane_threshold = 115
+
+	" Mundo
+	let g:mundo_right = 1
+
+	let g:right_pane_content = 'tagbar'
+
+	function! s:toggleRightPane()
+		if &columns > g:window_right_pane_threshold
+			if g:right_pane_content == 'tagbar'
+				TagbarOpen
+			elseif g:right_pane_content == 'mundo'
+				MundoShow
+			endif
+		else
+			TagbarClose
+			MundoHide
+		endif
+	endfunction
+
+	autocmd VimEnter * call <SID>toggleRightPane()
+	autocmd VimResized * call <SID>toggleRightPane()
+
+	function! s:swapMundoTagbar()
+		let a:tagbar_buffer = filter(getbufinfo(),
+					\ "v:val['name'] =~ 'Tagbar' && <SID>openedInCurrentTab(v:val['name'])")
+		if len(a:tagbar_buffer) > 0
+			TagbarClose
+			MundoShow
+			let g:right_pane_content = 'mundo'
+		else
+			MundoHide
+			TagbarOpen
+			let g:right_pane_content = 'tagbar'
+		endif
+	endfunction
+
+	nnoremap <silent> <C-u> :call <SID>swapMundoTagbar()<CR>
+
+	" NERDTree
+	let g:NERDTreeMouseMode = 3 " open with single click
+	let g:NERDTreeShowHidden = 1
+
+	autocmd VimEnter * NERDTree | vertical resize 25 | wincmd p
+	nnoremap <C-n> :NERDTreeToggle<CR>
+
+	" Signify
+	autocmd BufEnter * highlight SignifySignAdd ctermbg=235 ctermfg=green
+	autocmd BufEnter * highlight SignifySignDelete ctermbg=235 ctermfg=blue
+	autocmd BufEnter * highlight SignifySignChange ctermbg=235 ctermfg=lightgray
+	let g:signify_sign_change = '~'
+else
+	set signcolumn=no
+endif
+
 " Airline
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -277,15 +341,6 @@ let g:ctrlp_map = '<C-p>'
 let g:ctrlp_cmd = 'CtrlPBuffer'
 let g:ctrlp_dotfiles = 1
 
-" NERDTree
-if !&diff
-	let g:NERDTreeMouseMode = 3 " open with single click
-	let g:NERDTreeShowHidden = 1
-
-	autocmd VimEnter * NERDTree | vertical resize 25 | wincmd p
-	noremap <C-n> :NERDTreeToggle<CR>
-endif
-
 " NERDCommenter
 let g:NERDSpaceDelims = 1
 
@@ -302,26 +357,7 @@ let g:UltiSnipsJumpForwardTrigger="<Tab>"
 let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 
 " emmet
-noremap <C-u> <C-e>
 let g:user_emmet_leader_key = '<C-e>'
-
-" Tagbar
-if !&diff
-	let g:tagbar_width = 30
-	let g:tagbar_singleclick = 1
-	let g:window_tagbar_threshold = 115
-
-	function! s:toggleTagbar()
-		if &columns > g:window_tagbar_threshold
-			TagbarOpen
-		else
-			TagbarClose
-		endif
-	endfunction
-
-	autocmd VimEnter * call <SID>toggleTagbar()
-	autocmd VimResized * call <SID>toggleTagbar()
-endif
 
 " MatchTagAlways
 let g:mta_filetypes = {
@@ -343,16 +379,6 @@ let g:DevIconsEnableFoldersOpenClose = 1
 if exists('g:loaded_webdevicons')
 	call webdevicons#refresh()
 	wincmd p
-endif
-
-" Signify
-if !&diff
-	autocmd BufEnter * highlight SignifySignAdd ctermbg=235 ctermfg=green
-	autocmd BufEnter * highlight SignifySignDelete ctermbg=235 ctermfg=blue
-	autocmd BufEnter * highlight SignifySignChange ctermbg=235 ctermfg=lightgray
-	let g:signify_sign_change = '~'
-else
-	set signcolumn=no
 endif
 
 " YouCompleteMe
