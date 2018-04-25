@@ -15,7 +15,8 @@ set splitbelow
 set splitright
 set nostartofline
 set hidden
-set wildmode=longest,list,full
+set wildmenu
+set wildmode=longest:full,full
 set completeopt=longest,menuone
 set autoindent
 set nohlsearch
@@ -24,6 +25,8 @@ set whichwrap+=[,]
 set backspace=indent,eol,start
 set nofixendofline
 set encoding=utf8
+set display+=lastline
+set breakindent
 set wildignore+=tags,dbdata.vim,session.vim
 
 set fillchars=vert:\ 
