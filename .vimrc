@@ -28,6 +28,7 @@ set encoding=utf8
 set display+=lastline
 set breakindent
 set wildignore+=tags,dbdata.vim,session.vim
+set virtualedit=block
 
 set fillchars=vert:\ 
 set listchars=tab:⇢\ ,nbsp:•
