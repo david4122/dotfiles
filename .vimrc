@@ -27,6 +27,7 @@ set nofixendofline
 set encoding=utf8
 set display+=lastline
 set breakindent
+set breakindentopt+=shift:2
 set wildignore+=tags,dbdata.vim,session.vim
 set virtualedit=block
 
@@ -96,6 +97,7 @@ nnoremap <C-d> :wa<CR>
 nnoremap <C-b> :make %<CR>
 nnoremap <C-Up> <C-e>
 nnoremap <C-Down> <C-y>
+nnoremap <C-j> :ls<CR>:b 
 
 nnoremap ]e :cnext<CR>
 nnoremap [e :cprev<CR>
@@ -105,6 +107,8 @@ nnoremap [l :lprev<CR>
 
 tnoremap <kHome> <Home>
 tnoremap <kEnd> <End>
+
+vnoremap <C-y> "+y
 
 function! s:saveAs(fname, bang)
 	let a:dir = fnamemodify(a:fname, ':p:h')
