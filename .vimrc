@@ -260,9 +260,10 @@ command! ShowGdiff call <SID>openGDiffInTab()
 " PLUGINS
 execute pathogen#infect()
 
-if !&diff
+if &diff
 	nnoremap ;; :qa<CR>
-
+	set signcolumn=no
+else
 	" Tagbar
 	let g:tagbar_width = 30
 	let g:tagbar_singleclick = 1
@@ -317,8 +318,6 @@ if !&diff
 	autocmd BufEnter * highlight SignifySignDelete ctermbg=235 ctermfg=blue
 	autocmd BufEnter * highlight SignifySignChange ctermbg=235 ctermfg=lightgray
 	let g:signify_sign_change = '~'
-else
-	set signcolumn=no
 endif
 
 " Airline
@@ -353,8 +352,8 @@ let g:ctrlp_dotfiles = 1
 let g:NERDSpaceDelims = 1
 
 " VCoolor
-inoremap <kEnter> <C-o>:VCoolor<CR>
-map <kEnter> :VCoolor<CR>
+inoremap <kEnter> <Left><C-o>:VCoolor<CR>
+map <kEnter> <Left>:VCoolor<CR>
 
 " Gdiff
 set diffopt+=vertical
@@ -399,8 +398,8 @@ let g:ycm_collect_identifiers_from_comments_and_strings = 1
 let g:ycm_always_populate_location_list = 1
 let g:airline#extensions#ycm#enabled = 1
 
-inoremap <F7> <C-o>:YcmCompleter FixIt<CR>
-nnoremap <F7> :YcmCompleter FixIt<CR>
+inoremap <C-f> <C-o>:YcmCompleter FixIt<CR>
+nnoremap <C-f> :YcmCompleter FixIt<CR>
 
 " dbext
 if file_readable('dbdata.vim')
