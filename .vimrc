@@ -263,6 +263,7 @@ execute pathogen#infect()
 if &diff
 	nnoremap ;; :qa<CR>
 	set signcolumn=no
+	set g:loaded_youcompleteme = 1
 else
 	" Tagbar
 	let g:tagbar_width = 30
@@ -359,9 +360,12 @@ map <kEnter> <Left>:VCoolor<CR>
 set diffopt+=vertical
 
 " Ultisnips
-let g:UltiSnipsExpandTrigger="<Tab>"
-let g:UltiSnipsJumpForwardTrigger="<Tab>"
-let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
+let g:UltiSnipsExpandTrigger = "<Tab>"
+let g:UltiSnipsJumpForwardTrigger = "<Tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<S-Tab>"
+if !exists('UltiSnipsSnippetDirectories')
+	let g:UltiSnipsSnippetDirectories = ['UltiSnips', '~/.vim/UltiSnips']
+endif
 
 " emmet
 let g:user_emmet_leader_key = '<C-e>'
@@ -398,7 +402,6 @@ let g:ycm_collect_identifiers_from_comments_and_strings = 1
 let g:ycm_always_populate_location_list = 1
 let g:airline#extensions#ycm#enabled = 1
 
-inoremap <C-f> <C-o>:YcmCompleter FixIt<CR>
 nnoremap <C-f> :YcmCompleter FixIt<CR>
 
 " dbext
