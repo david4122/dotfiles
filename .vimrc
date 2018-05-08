@@ -110,17 +110,6 @@ tnoremap <kEnd> <End>
 
 vnoremap <C-y> "+y
 
-function! s:saveAs(fname, bang)
-	let a:dir = fnamemodify(a:fname, ':p:h')
-	call system("mkdir -p ".a:dir)
-	if a:bang | exe "w! ".a:fname | else | exe "w ".a:fname | endif
-	exe "e ".a:fname
-	bd #
-	call system("rm ".bufname('#'))
-endfunction
-
-command! -nargs=1 -complete=file -bang Saveas call <SID>saveAs(<f-args>, <bang>0)
-
 function! s:mark()
 	let s:mark_cursor_pos = getcurpos()
 	let s:mark_top_line = line('w0')
