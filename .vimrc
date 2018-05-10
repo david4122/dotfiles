@@ -405,6 +405,10 @@ let g:dbext_default_history_file = '~/.dbext_history'
 autocmd BufEnter Result setlocal nobuflisted
 autocmd BufEnter Result set winfixheight
 
+" Syntastic
+" disable for Java files
+let g:syntastic_java_checkers = []
+
 set background=dark
 " Fix problems with Tagbar
 autocmd VimEnter * AirlineRefresh

@@ -46,9 +46,6 @@
 [submodule ".vim/bundle/vim-fugitive"]
 	path = .vim/bundle/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive
-[submodule ".vim/bundle/vim-multiuser"]
-	path = .vim/bundle/vim-multiuser
-	url = https://github.com/emgram769/vim-multiuser
 [submodule ".vim/bundle/vim-signify"]
 	path = .vim/bundle/vim-signify
 	url = https://github.com/mhinz/vim-signify
@@ -70,3 +67,9 @@
 [submodule ".vim/bundle/smarty.vim"]
 	path = .vim/bundle/smarty.vim
 	url = https://github.com/blueyed/smarty.vim.git
+[submodule ".vim/bundle/vim-obsession"]
+	path = .vim/bundle/vim-obsession
+	url = https://github.com/tpope/vim-obsession
+[submodule ".vim/bundle/syntastic"]
+	path = .vim/bundle/syntastic
+	url = https://github.com/scrooloose/syntastic
