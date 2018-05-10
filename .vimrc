@@ -110,6 +110,8 @@ tnoremap <kEnd> <End>
 
 vnoremap <C-y> "+y
 
+command CpPath let @+ = fnamemodify(@%, ':h')
+
 function! s:mark()
 	let s:mark_cursor_pos = getcurpos()
 	let s:mark_top_line = line('w0')
@@ -252,7 +254,7 @@ execute pathogen#infect()
 if &diff
 	nnoremap ;; :qa<CR>
 	set signcolumn=no
-	set g:loaded_youcompleteme = 1
+	let g:loaded_youcompleteme = 1
 else
 	" Tagbar
 	let g:tagbar_width = 30
