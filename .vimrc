@@ -159,7 +159,7 @@ cnoreabbrev wd call <SID>jumpAndClose(1)
 
 function! s:openedInCurrentTab(bufname)
 	let a:bufnr = bufnr(a:bufname)
-	return index(tabpagebuflist(), a:bufnr) > 0
+	return index(tabpagebuflist(), a:bufnr) >= 0
 endfunction
 
 function! s:iunmapMoving(key)
