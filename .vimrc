@@ -75,8 +75,6 @@ highlight Method cterm=italic
 autocmd BufEnter *.php compiler! php
 autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
 
-autocmd TerminalOpen * set nobuflisted
-
 inoremap <S-Left> <C-o>gT
 inoremap <S-Right> <C-o>gt
 inoremap <A-Left> <C-o>:bp<CR>
@@ -105,8 +103,12 @@ nnoremap [e :cprev<CR>
 nnoremap ]l :lnext<CR>
 nnoremap [l :lprev<CR>
 
-tnoremap <kHome> <Home>
-tnoremap <kEnd> <End>
+if has('terminal')
+	autocmd TerminalOpen * set nobuflisted
+
+	tnoremap <kHome> <Home>
+	tnoremap <kEnd> <End>
+endif
 
 vnoremap <C-y> "+y
 
@@ -261,8 +263,10 @@ else
 	let g:tagbar_singleclick = 1
 	let g:window_right_pane_threshold = 115
 
-	" Mundo
-	let g:mundo_right = 1
+	" Undotree
+	let g:undotree_WindowLayout = 3
+	let g:undotree_SplitWidth = 40
+	let g:undotree_SetFocusWhenToggle = 1
 
 	let g:right_pane_content = 'tagbar'
 
@@ -270,33 +274,33 @@ else
 		if &columns > g:window_right_pane_threshold
 			if g:right_pane_content == 'tagbar'
 				TagbarOpen
-			elseif g:right_pane_content == 'mundo'
-				MundoShow
+			elseif g:right_pane_content == 'undotree'
+				UndotreeShow
 			endif
 		else
 			TagbarClose
-			MundoHide
+			UndotreeHide
 		endif
 	endfunction
 
 	autocmd VimEnter * call <SID>toggleRightPane()
 	autocmd VimResized * call <SID>toggleRightPane()
 
-	function! s:swapMundoTagbar()
+	function! s:swapUndotreeTagbar()
 		let a:tagbar_buffer = filter(getbufinfo(),
 					\ "v:val['name'] =~ 'Tagbar' && <SID>openedInCurrentTab(v:val['name'])")
 		if len(a:tagbar_buffer) > 0
 			TagbarClose
-			MundoShow
-			let g:right_pane_content = 'mundo'
+			UndotreeShow
+			let g:right_pane_content = 'undotree'
 		else
-			MundoHide
+			UndotreeHide
 			TagbarOpen
 			let g:right_pane_content = 'tagbar'
 		endif
 	endfunction
 
-	nnoremap <silent> <C-u> :call <SID>swapMundoTagbar()<CR>
+	nnoremap <silent> <C-u> :call <SID>swapUndotreeTagbar()<CR>
 
 	" NERDTree
 	let g:NERDTreeMouseMode = 3 " open with single click
