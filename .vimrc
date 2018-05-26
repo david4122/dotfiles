@@ -30,6 +30,7 @@ set breakindent
 set breakindentopt+=shift:2
 set wildignore+=tags,dbdata.vim,session.vim
 set virtualedit=block
+set synmaxcol=0
 
 set fillchars=vert:\ 
 set listchars=tab:⇢\ ,nbsp:•
@@ -207,8 +208,19 @@ for q in g:quotes
 	call <SID>iunmapMoving(q)
 endfor
 
-function! s:inQuotesOrBrackets()
-	let a:chrs = matchstr(getline('.'), '.\%'.(col('.')).'c.')
+function! s:inQuotesOrBrackets(multiline)
+	if a:multiline
+		let a:chrs = matchstr(
+					\ getline(line('.')-1)."\n".getline('.')."\n".getline(line('.')+1),
+					\ '.\s*\n\s\+\n\s*.')
+		let g:debug = a:chrs
+		let a:chrs = substitute(a:chrs, '[ \t\n]', '', 'g')
+		if strlen(a:chrs) == 0
+			return 0
+		endif
+	else
+		let a:chrs = matchstr(getline('.'), '.\%'.(col('.')).'c.')
+	endif
 	return get(g:closing, nr2char(strgetchar(a:chrs, 0)), '-')
 				\ == nr2char(strgetchar(a:chrs, 1))
 				\ || (strgetchar(a:chrs, 0) == strgetchar(a:chrs, 1)
@@ -216,8 +228,10 @@ function! s:inQuotesOrBrackets()
 endfunction
 
 function! s:removePairs()
-	if <SID>inQuotesOrBrackets()
+	if <SID>inQuotesOrBrackets(0)
 		return "\<Del>\<BS>"
+	elseif <SID>inQuotesOrBrackets(1)
+		return "\<C-u>\<BS>\<Del>"
 	else
 		return "\<BS>"
 	endif
@@ -226,7 +240,7 @@ endfunction
 inoremap <expr> <BS> <SID>removePairs()
 
 function! s:insertBlock()
-	if <SID>inQuotesOrBrackets()
+	if <SID>inQuotesOrBrackets(0)
 		return "\<CR>\<C-o>O"
 	else
 		return "\<CR>"
