@@ -28,7 +28,7 @@ set encoding=utf8
 set display+=lastline
 set breakindent
 set breakindentopt+=shift:2
-set wildignore+=tags,dbdata.vim,session.vim
+set wildignore+=tags,dbdata.vim,session.vim,*.log
 set virtualedit=block
 
 set fillchars=vert:\ 
