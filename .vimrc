@@ -231,7 +231,7 @@ function! s:removePairs()
 	if <SID>inQuotesOrBrackets(0)
 		return "\<Del>\<BS>"
 	elseif <SID>inQuotesOrBrackets(1)
-		return "\<C-u>\<BS>\<Del>"
+		return "\<Down>\<C-o>V\<Up>\<Up>J\<BS>"
 	else
 		return "\<BS>"
 	endif
