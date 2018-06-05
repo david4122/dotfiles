@@ -427,6 +427,14 @@ autocmd BufEnter Result set winfixheight
 " disable for Java files
 let g:syntastic_java_checkers = []
 
+" Promptline setup
+let g:promptline_preset = {
+	\'a': ['\u@\h'],
+	\'b': ['\t'],
+	\'c': ['\w'],
+	\'y': [promptline#slices#python_virtualenv(), promptline#slices#vcs_branch()],
+	\'warn': [ promptline#slices#last_exit_code() ]}
+
 set background=dark
 " Fix problems with Tagbar
 autocmd VimEnter * AirlineRefresh
