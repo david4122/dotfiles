@@ -1,0 +1,7 @@
+alias la='ls -laFh --color'
+alias ll='ls -laFh --color=always | less -R'
+alias c='clear'
+alias dlsong='youtube-dl --extract-audio --audio-format m4a --output "%(title)s.%(ext)s" --no-playlist'
+alias grep='grep --color=always -n'
+alias ..='cd ..'
+alias ...='cd ../..'
