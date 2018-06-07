@@ -113,7 +113,7 @@ endif
 
 vnoremap <C-y> "+y
 
-command CpPath let @+ = fnamemodify(@%, ':h')
+command! CpPath let @+ = fnamemodify(@%, ':h')
 
 function! s:mark()
 	let s:mark_cursor_pos = getcurpos()
@@ -429,10 +429,10 @@ let g:syntastic_java_checkers = []
 
 " Promptline setup
 let g:promptline_preset = {
-	\'a': ['\u@\h'],
+	\'a': ['\u@\h', promptline#slices#python_virtualenv()],
 	\'b': ['\t'],
 	\'c': ['\w'],
-	\'y': [promptline#slices#python_virtualenv(), promptline#slices#vcs_branch()],
+	\'y': [promptline#slices#vcs_branch()],
 	\'warn': [ promptline#slices#last_exit_code() ]}
 
 set background=dark
