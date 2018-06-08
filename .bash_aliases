@@ -5,3 +5,4 @@ alias dlsong='youtube-dl --extract-audio --audio-format m4a --output "%(title)s.
 alias grep='grep --color=always -n'
 alias ..='cd ..'
 alias ...='cd ../..'
+alias fixpermissions='find -type d -exec chmod 755 {} \; && find -type f -exec chmod 644 {} \;'

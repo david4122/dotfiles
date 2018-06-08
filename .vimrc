@@ -275,7 +275,6 @@ else
 	" Tagbar
 	let g:tagbar_width = 30
 	let g:tagbar_singleclick = 1
-	let g:window_right_pane_threshold = 115
 
 	" Undotree
 	let g:undotree_WindowLayout = 3
@@ -283,6 +282,7 @@ else
 	let g:undotree_SetFocusWhenToggle = 1
 
 	let g:right_pane_content = 'tagbar'
+	let g:window_right_pane_threshold = 130
 
 	function! s:toggleRightPane()
 		if &columns > g:window_right_pane_threshold
@@ -432,8 +432,8 @@ let g:promptline_preset = {
 	\'a': ['\u@\h', promptline#slices#python_virtualenv()],
 	\'b': ['\t'],
 	\'c': ['\w'],
-	\'y': [promptline#slices#vcs_branch()],
-	\'warn': [ promptline#slices#last_exit_code() ]}
+	\'y': [promptline#slices#vcs_branch(), promptline#slices#jobs()],
+	\'warn': [promptline#slices#last_exit_code()]}
 
 set background=dark
 " Fix problems with Tagbar
