@@ -431,9 +431,9 @@ let g:syntastic_java_checkers = []
 " Promptline setup
 let g:promptline_preset = {
 	\'a': ['\u@\h', promptline#slices#python_virtualenv()],
-	\'b': ['\t'],
+	\'b': ['\t', promptline#slices#jobs()],
 	\'c': ['\w'],
-	\'y': [promptline#slices#vcs_branch(), promptline#slices#jobs()],
+	\'y': [promptline#slices#vcs_branch()],
 	\'warn': [promptline#slices#last_exit_code()]}
 
 set background=dark
