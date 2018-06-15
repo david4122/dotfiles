@@ -272,6 +272,7 @@ if &diff || (exists('g:quick_mode') && g:quick_mode)
 	set signcolumn=no
 	let g:loaded_youcompleteme = 1
 	let g:loaded_signify = 1
+	let g:loaded_syntastic_plugin = 1
 else
 	" Tagbar
 	let g:tagbar_width = 30
@@ -329,6 +330,22 @@ else
 	autocmd BufEnter * highlight SignifySignDelete ctermbg=235 ctermfg=blue
 	autocmd BufEnter * highlight SignifySignChange ctermbg=235 ctermfg=lightgray
 	let g:signify_sign_change = '~'
+
+	" Syntastic
+	" disable for Java files
+	let g:syntastic_java_checkers = []
+
+	" YouCompleteMe
+	let ycm_key_list_select_completion = ['<Down>', '`']
+	let ycm_key_list_previous_completion = ['<Up>', '~']
+	let g:ycm_add_preview_to_completeopt = 1
+	let g:ycm_autoclose_preview_window_after_insertion = 1
+	let g:ycm_complete_in_strings = 1
+	let g:ycm_collect_identifiers_from_comments_and_strings = 1
+	let g:ycm_always_populate_location_list = 1
+	let g:airline#extensions#ycm#enabled = 1
+
+	nnoremap <C-f> :YcmCompleter FixIt<CR>
 endif
 
 " Airline
@@ -402,18 +419,6 @@ if exists('g:loaded_webdevicons')
 	wincmd p
 endif
 
-" YouCompleteMe
-let ycm_key_list_select_completion = ['<Down>', '`']
-let ycm_key_list_previous_completion = ['<Up>', '~']
-let g:ycm_add_preview_to_completeopt = 1
-let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_complete_in_strings = 1
-let g:ycm_collect_identifiers_from_comments_and_strings = 1
-let g:ycm_always_populate_location_list = 1
-let g:airline#extensions#ycm#enabled = 1
-
-nnoremap <C-f> :YcmCompleter FixIt<CR>
-
 " dbext
 if file_readable('dbdata.vim')
 	let g:dbext_default_profile = 'local'
@@ -423,10 +428,6 @@ endif
 let g:dbext_default_history_file = '~/.dbext_history'
 autocmd BufEnter Result setlocal nobuflisted
 autocmd BufEnter Result set winfixheight
-
-" Syntastic
-" disable for Java files
-let g:syntastic_java_checkers = []
 
 " Promptline setup
 let g:promptline_preset = {
