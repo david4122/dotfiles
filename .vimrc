@@ -267,10 +267,11 @@ command! ShowGdiff call <SID>openGDiffInTab()
 " PLUGINS
 execute pathogen#infect()
 
-if &diff
+if &diff || (exists('g:quick_mode') && g:quick_mode)
 	nnoremap ;; :qa<CR>
 	set signcolumn=no
 	let g:loaded_youcompleteme = 1
+	let g:loaded_signify = 1
 else
 	" Tagbar
 	let g:tagbar_width = 30
