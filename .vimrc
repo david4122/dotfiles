@@ -283,14 +283,14 @@ else
 	let g:undotree_SplitWidth = 40
 	let g:undotree_SetFocusWhenToggle = 1
 
-	let g:right_pane_content = 'tagbar'
+	let t:right_pane_content = 'tagbar'
 	let g:window_right_pane_threshold = 130
 
 	function! s:toggleRightPane()
 		if &columns > g:window_right_pane_threshold
-			if g:right_pane_content == 'tagbar'
+			if t:right_pane_content == 'tagbar'
 				TagbarOpen
-			elseif g:right_pane_content == 'undotree'
+			elseif t:right_pane_content == 'undotree'
 				UndotreeShow
 			endif
 		else
@@ -308,11 +308,11 @@ else
 		if len(a:tagbar_buffer) > 0
 			TagbarClose
 			UndotreeShow
-			let g:right_pane_content = 'undotree'
+			let t:right_pane_content = 'undotree'
 		else
 			UndotreeHide
 			TagbarOpen
-			let g:right_pane_content = 'tagbar'
+			let t:right_pane_content = 'tagbar'
 		endif
 	endfunction
 
