@@ -105,7 +105,9 @@ nnoremap ]l :lnext<CR>
 nnoremap [l :lprev<CR>
 
 if has('terminal')
-	autocmd TerminalOpen * set nobuflisted
+	if exists('##TerminalOpen')
+		autocmd TerminalOpen * set nobuflisted
+	endif
 
 	tnoremap <kHome> <Home>
 	tnoremap <kEnd> <End>
