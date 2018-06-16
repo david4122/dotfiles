@@ -31,9 +31,13 @@ set breakindentopt+=shift:2
 set wildignore+=tags,dbdata.vim,session.vim,*.log
 set virtualedit=block
 set synmaxcol=0
+set linebreak
+set ignorecase
+set smartcase
+set ttymouse=sgr
 
 set fillchars=vert:\ 
-set listchars=tab:⇢\ ,nbsp:•
+set listchars=tab:⇢\ ,nbsp:•,eol:¬
 " set listchars=tab:⟶\ 
 set list
 
@@ -62,6 +66,7 @@ highlight javaAnnotation ctermfg=blue
 highlight Folded ctermbg=234 ctermfg=121
 highlight FoldColumn ctermbg=236 ctermfg=252
 highlight SpecialKey ctermfg=237
+highlight NonText ctermfg=239
 highlight VertSplit cterm=none ctermbg=237
 highlight DiffDelete ctermbg=235
 highlight DiffText cterm=none ctermbg=130 ctermfg=white
@@ -276,6 +281,8 @@ if &diff || (exists('g:quick_mode') && g:quick_mode)
 	let g:loaded_signify = 1
 	let g:loaded_syntastic_plugin = 1
 else
+	set relativenumber
+
 	" Tagbar
 	let g:tagbar_width = 30
 	let g:tagbar_singleclick = 1
