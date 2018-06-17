@@ -15,12 +15,12 @@ echo "Configuring .bashrc..."
 cat <<EOF >> $HOME/.bashrc
 [[ \$TERM =~ '256color' ]] && [ -f ~/prompt.sh ] && source ~/prompt.sh
 
-export LD_PRELOAD="$HOME/dotfiles/stderred/build/libstderred.so\${LS_PRELOAD:+:\$LD_PRELOAD}"
+export LD_PRELOAD="$(pwd)/stderred/build/libstderred.so\${LS_PRELOAD:+:\$LD_PRELOAD}"
 export STDERRED_ESC_CODE=\$(printf "\\e[38;2;255;85;85m")
 EOF
 
 [ -f $HOME/.fzf.bash ] && mv $HOME/.fzf.bash $HOME/dotfiles_backup
-(cd fzf && ./install) || exit 1
+(cd fzf && ./install --all) || exit 1
 ln -s $(pwd)/fzf $HOME
 rm $HOME/.fzf.bash
 
@@ -34,6 +34,9 @@ for file in ${files[@]}; do
 	echo "Linking $file..."
 	ln -s $(pwd)/$file $HOME
 done
+
+[ -f $HOME/prompt.sh ] && mv $HOME/prompt.sh $HOME/dotfiles_backup
+vim -c "PromptlineSnapshot ~/prompt.sh airline" -c "q"
 
 echo "All done"
 rmdir $HOME/dotfiles_backup 2>/dev/null

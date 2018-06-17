@@ -35,6 +35,8 @@ set linebreak
 set ignorecase
 set smartcase
 set ttymouse=sgr
+set smarttab
+set formatoptions+=j
 
 set fillchars=vert:\ 
 set listchars=tab:⇢\ ,nbsp:•,eol:¬
@@ -50,6 +52,8 @@ set undofile
 syntax on
 filetype plugin on
 filetype indent on
+
+runtime macros/matchit.vim
 
 highlight String ctermfg=142
 highlight Statement ctermfg=darkgreen

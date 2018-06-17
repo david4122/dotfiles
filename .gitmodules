@@ -10,9 +10,6 @@
 [submodule ".vim/bundle/emmet-vim"]
 	path = .vim/bundle/emmet-vim
 	url = https://github.com/mattn/emmet-vim
-[submodule ".vim/bundle/matchit.zip"]
-	path = .vim/bundle/matchit.zip
-	url = https://github.com/vim-scripts/matchit.zip
 [submodule ".vim/bundle/matchtagalways"]
 	path = .vim/bundle/matchtagalways
 	url = https://github.com/valloric/matchtagalways
