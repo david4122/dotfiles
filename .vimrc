@@ -37,6 +37,10 @@ set smartcase
 set ttymouse=sgr
 set smarttab
 set formatoptions+=j
+set showcmd
+set ttimeoutlen=50
+set scrolloff=2
+set sidescrolloff=5
 
 set fillchars=vert:\ 
 set listchars=tab:⇢\ ,nbsp:•,eol:¬
