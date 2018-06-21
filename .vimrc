@@ -28,7 +28,7 @@ set encoding=utf8
 set display+=lastline
 set breakindent
 set breakindentopt+=shift:2
-set wildignore+=tags,dbdata.vim,session.vim,*.log
+set wildignore+=tags,dbdata.vim,Session.vim,*.log
 set virtualedit=block
 set synmaxcol=0
 set linebreak
@@ -47,10 +47,11 @@ set listchars=tab:⇢\ ,nbsp:•,eol:¬
 " set listchars=tab:⟶\ 
 set list
 
-if !isdirectory('~/.vim/undo')
-	call system('mkdir ~/.vim/undo')
+let s:undo_dir = '~/.vim/undo'
+if !isdirectory(s:undo_dir)
+	call system(s:undo_dir)
 endif
-set undodir=~/.vim/undo
+let &undodir = s:undo_dir
 set undofile
 
 syntax on
@@ -437,7 +438,7 @@ if exists('g:loaded_webdevicons')
 endif
 
 " dbext
-if file_readable('dbdata.vim')
+if filereadable('dbdata.vim')
 	let g:dbext_default_profile = 'local'
 	let db_data = readfile('dbdata.vim')
 	let g:dbext_default_profile_local = join(db_data, ':')
@@ -457,3 +458,7 @@ let g:promptline_preset = {
 set background=dark
 " Fix problems with Tagbar
 autocmd VimEnter * AirlineRefresh
+
+if filereadable('~/.vimrc.local')
+	source ~/.vimrc.local
+endif
