@@ -20,8 +20,7 @@ export STDERRED_ESC_CODE=\$(printf "\\e[38;2;255;85;85m")
 EOF
 
 [ -f $HOME/.fzf.bash ] && mv $HOME/.fzf.bash $HOME/dotfiles_backup
-(cd fzf && ./install --all) || exit 1
-ln -s $(pwd)/fzf $HOME
+(cd .vim/bundle/fzf && ./install --all) || exit 1
 rm $HOME/.fzf.bash
 
 files=(.vimrc .fzf.bash .tmux.conf .vim .tmux)

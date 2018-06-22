@@ -341,7 +341,6 @@ else
 	let g:NERDTreeShowHidden = 1
 
 	autocmd VimEnter * NERDTree | vertical resize 25 | wincmd p
-	nnoremap <C-n> :NERDTreeToggle<CR>
 
 	" Signify
 	autocmd BufEnter * highlight SignifySignAdd ctermbg=235 ctermfg=green
@@ -388,11 +387,6 @@ let g:airline_symbols.paste = '∥'
 let g:airline_symbols.spell = 'Ꞩ'
 let g:airline_symbols.notexists = '∄'
 let g:airline_symbols.whitespace = 'Ξ'
-
-" CtrlP
-let g:ctrlp_map = '<C-p>'
-let g:ctrlp_cmd = 'CtrlPBuffer'
-let g:ctrlp_dotfiles = 1
 
 " NERDCommenter
 let g:NERDSpaceDelims = 1
@@ -454,6 +448,10 @@ let g:promptline_preset = {
 	\'c': ['\w'],
 	\'y': [promptline#slices#vcs_branch()],
 	\'warn': [promptline#slices#last_exit_code()]}
+
+" FZF
+nnoremap <C-p> :Buffers<CR>
+nnoremap <C-n> :Files<CR>
 
 set background=dark
 " Fix problems with Tagbar
