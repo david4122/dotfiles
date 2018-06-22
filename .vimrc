@@ -426,7 +426,7 @@ let g:mta_filetypes = {
 
 let g:mta_use_matchparen_group = 0
 let g:mta_set_default_matchtag_color = 0
-highlight MatchTag cterm=underline ctermbg=none ctermfg=none
+highlight MatchTag cterm=underline,bold ctermbg=none ctermfg=none
 
 " WebDevIcons
 let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
