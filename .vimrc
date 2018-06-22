@@ -47,9 +47,9 @@ set listchars=tab:⇢\ ,nbsp:•,eol:¬
 " set listchars=tab:⟶\ 
 set list
 
-let s:undo_dir = '~/.vim/undo'
+let s:undo_dir = $HOME.'/.vim/undo'
 if !isdirectory(s:undo_dir)
-	call system(s:undo_dir)
+	call system('mkdir '.s:undo_dir)
 endif
 let &undodir = s:undo_dir
 set undofile
