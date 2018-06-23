@@ -42,7 +42,6 @@ set ttimeoutlen=50
 set scrolloff=2
 set sidescrolloff=5
 
-set fillchars=vert:\ 
 set listchars=tab:⇢\ ,nbsp:•,eol:¬
 " set listchars=tab:⟶\ 
 set list
@@ -288,6 +287,9 @@ execute pathogen#infect()
 " disable airline if term doesn'y support colors'
 if system('tput colors') !~ '256'
 	let g:loaded_airline = 1
+	let g:webdevicons_enable = 0
+else
+	set fillchars=vert:\ 
 endif
 
 if &diff || (exists('g:quick_mode') && g:quick_mode)
@@ -434,7 +436,7 @@ highlight MatchTag cterm=underline,bold ctermbg=none ctermfg=none
 let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 let g:DevIconsEnableFoldersOpenClose = 1
-if exists('g:loaded_webdevicons')
+if system('tput colors') =~ '256' && exists('g:loaded_webdevicons')
 	call webdevicons#refresh()
 	wincmd p
 endif
@@ -462,8 +464,10 @@ nnoremap <C-p> :Buffers<CR>
 nnoremap <C-n> :Files<CR>
 
 set background=dark
-" Fix problems with Tagbar
-autocmd VimEnter * AirlineRefresh
+if system('tput colors') =~ '256'
+	" Fix problems with Tagbar
+	autocmd VimEnter * AirlineRefresh
+endif
 
 if filereadable('~/.vimrc.local')
 	source ~/.vimrc.local
