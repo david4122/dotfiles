@@ -90,6 +90,8 @@ highlight Method cterm=italic
 autocmd BufEnter *.php compiler! php
 autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
 
+autocmd BufRead anacrontab setf crontab
+
 inoremap <S-Left> <C-o>gT
 inoremap <S-Right> <C-o>gt
 inoremap <A-Left> <C-o>:bp<CR>
@@ -282,6 +284,11 @@ command! ShowGdiff call <SID>openGDiffInTab()
 
 " PLUGINS
 execute pathogen#infect()
+
+" disable airline if term doesn'y support colors'
+if system('tput colors') !~ '256'
+	let g:loaded_airline = 1
+endif
 
 if &diff || (exists('g:quick_mode') && g:quick_mode)
 	nnoremap ;; :qa<CR>
