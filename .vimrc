@@ -110,7 +110,7 @@ nnoremap <C-d> :wa<CR>
 nnoremap <C-b> :make %<CR>
 nnoremap <C-Up> <C-e>
 nnoremap <C-Down> <C-y>
-nnoremap <C-j> :ls<CR>:b 
+nnoremap <C-j> :Tags<CR>
 
 nnoremap ]e :cnext<CR>
 nnoremap [e :cprev<CR>
@@ -245,9 +245,9 @@ endfunction
 
 function! s:removePairs()
 	if <SID>inQuotesOrBrackets(0)
-		return "\<Del>\<BS>"
+		return "\<DEL>\<BS>"
 	elseif <SID>inQuotesOrBrackets(1)
-		return "\<Down>\<C-o>V\<Up>\<Up>J\<BS>"
+		return "\<ESC>\<Up>JJi\<BS>"
 	else
 		return "\<BS>"
 	endif
@@ -376,13 +376,13 @@ if !exists('g:airline_symbols')
 endif
 let g:airline_symbols.space = "\ua0"
 let g:airline_symbols.crypt = '🔒'
-let g:airline_symbols.linenr = '␊'
-let g:airline_symbols.linenr = '␤'
+" let g:airline_symbols.linenr = '␊'
+" let g:airline_symbols.linenr = '␤'
 let g:airline_symbols.linenr = '¶'
 let g:airline_symbols.maxlinenr = '☰'
 let g:airline_symbols.branch = '⎇'
-let g:airline_symbols.paste = 'ρ'
-let g:airline_symbols.paste = 'Þ'
+" let g:airline_symbols.paste = 'ρ'
+" let g:airline_symbols.paste = 'Þ'
 let g:airline_symbols.paste = '∥'
 let g:airline_symbols.spell = 'Ꞩ'
 let g:airline_symbols.notexists = '∄'
@@ -393,7 +393,7 @@ let g:NERDSpaceDelims = 1
 
 " VCoolor
 inoremap <kEnter> <Left><C-o>:VCoolor<CR>
-map <kEnter> <Left>:VCoolor<CR>
+nnoremap <kEnter> <Left>:VCoolor<CR>
 
 " Gdiff
 set diffopt+=vertical
@@ -437,15 +437,15 @@ if filereadable('dbdata.vim')
 	let db_data = readfile('dbdata.vim')
 	let g:dbext_default_profile_local = join(db_data, ':')
 endif
-let g:dbext_default_history_file = '~/.dbext_history'
+let g:dbext_default_history_file = '~/.vim/dbext_history'
 autocmd BufEnter Result setlocal nobuflisted
 autocmd BufEnter Result set winfixheight
 
-" Promptline setup
+" Promptline
 let g:promptline_preset = {
 	\'a': ['\u@\h', promptline#slices#python_virtualenv()],
 	\'b': ['\t', promptline#slices#jobs()],
-	\'c': ['\w'],
+	\'c': [promptline#slices#cwd({'dir_limit': 10})],
 	\'y': [promptline#slices#vcs_branch()],
 	\'warn': [promptline#slices#last_exit_code()]}
 
