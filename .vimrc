@@ -296,6 +296,7 @@ if &diff || (exists('g:quick_mode') && g:quick_mode)
 	let g:loaded_youcompleteme = 1
 	let g:loaded_signify = 1
 	let g:loaded_syntastic_plugin = 1
+	let g:is_vdebug_loaded = 1
 else
 	set relativenumber
 

@@ -13,4 +13,3 @@ complete -F _fzf_path_completion -o bashdefault la
 # Key bindings
 # ------------
 source "$HOME/.vim/bundle/fzf/shell/key-bindings.bash"
-
