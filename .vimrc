@@ -270,6 +270,23 @@ endfunction
 
 command! ShowGdiff call <SID>openGDiffInTab()
 
+" Automatically restore view in the window
+function s:saveWinView()
+	if !exists('g:win_views')
+		let g:win_views = {}
+	endif
+	let g:win_views[bufnr('%')] = winsaveview()
+endfunction
+
+function s:restoreWinView()
+	if !exists('g:win_views') || !exists('g:win_views['.bufnr('%').']')
+		return
+	endif
+	call winrestview(g:win_views[bufnr('%')])
+endfunction
+
+autocmd BufEnter * call <SID>restoreWinView()
+autocmd BufLeave * call <SID>saveWinView()
 
 " PLUGINS
 execute pathogen#infect()
