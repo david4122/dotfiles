@@ -272,17 +272,18 @@ command! ShowGdiff call <SID>openGDiffInTab()
 
 " Automatically restore view in the window
 function s:saveWinView()
-	if !exists('g:win_views')
-		let g:win_views = {}
+	if !exists('w:win_views')
+		let w:win_views = {}
 	endif
-	let g:win_views[bufnr('%')] = winsaveview()
+	let w:win_views[bufnr('%')] = winsaveview()
 endfunction
 
 function s:restoreWinView()
-	if !exists('g:win_views') || !exists('g:win_views['.bufnr('%').']')
-		return
+	if exists('w:win_views') && has_key(w:win_views, bufnr('%'))
+				\ && line('.') == 1 && col('.') == 1
+		call winrestview(w:win_views[bufnr('%')])
+		unlet w:win_views[bufnr('%')]
 	endif
-	call winrestview(g:win_views[bufnr('%')])
 endfunction
 
 autocmd BufEnter * call <SID>restoreWinView()
