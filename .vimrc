@@ -41,6 +41,7 @@ set showcmd
 set ttimeoutlen=50
 set scrolloff=2
 set sidescrolloff=5
+set title
 
 set listchars=tab:⇢\ ,nbsp:•,eol:¬
 " set listchars=tab:⟶\ 
