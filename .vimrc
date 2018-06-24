@@ -132,27 +132,17 @@ vnoremap <C-y> "+y
 
 command! CpPath let @+ = fnamemodify(@%, ':h')
 
-function! s:mark()
-	let s:mark_cursor_pos = getcurpos()
-	let s:mark_top_line = line('w0')
-endfunction
-
-function! s:return()
-	exe "normal! ".s:mark_top_line."Gzt"
-	call setpos('.', s:mark_cursor_pos)
-endfunction
-
 function! BreakLines()
 	let &l:tw = winwidth('%') - 10
-	call <SID>mark()
+	let a:winview = winsaveview()
 	exe "normal! gq"
-	call <SID>return()
+	call winrestview(a:winview)
 endfunction
 
 function! RemoveTrailingWS()
-	call <SID>mark()
+	let a:winview = winsaveview()
 	%s/\s\+$//ge
-	call <SID>return()
+	call winrestview(a:winview)
 endfunction
 
 " close buffer and jump to last opened/previus one
