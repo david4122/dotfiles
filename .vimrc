@@ -131,7 +131,7 @@ endif
 
 vnoremap <C-y> "+y
 
-command! CpPath let @+ = fnamemodify(@%, ':h')
+command! CpPath let @+ = fnamemodify(@%, ':h') | echo @+
 
 function! BreakLines()
 	let &l:tw = winwidth('%') - 10
@@ -272,14 +272,14 @@ endfunction
 command! ShowGdiff call <SID>openGDiffInTab()
 
 " Automatically restore view in the window
-function s:saveWinView()
+function! s:saveWinView()
 	if !exists('w:win_views')
 		let w:win_views = {}
 	endif
 	let w:win_views[bufnr('%')] = winsaveview()
 endfunction
 
-function s:restoreWinView()
+function! s:restoreWinView()
 	if exists('w:win_views') && has_key(w:win_views, bufnr('%'))
 				\ && line('.') == 1 && col('.') == 1
 		call winrestview(w:win_views[bufnr('%')])
@@ -471,6 +471,15 @@ let g:promptline_preset = {
 " FZF
 nnoremap <C-p> :Buffers<CR>
 nnoremap <C-n> :Files<CR>
+
+command! -bang -nargs=* Ag
+			\ call fzf#vim#ag(<q-args>,
+			\ <bang>0 ? fzf#vim#with_preview('up:60%') : fzf#vim#with_preview('right:50%:hidden', '?'),
+			\ <bang>0)
+
+
+let g:fzf_layout = {'window' : 'botright 15split'}
+let g:fzf_history_dir = '~/.vim/.fzf_hist'
 
 set background=dark
 if system('tput colors') =~ '256'
