@@ -296,6 +296,7 @@ endfunction
 autocmd BufEnter * call <SID>restoreWinView()
 autocmd BufLeave * call <SID>saveWinView()
 
+
 " PLUGINS
 execute pathogen#infect()
 
@@ -475,6 +476,9 @@ let g:promptline_preset = {
 	\'warn': [promptline#slices#last_exit_code()]}
 
 " FZF
+let g:fzf_layout = {'window' : 'botright 15split'}
+let g:fzf_history_dir = '~/.vim/.fzf_hist'
+
 nnoremap <C-p> :Buffers<CR>
 nnoremap <C-n> :Files<CR>
 
@@ -484,8 +488,28 @@ command! -bang -nargs=* Ag
 			\ <bang>0)
 
 
-let g:fzf_layout = {'window' : 'botright 15split'}
-let g:fzf_history_dir = '~/.vim/.fzf_hist'
+function! s:registersContents()
+	let a:values = map(range(0, 9), '"[".v:val."]\t".eval("@".v:val)')
+	let a:values = a:values+map(
+				\ range(char2nr('a'), char2nr('z')),
+				\ '"[".nr2char(v:val)."]\t".eval("@".nr2char(v:val))')
+	let a:values = a:values+map(['"', ':', '.', '%', '#', '*', '+', '~', '/'],
+				\ '"[".v:val."]\t".eval("@".v:val)')
+	return filter(a:values, 'len(v:val) > 5')
+endfunction
+
+function! s:registers_sink(value)
+	let a:v = split(a:value, '\t')
+	exe "normal! i".a:v[1]
+endfunction
+
+command! Registers call fzf#run(fzf#wrap({
+			\ 'source': <SID>registersContents(),
+			\ 'sink': function('<SID>registers_sink'),
+			\ 'options': '+m' }))
+
+inoremap <C-x><C-r> <C-o>:Registers<CR>
+
 
 set background=dark
 if system('tput colors') =~ '256'
