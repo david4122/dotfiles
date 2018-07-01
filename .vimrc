@@ -42,6 +42,7 @@ set ttimeoutlen=50
 set scrolloff=2
 set sidescrolloff=5
 set title
+set lazyredraw
 
 set listchars=tab:⇢\ ,nbsp:•,eol:¬
 " set listchars=tab:⟶\ 
@@ -83,6 +84,11 @@ highlight DiffChange ctermbg=17
 highlight DiffAdd ctermbg=22
 highlight SignColumn ctermbg=235
 highlight phpMethodsVar cterm=italic
+highlight DbgBreakpointLine ctermbg=brown
+highlight StatusLine cterm=none ctermfg=121 ctermbg=233
+highlight StatusLineNC cterm=none ctermbg=233 ctermfg=none
+highlight MatchParen cterm=bold ctermbg=none ctermfg=yellow
+highlight EasyMotionTarget cterm=bold ctermfg=yellow
 
 autocmd BufEnter * syntax match Method "\(\.\|->\)\@<=\s*\w\+\s*(\@="
 highlight Method cterm=italic
@@ -229,7 +235,7 @@ function! s:inQuotesOrBrackets(multiline)
 	else
 		let a:chrs = matchstr(getline('.'), '.\%'.(col('.')).'c.')
 	endif
-	return get(g:closing, nr2char(strgetchar(a:chrs, 0)), '-')
+	return get(g:closing, nr2char(strgetchar(a:chrs, 0)), '\0')
 				\ == nr2char(strgetchar(a:chrs, 1))
 				\ || (strgetchar(a:chrs, 0) == strgetchar(a:chrs, 1)
 				\ && index(g:quotes, nr2char(strgetchar(a:chrs, 0))) >= 0)
