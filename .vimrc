@@ -119,6 +119,7 @@ nnoremap <C-b> :make %<CR>
 nnoremap <C-Up> <C-e>
 nnoremap <C-Down> <C-y>
 nnoremap <C-j> :Tags<CR>
+nnoremap Y y$
 
 nnoremap ]e :cnext<CR>
 nnoremap [e :cprev<CR>
@@ -395,6 +396,7 @@ endif
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_buffers = 1
+let g:airline_theme = 'jellybeans'
 
 " unicode symbols
 if !exists('g:airline_symbols')
@@ -482,8 +484,7 @@ let g:fzf_history_dir = '~/.vim/.fzf_hist'
 nnoremap <C-p> :Buffers<CR>
 nnoremap <C-n> :Files<CR>
 
-command! -bang -nargs=* Ag
-			\ call fzf#vim#ag(<q-args>,
+command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>,
 			\ <bang>0 ? fzf#vim#with_preview('up:60%') : fzf#vim#with_preview('right:50%:hidden', '?'),
 			\ <bang>0)
 
