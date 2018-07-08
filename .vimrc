@@ -45,7 +45,6 @@ set title
 set lazyredraw
 
 set listchars=tab:⇢\ ,nbsp:•,eol:¬
-" set listchars=tab:⟶\ 
 set list
 
 let s:undo_dir = $HOME.'/.vim/undo'
@@ -88,7 +87,6 @@ highlight DbgBreakpointLine ctermbg=brown
 highlight StatusLine cterm=none ctermfg=121 ctermbg=233
 highlight StatusLineNC cterm=none ctermbg=233 ctermfg=none
 highlight MatchParen cterm=bold ctermbg=none ctermfg=yellow
-highlight EasyMotionTarget cterm=bold ctermfg=yellow
 
 autocmd BufEnter * syntax match Method "\(\.\|->\)\@<=\s*\w\+\s*(\@="
 highlight Method cterm=italic
@@ -476,6 +474,10 @@ let g:promptline_preset = {
 	\'c': [promptline#slices#cwd({'dir_limit': 10})],
 	\'y': [promptline#slices#vcs_branch()],
 	\'warn': [promptline#slices#last_exit_code()]}
+
+" EasyMotion
+map <Leader> <Plug>(easymotion-prefix)
+highlight EasyMotionTarget cterm=bold ctermfg=yellow
 
 " FZF
 let g:fzf_layout = {'window' : 'botright 15split'}

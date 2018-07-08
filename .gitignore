@@ -1,4 +1,5 @@
-.vim/undo/*
-.tmux/*
+.vim/undo
+.tmux
 .vim/.netrwhist
 Session.vim
+.fzf_hist
