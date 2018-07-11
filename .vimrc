@@ -101,7 +101,6 @@ inoremap <S-Right> <C-o>gt
 inoremap <A-Left> <C-o>:bp<CR>
 inoremap <A-Right> <C-o>:bn<CR>
 inoremap <C-l> <C-\><C-o>:exe "normal! mfYp`fa"<CR>
-inoremap <C-h> <C-o>:set hlsearch! hlsearch?<CR>
 inoremap <C-d> <C-o>:wa<CR>
 inoremap <A-Up> <ESC>:m-2<CR>==a
 inoremap <A-Down> <ESC>:m+1<CR>==a
@@ -111,7 +110,6 @@ nnoremap <S-Left> gT
 nnoremap <S-Right> gt
 nnoremap <A-Left> :bp<CR>
 nnoremap <A-Right> :bn<CR>
-nnoremap <C-h> :set hlsearch! hlsearch?<CR>
 nnoremap <C-d> :wa<CR>
 nnoremap <C-b> :make %<CR>
 nnoremap <C-Up> <C-e>
@@ -365,7 +363,7 @@ else
 	let g:NERDTreeMouseMode = 3 " open with single click
 	let g:NERDTreeShowHidden = 1
 
-	autocmd VimEnter * NERDTree | vertical resize 25 | wincmd p
+	" autocmd VimEnter * NERDTree | vertical resize 25 | wincmd p
 
 	" Signify
 	autocmd BufEnter * highlight SignifySignAdd ctermbg=235 ctermfg=green
@@ -413,9 +411,6 @@ let g:airline_symbols.paste = '∥'
 let g:airline_symbols.spell = 'Ꞩ'
 let g:airline_symbols.notexists = '∄'
 let g:airline_symbols.whitespace = 'Ξ'
-
-" NERDCommenter
-let g:NERDSpaceDelims = 1
 
 " VCoolor
 inoremap <kEnter> <Left><C-o>:VCoolor<CR>
@@ -512,6 +507,10 @@ command! Registers call fzf#run(fzf#wrap({
 			\ 'options': '+m' }))
 
 inoremap <C-x><C-r> <C-o>:Registers<CR>
+
+" Anzu
+inoremap <silent> <C-h> <C-o>:if &hlsearch \| AnzuClearSearchStatus \| set nohlsearch \| else \| set hlsearch \| AnzuUpdateSearchStatus \| endif<CR>
+nnoremap <silent> <C-h> :if &hlsearch \| AnzuClearSearchStatus \| set nohlsearch \| else \| set hlsearch \| AnzuUpdateSearchStatus \| endif<CR>
 
 
 set background=dark
