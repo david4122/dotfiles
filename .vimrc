@@ -485,6 +485,8 @@ command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>,
 			\ <bang>0 ? fzf#vim#with_preview('up:60%') : fzf#vim#with_preview('right:50%:hidden', '?'),
 			\ <bang>0)
 
+command! -bang -nargs=? -complete=dir Files
+  \ call fzf#vim#files(<q-args>, {'source': 'ag --hidden --ignore .git -g ""'}, <bang>0)
 
 function! s:registersContents()
 	let a:values = map(range(0, 9), '"[".v:val."]\t".eval("@".v:val)')
