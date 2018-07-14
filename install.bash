@@ -19,11 +19,7 @@ export LD_PRELOAD="$(pwd)/stderred/build/libstderred.so\${LS_PRELOAD:+:\$LD_PREL
 export STDERRED_ESC_CODE=\$(printf "\\e[38;2;255;85;85m")
 EOF
 
-[ -f $HOME/.fzf.bash ] && mv $HOME/.fzf.bash $HOME/dotfiles_backup
-(cd .vim/bundle/fzf && ./install --all) || exit 1
-rm $HOME/.fzf.bash
-
-files=(.vimrc .fzf.bash .tmux.conf .vim .tmux)
+files=(.vimrc .tmux.conf .vim .tmux)
 for file in ${files[@]}; do
 	if [ -f $HOME/$file ]; then
 		echo "Backing up $file.."
@@ -34,8 +30,11 @@ for file in ${files[@]}; do
 	ln -s $(pwd)/$file $HOME
 done
 
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+[ -f $HOME/.fzf.bash ] && mv $HOME/.fzf.bash $HOME/dotfiles_backup
 [ -f $HOME/prompt.sh ] && mv $HOME/prompt.sh $HOME/dotfiles_backup
-vim -c "PromptlineSnapshot ~/prompt.sh airline" -c "q"
+vim -c "PlugInstall" -c "PromptlineSnapshot ~/prompt.sh airline" -c "q"
 
 echo "All done"
 rmdir $HOME/dotfiles_backup 2>/dev/null

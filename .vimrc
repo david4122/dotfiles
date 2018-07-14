@@ -311,7 +311,38 @@ autocmd BufLeave * call <SID>saveWinView()
 """""""""""""
 "  Plugins  "
 """""""""""""
-execute pathogen#infect()
+call plug#begin('~/.vim/bundle')
+
+Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --clang-completer'}
+Plug 'ap/vim-css-color'
+Plug 'blueyed/smarty.vim'
+Plug 'chrisbra/csv.vim'
+Plug 'easymotion/vim-easymotion'
+Plug 'edkolev/promptline.vim'
+Plug 'honza/vim-snippets'
+Plug 'joonty/vdebug', {'for': 'php'}
+Plug 'junegunn/fzf', {'do': './install --all'}
+Plug 'junegunn/fzf.vim'
+Plug 'kabbamine/vcoolor.vim', {'on': ['VCoolor', 'VCoolIns']}
+Plug 'majutsushi/tagbar'
+Plug 'mattn/emmet-vim', {'for': ['html', 'php']}
+Plug 'mbbill/undotree'
+Plug 'mhinz/vim-signify'
+Plug 'osyo-manga/vim-anzu'
+Plug 'ryanoasis/vim-devicons'
+Plug 'sirver/ultisnips'
+Plug 'tfnico/vim-gradle', {'for': 'java'}
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-obsession'
+Plug 'tpope/vim-surround'
+Plug 'valloric/matchtagalways'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-scripts/dbext.vim'
+Plug 'vim-syntastic/syntastic'
+
+call plug#end()
 
 " disable airline if term doesn'y support colors'
 if system('tput colors') !~ '256'

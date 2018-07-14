@@ -1,93 +1,9 @@
-[submodule ".vim/bundle/csv.vim"]
-	path = .vim/bundle/csv.vim
-	url = https://github.com/chrisbra/csv.vim
 [submodule ".vim/bundle/ctrlp.vim"]
 	path = .vim/bundle/ctrlp.vim
 	url = https://github.com/ctrlpvim/ctrlp.vim
-[submodule ".vim/bundle/dbext.vim"]
-	path = .vim/bundle/dbext.vim
-	url = https://github.com/vim-scripts/dbext.vim
-[submodule ".vim/bundle/emmet-vim"]
-	path = .vim/bundle/emmet-vim
-	url = https://github.com/mattn/emmet-vim
-[submodule ".vim/bundle/matchtagalways"]
-	path = .vim/bundle/matchtagalways
-	url = https://github.com/valloric/matchtagalways
-[submodule ".vim/bundle/tagbar"]
-	path = .vim/bundle/tagbar
-	url = https://github.com/majutsushi/tagbar.git
-[submodule ".vim/bundle/ultisnips"]
-	path = .vim/bundle/ultisnips
-	url = https://github.com/sirver/ultisnips
-[submodule ".vim/bundle/vcoolor.vim"]
-	path = .vim/bundle/vcoolor.vim
-	url = https://github.com/kabbamine/vcoolor.vim
-[submodule ".vim/bundle/vim-airline"]
-	path = .vim/bundle/vim-airline
-	url = https://github.com/vim-airline/vim-airline
-[submodule ".vim/bundle/vim-css-color"]
-	path = .vim/bundle/vim-css-color
-	url = https://github.com/ap/vim-css-color
-[submodule ".vim/bundle/vim-devicons"]
-	path = .vim/bundle/vim-devicons
-	url = https://github.com/ryanoasis/vim-devicons.git
-[submodule ".vim/bundle/vim-fugitive"]
-	path = .vim/bundle/vim-fugitive
-	url = https://github.com/tpope/vim-fugitive
-[submodule ".vim/bundle/vim-signify"]
-	path = .vim/bundle/vim-signify
-	url = https://github.com/mhinz/vim-signify
-[submodule ".vim/bundle/vim-snippets"]
-	path = .vim/bundle/vim-snippets
-	url = https://github.com/honza/vim-snippets
-[submodule ".vim/bundle/YouCompleteMe"]
-	path = .vim/bundle/YouCompleteMe
-	url = https://github.com/Valloric/YouCompleteMe.git
-[submodule ".vim/bundle/vim-gradle"]
-	path = .vim/bundle/vim-gradle
-	url = https://github.com/tfnico/vim-gradle.git
 [submodule ".tmux/plugins/tpm"]
 	path = .tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
-[submodule ".vim/bundle/smarty.vim"]
-	path = .vim/bundle/smarty.vim
-	url = https://github.com/blueyed/smarty.vim.git
-[submodule ".vim/bundle/vim-obsession"]
-	path = .vim/bundle/vim-obsession
-	url = https://github.com/tpope/vim-obsession
-[submodule ".vim/bundle/undotree"]
-	path = .vim/bundle/undotree
-	url = https://github.com/mbbill/undotree
-[submodule ".vim/bundle/promptline.vim"]
-	path = .vim/bundle/promptline.vim
-	url = https://github.com/edkolev/promptline.vim.git
-[submodule ".vim/bundle/syntastic"]
-	path = .vim/bundle/syntastic
-	url = https://github.com/vim-syntastic/syntastic
 [submodule "stderred"]
 	path = stderred
 	url = https://github.com/sickill/stderred
-[submodule ".vim/bundle/fzf"]
-	path = .vim/bundle/fzf
-	url = https://github.com/junegunn/fzf
-[submodule ".vim/bundle/fzf.vim"]
-	path = .vim/bundle/fzf.vim
-	url = https://github.com/junegunn/fzf.vim
-[submodule ".vim/bundle/vdebug"]
-	path = .vim/bundle/vdebug
-	url = https://github.com/joonty/vdebug
-[submodule ".vim/bundle/vim-easymotion"]
-	path = .vim/bundle/vim-easymotion
-	url = https://github.com/easymotion/vim-easymotion.git
-[submodule ".vim/bundle/vim-airline-themes"]
-	path = .vim/bundle/vim-airline-themes
-	url = https://github.com/vim-airline/vim-airline-themes
-[submodule ".vim/bundle/vim-surround"]
-	path = .vim/bundle/vim-surround
-	url = https://github.com/tpope/vim-surround
-[submodule ".vim/bundle/vim-commentary"]
-	path = .vim/bundle/vim-commentary
-	url = https://github.com/tpope/vim-commentary
-[submodule ".vim/bundle/vim-anzu"]
-	path = .vim/bundle/vim-anzu
-	url = https://github.com/osyo-manga/vim-anzu
