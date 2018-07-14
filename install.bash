@@ -19,7 +19,7 @@ export LD_PRELOAD="$(pwd)/stderred/build/libstderred.so\${LS_PRELOAD:+:\$LD_PREL
 export STDERRED_ESC_CODE=\$(printf "\\e[38;2;255;85;85m")
 EOF
 
-files=(.vimrc .tmux.conf .vim .tmux)
+files=(.vimrc .tmux.conf .vim .tmux .inputrc)
 for file in ${files[@]}; do
 	if [ -f $HOME/$file ]; then
 		echo "Backing up $file.."
