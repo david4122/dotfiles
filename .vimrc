@@ -1,3 +1,6 @@
+""""""""""""""
+"  Settings  "
+""""""""""""""
 set nocompatible
 set number
 set tabstop=4
@@ -60,6 +63,9 @@ filetype indent on
 
 runtime macros/matchit.vim
 
+""""""""""""""""
+"  Highlights  "
+""""""""""""""""
 highlight String ctermfg=142
 highlight Statement ctermfg=darkgreen
 highlight Type ctermfg=121
@@ -96,18 +102,23 @@ autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
 
 autocmd BufRead anacrontab setf crontab
 
+""""""""""""""
+"  Mappings  "
+""""""""""""""
 inoremap <S-Left> <C-o>gT
 inoremap <S-Right> <C-o>gt
 inoremap <A-Left> <C-o>:bp<CR>
 inoremap <A-Right> <C-o>:bn<CR>
 inoremap <C-l> <C-\><C-o>:exe "normal! mfYp`fa"<CR>
 inoremap <C-d> <C-o>:wa<CR>
-inoremap <A-Up> <ESC>:m-2<CR>==a
-inoremap <A-Down> <ESC>:m+1<CR>==a
+inoremap <S-Up> <ESC>:m-2<CR>==a
+inoremap <S-Down> <ESC>:m+1<CR>==a
+inoremap <S-Left> <C-d>
+inoremap <S-Right> <C-t>
 inoremap <C-b> <C-o>:make %<CR>
 
-nnoremap <S-Left> gT
-nnoremap <S-Right> gt
+nnoremap <S-Left> <<
+nnoremap <S-Right> >>
 nnoremap <A-Left> :bp<CR>
 nnoremap <A-Right> :bn<CR>
 nnoremap <C-d> :wa<CR>
@@ -134,6 +145,9 @@ endif
 
 vnoremap <C-y> "+y
 
+""""""""""""""""""""""""""""
+"  Commands and functions  "
+""""""""""""""""""""""""""""
 command! CpPath let @+ = fnamemodify(@%, ':h') | echo @+
 
 function! BreakLines()
@@ -294,7 +308,9 @@ autocmd BufEnter * call <SID>restoreWinView()
 autocmd BufLeave * call <SID>saveWinView()
 
 
-" PLUGINS
+"""""""""""""
+"  Plugins  "
+"""""""""""""
 execute pathogen#infect()
 
 " disable airline if term doesn'y support colors'
@@ -358,12 +374,6 @@ else
 	endfunction
 
 	nnoremap <silent> <C-u> :call <SID>swapUndotreeTagbar()<CR>
-
-	" NERDTree
-	let g:NERDTreeMouseMode = 3 " open with single click
-	let g:NERDTreeShowHidden = 1
-
-	" autocmd VimEnter * NERDTree | vertical resize 25 | wincmd p
 
 	" Signify
 	autocmd BufEnter * highlight SignifySignAdd ctermbg=235 ctermfg=green
@@ -444,9 +454,6 @@ let g:mta_set_default_matchtag_color = 0
 highlight MatchTag cterm=underline,bold ctermbg=none ctermfg=none
 
 " WebDevIcons
-let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-let g:DevIconsEnableFoldersOpenClose = 1
 if system('tput colors') =~ '256' && exists('g:loaded_webdevicons')
 	call webdevicons#refresh()
 	wincmd p
@@ -511,8 +518,16 @@ command! Registers call fzf#run(fzf#wrap({
 inoremap <C-x><C-r> <C-o>:Registers<CR>
 
 " Anzu
-inoremap <silent> <C-h> <C-o>:if &hlsearch \| AnzuClearSearchStatus \| set nohlsearch \| else \| set hlsearch \| AnzuUpdateSearchStatus \| endif<CR>
-nnoremap <silent> <C-h> :if &hlsearch \| AnzuClearSearchStatus \| set nohlsearch \| else \| set hlsearch \| AnzuUpdateSearchStatus \| endif<CR>
+inoremap <silent> <C-h> <C-o>:if &hlsearch \|
+			\ AnzuClearSearchStatus \| set nohlsearch \|
+		\ else \|
+			\ set hlsearch \| AnzuUpdateSearchStatus \|
+		\ endif<CR>
+nnoremap <silent> <C-h> :if &hlsearch \| 
+			\ AnzuClearSearchStatus \| set nohlsearch \|
+		\ else \|
+			\ set hlsearch \| AnzuUpdateSearchStatus \|
+		\ endif<CR>
 
 
 set background=dark
