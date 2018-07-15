@@ -105,22 +105,22 @@ autocmd BufRead anacrontab setf crontab
 """"""""""""""
 "  Mappings  "
 """"""""""""""
-inoremap <S-Left> <C-o>gT
-inoremap <S-Right> <C-o>gt
 inoremap <A-Left> <C-o>:bp<CR>
 inoremap <A-Right> <C-o>:bn<CR>
-inoremap <C-l> <C-\><C-o>:exe "normal! mfYp`fa"<CR>
-inoremap <C-d> <C-o>:wa<CR>
-inoremap <S-Up> <ESC>:m-2<CR>==a
-inoremap <S-Down> <ESC>:m+1<CR>==a
+inoremap <silent> <S-Up> <ESC>:m-2<CR>==a
+inoremap <silent> <S-Down> <ESC>:m+1<CR>==a
 inoremap <S-Left> <C-d>
 inoremap <S-Right> <C-t>
+inoremap <C-d> <C-o>:wa<CR>
+inoremap <C-l> <C-\><C-o>:exe "normal! mfYp`fa"<CR>
 inoremap <C-b> <C-o>:make %<CR>
 
-nnoremap <S-Left> <<
-nnoremap <S-Right> >>
 nnoremap <A-Left> :bp<CR>
 nnoremap <A-Right> :bn<CR>
+nnoremap <S-Left> <<
+nnoremap <S-Right> >>
+nnoremap <silent> <S-Up> :m-2<CR>
+nnoremap <silent> <S-Down> :m+1<CR>
 nnoremap <C-d> :wa<CR>
 nnoremap <C-b> :make %<CR>
 nnoremap <C-Up> <C-e>
@@ -134,6 +134,8 @@ nnoremap [e :cprev<CR>
 nnoremap ]l :lnext<CR>
 nnoremap [l :lprev<CR>
 
+vnoremap <C-y> "+y
+
 if has('terminal')
 	if exists('##TerminalOpen')
 		autocmd TerminalOpen * set nobuflisted
@@ -142,8 +144,6 @@ if has('terminal')
 	tnoremap <kHome> <Home>
 	tnoremap <kEnd> <End>
 endif
-
-vnoremap <C-y> "+y
 
 """"""""""""""""""""""""""""
 "  Commands and functions  "
