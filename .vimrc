@@ -339,7 +339,7 @@ Plug 'tpope/vim-surround'
 Plug 'valloric/matchtagalways'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'vim-scripts/dbext.vim'
+Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php']}
 Plug 'vim-syntastic/syntastic'
 
 call plug#end()
