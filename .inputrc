@@ -6,6 +6,11 @@ set colored-stats on
 set completion-prefix-display-length 3
 set mark-symlinked-directories on
 set visible-stats on
+set enable-bracketed-paste on
+set skip-completed-text on
+set show-mode-in-prompt on
+set vi-cmd-mode-string "\1\e[38;5;59m\e[48;5;233m\2 CMD \1\e[38;5;233m\e[48;5;25m\2"
+set vi-ins-mode-string "\1\e[38;5;59m\e[48;5;233m\2 INS \1\e[38;5;233m\e[48;5;25m\2"
 
 "\C-i": menu-complete
 "\e[Z": menu-complete-backward

@@ -1,1 +1,7 @@
 extends html
+
+snippet iflocal "if localhost"
+{if $smarty.server.REMOTE_ADDR == "${1:`curl ipinfo.io/ip`}"}
+	$2
+{/if}$0
+endsnippet

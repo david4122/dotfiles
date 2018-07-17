@@ -97,11 +97,6 @@ highlight MatchParen cterm=bold ctermbg=none ctermfg=yellow
 autocmd BufEnter * syntax match Method "\(\.\|->\)\@<=\s*\w\+\s*(\@="
 highlight Method cterm=italic
 
-autocmd BufEnter *.php compiler! php
-autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
-
-autocmd BufRead anacrontab setf crontab
-
 """"""""""""""
 "  Mappings  "
 """"""""""""""
@@ -123,10 +118,14 @@ nnoremap <silent> <S-Up> :m-2<CR>
 nnoremap <silent> <S-Down> :m+1<CR>
 nnoremap <C-d> :wa<CR>
 nnoremap <C-b> :make %<CR>
-nnoremap <C-Up> <C-e>
-nnoremap <C-Down> <C-y>
+nnoremap <A-Up> <C-e>
+nnoremap <A-Down> <C-y>
 nnoremap <C-j> :Tags<CR>
 nnoremap Y y$
+nnoremap <C-k> <C-w>+
+nnoremap <C-j> <C-w>-
+nnoremap <C-h> <C-w><
+nnoremap <C-l> <C-w>>
 
 nnoremap ]e :cnext<CR>
 nnoremap [e :cprev<CR>
@@ -307,6 +306,11 @@ endfunction
 autocmd BufEnter * call <SID>restoreWinView()
 autocmd BufLeave * call <SID>saveWinView()
 
+autocmd BufEnter *.php compiler! php
+autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
+
+autocmd BufRead anacrontab setf crontab
+autocmd BufRead .htaccess set commentstring=#\ %s
 
 """""""""""""
 "  Plugins  "
@@ -341,6 +345,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php']}
 Plug 'vim-syntastic/syntastic'
+Plug 'nanotech/jellybeans.vim'
 
 call plug#end()
 
@@ -549,12 +554,7 @@ command! Registers call fzf#run(fzf#wrap({
 inoremap <C-x><C-r> <C-o>:Registers<CR>
 
 " Anzu
-inoremap <silent> <C-h> <C-o>:if &hlsearch \|
-			\ AnzuClearSearchStatus \| set nohlsearch \|
-		\ else \|
-			\ set hlsearch \| AnzuUpdateSearchStatus \|
-		\ endif<CR>
-nnoremap <silent> <C-h> :if &hlsearch \| 
+nnoremap <silent> <leader>h :if &hlsearch \| 
 			\ AnzuClearSearchStatus \| set nohlsearch \|
 		\ else \|
 			\ set hlsearch \| AnzuUpdateSearchStatus \|
