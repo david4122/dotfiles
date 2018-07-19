@@ -3,3 +3,5 @@
 .vim/.netrwhist
 Session.vim
 .fzf_hist
+.vim/bundle
+.vim/autoload

@@ -102,6 +102,8 @@ highlight Method cterm=italic
 """"""""""""""
 inoremap <A-Left> <C-o>:bp<CR>
 inoremap <A-Right> <C-o>:bn<CR>
+inoremap <A-Up> <C-o><C-e>
+inoremap <A-Down> <C-o><C-y>
 inoremap <silent> <S-Up> <ESC>:m-2<CR>==a
 inoremap <silent> <S-Down> <ESC>:m+1<CR>==a
 inoremap <S-Left> <C-d>
@@ -112,14 +114,14 @@ inoremap <C-b> <C-o>:make %<CR>
 
 nnoremap <A-Left> :bp<CR>
 nnoremap <A-Right> :bn<CR>
+nnoremap <A-Up> <C-e>
+nnoremap <A-Down> <C-y>
 nnoremap <S-Left> <<
 nnoremap <S-Right> >>
 nnoremap <silent> <S-Up> :m-2<CR>
 nnoremap <silent> <S-Down> :m+1<CR>
 nnoremap <C-d> :wa<CR>
 nnoremap <C-b> :make %<CR>
-nnoremap <A-Up> <C-e>
-nnoremap <A-Down> <C-y>
 nnoremap <C-j> :Tags<CR>
 nnoremap Y y$
 nnoremap <C-k> <C-w>+
@@ -311,6 +313,7 @@ autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
 
 autocmd BufRead anacrontab setf crontab
 autocmd BufRead .htaccess set commentstring=#\ %s
+autocmd FileType smarty set commentstring={*\ %s\ *}
 
 """""""""""""
 "  Plugins  "
