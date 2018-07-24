@@ -124,10 +124,10 @@ nnoremap <C-d> :wa<CR>
 nnoremap <C-b> :make %<CR>
 nnoremap <C-j> :Tags<CR>
 nnoremap Y y$
-nnoremap <C-k> <C-w>+
-nnoremap <C-j> <C-w>-
-nnoremap <C-h> <C-w><
-nnoremap <C-l> <C-w>>
+nnoremap <C-w><C-Up> 5<C-w>+
+nnoremap <C-w><C-Down> 5<C-w>-
+nnoremap <C-w><C-Left> 5<C-w><
+nnoremap <C-w><C-Right> 5<C-w>>
 
 nnoremap ]e :cnext<CR>
 nnoremap [e :cprev<CR>
@@ -149,6 +149,9 @@ endif
 """"""""""""""""""""""""""""
 "  Commands and functions  "
 """"""""""""""""""""""""""""
+command! -bar -bang Db if buflisted(@#) | b# | else | bp | endif | bd #
+command! -bar -bang Dw write<bang> | Db
+
 command! CpPath let @+ = fnamemodify(@%, ':h') | echo @+
 
 function! BreakLines()
@@ -163,28 +166,6 @@ function! RemoveTrailingWS()
 	%s/\s\+$//ge
 	call winrestview(a:winview)
 endfunction
-
-" close buffer and jump to last opened/previus one
-" 0 - default
-" 1 - write
-" 2 - force
-function! s:jumpAndClose(action)
-	if a:action == 1 | w | endif
-	if len(getbufinfo({'buflisted':1})) > 1
-		if &mod && a:action != 2
-			echoerr "No write since last change!"
-			return
-		endif
-		if buflisted(@#) | b# | else | bp | endif
-		if a:action == 2 | bd! # | else | bd # | endif
-	else
-		if a:action == 2 | bd! | else | bd | endif
-	endif
-endfunction
-
-cnoreabbrev db call <SID>jumpAndClose(0)
-cnoreabbrev dbf call <SID>jumpAndClose(2)
-cnoreabbrev wd call <SID>jumpAndClose(1)
 
 function! s:openedInCurrentTab(bufname)
 	let a:bufnr = bufnr(a:bufname)
@@ -322,8 +303,8 @@ call plug#begin('~/.vim/bundle')
 
 Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --clang-completer'}
 Plug 'ap/vim-css-color'
-Plug 'blueyed/smarty.vim'
-Plug 'chrisbra/csv.vim'
+Plug 'blueyed/smarty.vim', {'for': 'smarty'}
+Plug 'chrisbra/csv.vim', {'for': 'csv'}
 Plug 'easymotion/vim-easymotion'
 Plug 'edkolev/promptline.vim'
 Plug 'honza/vim-snippets'
@@ -343,7 +324,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-surround'
-Plug 'valloric/matchtagalways'
+Plug 'valloric/matchtagalways', {'for': ['html', 'xml', 'php']}
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php']}
@@ -352,7 +333,7 @@ Plug 'nanotech/jellybeans.vim'
 
 call plug#end()
 
-" disable airline if term doesn'y support colors'
+" disable airline if term doesn't support colors'
 if system('tput colors') !~ '256'
 	let g:loaded_airline = 1
 	let g:webdevicons_enable = 0
@@ -371,7 +352,7 @@ else
 	set relativenumber
 
 	" Tagbar
-	let g:tagbar_width = 30
+	let g:tagbar_width = 50
 	let g:tagbar_singleclick = 1
 
 	" Undotree
@@ -379,14 +360,13 @@ else
 	let g:undotree_SplitWidth = 40
 	let g:undotree_SetFocusWhenToggle = 1
 
-	let t:right_pane_content = 'tagbar'
 	let g:window_right_pane_threshold = 130
 
 	function! s:toggleRightPane()
 		if &columns > g:window_right_pane_threshold
-			if t:right_pane_content == 'tagbar'
+			if exists('t:right_pane_content') && t:right_pane_content == 'tagbar'
 				TagbarOpen
-			elseif t:right_pane_content == 'undotree'
+			elseif exists('t:right_pane_content') && t:right_pane_content == 'undotree'
 				UndotreeShow
 			endif
 		else
@@ -395,8 +375,8 @@ else
 		endif
 	endfunction
 
-	autocmd VimEnter * call <SID>toggleRightPane()
-	autocmd VimResized * call <SID>toggleRightPane()
+	autocmd VimEnter * let t:right_pane_content = 'tagbar'
+	autocmd VimEnter,VimResized * call <SID>toggleRightPane()
 
 	function! s:swapUndotreeTagbar()
 		let a:tagbar_buffer = filter(getbufinfo(),
@@ -480,23 +460,9 @@ endif
 let g:user_emmet_leader_key = '<C-e>'
 
 " MatchTagAlways
-let g:mta_filetypes = {
-			\ 'html' : 1,
-			\ 'xhtml' : 1,
-			\ 'xml' : 1,
-			\ 'jinja' : 1,
-			\ 'php' : 1,
-			\}
-
 let g:mta_use_matchparen_group = 0
 let g:mta_set_default_matchtag_color = 0
 highlight MatchTag cterm=underline,bold ctermbg=none ctermfg=none
-
-" WebDevIcons
-if system('tput colors') =~ '256' && exists('g:loaded_webdevicons')
-	call webdevicons#refresh()
-	wincmd p
-endif
 
 " dbext
 if filereadable('dbdata.vim')
@@ -504,6 +470,7 @@ if filereadable('dbdata.vim')
 	let db_data = readfile('dbdata.vim')
 	let g:dbext_default_profile_local = join(db_data, ':')
 endif
+
 let g:dbext_default_history_file = '~/.vim/dbext_history'
 autocmd BufEnter Result setlocal nobuflisted
 autocmd BufEnter Result set winfixheight
@@ -517,7 +484,6 @@ let g:promptline_preset = {
 	\'warn': [promptline#slices#last_exit_code()]}
 
 " EasyMotion
-map <Leader> <Plug>(easymotion-prefix)
 highlight EasyMotionTarget cterm=bold ctermfg=yellow
 
 " FZF
