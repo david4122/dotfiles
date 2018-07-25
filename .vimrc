@@ -291,6 +291,44 @@ endfunction
 autocmd BufEnter * call <SID>restoreWinView()
 autocmd BufLeave * call <SID>saveWinView()
 
+function! s:completeParams()
+	if !exists('v:completed_item.menu') || empty(v:completed_item.menu)
+		return
+	endif
+
+	let args = v:completed_item.menu
+	let sepIdx = stridx(args, '|')
+	let args = strpart(args, 0, sepIdx - 1)
+	let args = split(args, '\(\>, \| \[\(, \)\@=\|]\+\)')
+	let index = 0
+	let stack = 0
+	while index < len(args)
+		if empty(trim(args[index]))
+			continue
+		endif
+		if strgetchar(args[index], 0) == char2nr(',')
+			let arg = strpart(args[index], 2)
+			let args[index] = '${'.(index+stack*2+1).':, ${'.(index+stack*2+2).':'.arg.'}'
+			let stack = stack + 1
+		else
+			let args[index] = '${'.(index+stack*2+1).':'.args[index].'}'
+			if index != 0
+				let args[index] = ', '.args[index]
+			endif
+		endif
+		let index = index + 1
+	endwhile
+	let template = join(args, '')
+	for i in range(stack)
+		let template = template.'}'
+	endfor
+	let template = template.')$0'
+
+	call UltiSnips#Anon(template)
+endfunction
+
+autocmd CompleteDone *.php call <SID>completeParams()
+
 autocmd BufEnter *.php compiler! php
 autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
 
