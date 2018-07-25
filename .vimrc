@@ -118,8 +118,8 @@ nnoremap <A-Up> <C-e>
 nnoremap <A-Down> <C-y>
 nnoremap <S-Left> <<
 nnoremap <S-Right> >>
-nnoremap <silent> <S-Up> :m-2<CR>
-nnoremap <silent> <S-Down> :m+1<CR>
+nnoremap <silent> <S-Up> :m-2<CR>==
+nnoremap <silent> <S-Down> :m+1<CR>==
 nnoremap <C-d> :wa<CR>
 nnoremap <C-b> :make %<CR>
 nnoremap <C-j> :Tags<CR>
@@ -136,6 +136,8 @@ nnoremap ]l :lnext<CR>
 nnoremap [l :lprev<CR>
 
 vnoremap <C-y> "+y
+vnoremap <S-Left> <gv
+vnoremap <S-Right> >gv
 
 if has('terminal')
 	if exists('##TerminalOpen')
@@ -149,7 +151,7 @@ endif
 """"""""""""""""""""""""""""
 "  Commands and functions  "
 """"""""""""""""""""""""""""
-command! -bar -bang Db if buflisted(@#) | b# | else | bp | endif | bd #
+command! -bar -bang Db if buflisted(@#) | b# | else | bp | endif | bd<bang> #
 command! -bar -bang Dw write<bang> | Db
 
 command! CpPath let @+ = fnamemodify(@%, ':h') | echo @+
@@ -313,7 +315,7 @@ Plug 'junegunn/fzf', {'do': './install --all'}
 Plug 'junegunn/fzf.vim'
 Plug 'kabbamine/vcoolor.vim', {'on': ['VCoolor', 'VCoolIns']}
 Plug 'majutsushi/tagbar'
-Plug 'mattn/emmet-vim', {'for': ['html', 'php']}
+Plug 'mattn/emmet-vim', {'for': ['html', 'php', 'smarty']}
 Plug 'mbbill/undotree'
 Plug 'mhinz/vim-signify'
 Plug 'osyo-manga/vim-anzu'
@@ -324,7 +326,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-surround'
-Plug 'valloric/matchtagalways', {'for': ['html', 'xml', 'php']}
+Plug 'valloric/matchtagalways', {'for': ['html', 'xml', 'php', 'smarty']}
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php']}
