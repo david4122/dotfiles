@@ -82,14 +82,15 @@ highlight Folded ctermbg=234 ctermfg=121
 highlight FoldColumn ctermbg=236 ctermfg=252
 highlight SpecialKey ctermfg=237
 highlight NonText ctermfg=239
-highlight VertSplit cterm=none ctermbg=237
+highlight VertSplit cterm=none ctermbg=233
 highlight DiffDelete ctermbg=235
 highlight DiffText cterm=none ctermbg=130 ctermfg=white
 highlight DiffChange ctermbg=17
 highlight DiffAdd ctermbg=22
 highlight SignColumn ctermbg=235
 highlight phpMethodsVar cterm=italic
-highlight DbgBreakpointLine ctermbg=brown
+highlight DbgBreakptLine ctermbg=brown
+highlight DbgBreakptSign ctermbg=brown
 highlight StatusLine cterm=none ctermfg=121 ctermbg=233
 highlight StatusLineNC cterm=none ctermbg=233 ctermfg=none
 highlight MatchParen cterm=bold ctermbg=none ctermfg=yellow
@@ -222,7 +223,6 @@ function! s:inQuotesOrBrackets(multiline)
 		let a:chrs = matchstr(
 					\ getline(line('.')-1)."\n".getline('.')."\n".getline(line('.')+1),
 					\ '.\s*\n\s\+\n\s*.')
-		let g:debug = a:chrs
 		let a:chrs = substitute(a:chrs, '[ \t\n]', '', 'g')
 		if strlen(a:chrs) == 0
 			return 0
@@ -258,20 +258,6 @@ endfunction
 
 inoremap <expr> <CR> <SID>insertBlock()
 
-function! s:openGDiffInTab()
-	if(!exists(':Gdiff'))
-		echoerr 'Git repository not found'
-		return
-	endif
-
-	let a:line = line('.')
-	tabe %
-	Gdiff
-	call cursor(a:line, 0)
-endfunction
-
-command! ShowGdiff call <SID>openGDiffInTab()
-
 " Automatically restore view in the window
 function! s:saveWinView()
 	if !exists('w:win_views')
@@ -296,10 +282,8 @@ function! s:completeParams()
 		return
 	endif
 
-	let args = v:completed_item.menu
-	let sepIdx = stridx(args, '|')
-	let args = strpart(args, 0, sepIdx - 1)
-	let args = split(args, '\(\>, \| \[\(, \)\@=\|]\+\)')
+	let sepIdx = stridx(v:completed_item.menu, '|')
+	let args = split(strpart(v:completed_item.menu, 0, sepIdx - 1), '\(\>, \| \[\(, \)\@=\|]\+\)')
 	let index = 0
 	let stack = 0
 	while index < len(args)
@@ -322,9 +306,10 @@ function! s:completeParams()
 	for i in range(stack)
 		let template = template.'}'
 	endfor
-	let template = template.')$0'
-
-	call UltiSnips#Anon(template)
+	if !empty(template)
+		let template = template.')$0'
+		call UltiSnips#Anon(template)
+	endif
 endfunction
 
 autocmd CompleteDone *.php call <SID>completeParams()
@@ -348,11 +333,11 @@ Plug 'chrisbra/csv.vim', {'for': 'csv'}
 Plug 'easymotion/vim-easymotion'
 Plug 'edkolev/promptline.vim'
 Plug 'honza/vim-snippets'
-Plug 'joonty/vdebug', {'for': 'php'}
+Plug 'joonty/vdebug', {'on': 'VdebugStart'}
 Plug 'junegunn/fzf', {'do': './install --all'}
 Plug 'junegunn/fzf.vim'
 Plug 'kabbamine/vcoolor.vim', {'on': ['VCoolor', 'VCoolIns']}
-Plug 'majutsushi/tagbar'
+Plug 'majutsushi/tagbar', {'on': 'TagbarOpen'}
 Plug 'mattn/emmet-vim', {'for': ['html', 'php', 'smarty']}
 Plug 'mbbill/undotree'
 Plug 'mhinz/vim-signify'
@@ -373,7 +358,7 @@ Plug 'nanotech/jellybeans.vim'
 
 call plug#end()
 
-" disable airline if term doesn't support colors'
+" disable airline if term doesn't support colors
 if system('tput colors') !~ '256'
 	let g:loaded_airline = 1
 	let g:webdevicons_enable = 0
@@ -387,7 +372,6 @@ if &diff || (exists('g:quick_mode') && g:quick_mode)
 	let g:loaded_youcompleteme = 1
 	let g:loaded_signify = 1
 	let g:loaded_syntastic_plugin = 1
-	let g:is_vdebug_loaded = 1
 else
 	set relativenumber
 
@@ -400,7 +384,7 @@ else
 	let g:undotree_SplitWidth = 40
 	let g:undotree_SetFocusWhenToggle = 1
 
-	let g:window_right_pane_threshold = 130
+	let g:window_right_pane_threshold = 150
 
 	function! s:toggleRightPane()
 		if &columns > g:window_right_pane_threshold
@@ -447,8 +431,6 @@ else
 	" YouCompleteMe
 	let ycm_key_list_select_completion = ['<Down>', '`']
 	let ycm_key_list_previous_completion = ['<Up>', '~']
-	let g:ycm_add_preview_to_completeopt = 1
-	let g:ycm_autoclose_preview_window_after_insertion = 1
 	let g:ycm_complete_in_strings = 1
 	let g:ycm_collect_identifiers_from_comments_and_strings = 1
 	let g:ycm_always_populate_location_list = 1
@@ -540,27 +522,6 @@ command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>,
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, {'source': 'ag --hidden --ignore .git -g ""'}, <bang>0)
 
-function! s:registersContents()
-	let a:values = map(range(0, 9), '"[".v:val."]\t".eval("@".v:val)')
-	let a:values = a:values+map(
-				\ range(char2nr('a'), char2nr('z')),
-				\ '"[".nr2char(v:val)."]\t".eval("@".nr2char(v:val))')
-	let a:values = a:values+map(['"', ':', '.', '%', '#', '*', '+', '~', '/'],
-				\ '"[".v:val."]\t".eval("@".v:val)')
-	return filter(a:values, 'len(v:val) > 5')
-endfunction
-
-function! s:registers_sink(value)
-	let a:v = split(a:value, '\t')
-	exe "normal! i".a:v[1]
-endfunction
-
-command! Registers call fzf#run(fzf#wrap({
-			\ 'source': <SID>registersContents(),
-			\ 'sink': function('<SID>registers_sink'),
-			\ 'options': '+m' }))
-
-inoremap <C-x><C-r> <C-o>:Registers<CR>
 
 " Anzu
 nnoremap <silent> <leader>h :if &hlsearch \| 
