@@ -11,7 +11,6 @@ set noswapfile
 set hlsearch
 set incsearch
 set noswapfile
-set cursorline
 set laststatus=2
 set autowrite
 set splitbelow
@@ -72,7 +71,7 @@ highlight Type ctermfg=121
 highlight Typedef cterm=bold
 highlight LineNr cterm=none ctermfg=240
 highlight CursorLine cterm=none ctermbg=234
-highlight CursorLineNr cterm=none ctermfg=250 ctermbg=234
+highlight CursorLineNr cterm=bold ctermfg=250 ctermbg=234
 highlight Pmenu ctermbg=233 ctermfg=242
 highlight PmenuSel ctermbg=234 ctermfg=121
 highlight Todo ctermbg=green ctermfg=blue
@@ -112,6 +111,8 @@ inoremap <S-Right> <C-t>
 inoremap <C-d> <C-o>:wa<CR>
 inoremap <C-l> <C-\><C-o>:exe "normal! mfYp`fa"<CR>
 inoremap <C-b> <C-o>:make %<CR>
+inoremap <expr> <Up> (pumvisible() ? "\<C-y>\<Up>" : "\<Up>")
+inoremap <expr> <Down> (pumvisible() ? "\<C-y>\<Down>" : "\<Down>")
 
 nnoremap <A-Left> :bp<CR>
 nnoremap <A-Right> :bn<CR>
@@ -125,6 +126,7 @@ nnoremap <C-d> :wa<CR>
 nnoremap <C-b> :make %<CR>
 nnoremap <C-j> :Tags<CR>
 nnoremap Y y$
+
 nnoremap <C-w><C-Up> 5<C-w>+
 nnoremap <C-w><C-Down> 5<C-w>-
 nnoremap <C-w><C-Left> 5<C-w><
@@ -314,6 +316,42 @@ endfunction
 
 autocmd CompleteDone *.php call <SID>completeParams()
 
+function! s:windowMode()
+	echo '-- WIN --'
+	let current = win_getid()
+	while 1
+		let c = getchar()
+		if 13 == c
+			break
+		elseif 27 == c
+			call win_gotoid(current)
+			break
+		elseif "\<Left>" == c
+			let c = 'h'
+		elseif "\<Right>" == c
+			let c = 'l'
+		elseif "\<Up>" == c
+			let c = 'k'
+		elseif "\<Down>" == c
+			let c = 'j'
+		else
+			let c = nr2char(c)
+		endif
+
+		exe "wincmd ".c
+		redraw
+	endwhile
+	echo
+endfunction
+
+nnoremap <silent> <C-w><C-w> :call <SID>windowMode()<CR>
+
+""""""""""""""""""
+"  Autocommands  "
+""""""""""""""""""
+autocmd WinEnter * set cursorline
+autocmd WinLeave * set nocursorline
+
 autocmd BufEnter *.php compiler! php
 autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
 
@@ -337,7 +375,7 @@ Plug 'joonty/vdebug', {'on': 'VdebugStart'}
 Plug 'junegunn/fzf', {'do': './install --all'}
 Plug 'junegunn/fzf.vim'
 Plug 'kabbamine/vcoolor.vim', {'on': ['VCoolor', 'VCoolIns']}
-Plug 'majutsushi/tagbar', {'on': 'TagbarOpen'}
+Plug 'majutsushi/tagbar'
 Plug 'mattn/emmet-vim', {'for': ['html', 'php', 'smarty']}
 Plug 'mbbill/undotree'
 Plug 'mhinz/vim-signify'
@@ -429,8 +467,8 @@ else
 	let g:syntastic_java_checkers = []
 
 	" YouCompleteMe
-	let ycm_key_list_select_completion = ['<Down>', '`']
-	let ycm_key_list_previous_completion = ['<Up>', '~']
+	let ycm_key_list_select_completion = ['`']
+	let ycm_key_list_previous_completion = ['~']
 	let g:ycm_complete_in_strings = 1
 	let g:ycm_collect_identifiers_from_comments_and_strings = 1
 	let g:ycm_always_populate_location_list = 1
@@ -520,11 +558,11 @@ command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>,
 			\ <bang>0)
 
 command! -bang -nargs=? -complete=dir Files
-  \ call fzf#vim#files(<q-args>, {'source': 'ag --hidden --ignore .git -g ""'}, <bang>0)
+			\ call fzf#vim#files(<q-args>, {'source': 'ag --hidden --ignore .git -g ""'}, <bang>0)
 
 
 " Anzu
-nnoremap <silent> <leader>h :if &hlsearch \| 
+nnoremap <silent> <leader>h :if &hlsearch \|
 			\ AnzuClearSearchStatus \| set nohlsearch \|
 		\ else \|
 			\ set hlsearch \| AnzuUpdateSearchStatus \|
