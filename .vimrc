@@ -319,8 +319,10 @@ autocmd CompleteDone *.php call <SID>completeParams()
 function! s:windowMode()
 	echo '-- WIN --'
 	let current = win_getid()
+	let cnt = ''
 	while 1
 		let c = getchar()
+
 		if 13 == c
 			break
 		elseif 27 == c
@@ -338,7 +340,13 @@ function! s:windowMode()
 			let c = nr2char(c)
 		endif
 
-		exe "wincmd ".c
+		if c =~ '\d'
+			let cnt = cnt.c
+			continue
+		endif
+
+		exe cnt."wincmd ".c
+		let cnt = ''
 		redraw
 	endwhile
 	echo
