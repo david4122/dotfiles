@@ -316,10 +316,20 @@ endfunction
 
 autocmd CompleteDone *.php call <SID>completeParams()
 
-function! s:windowMode()
-	echo '-- WIN --'
+if !exists('g:winModeMappigs')
+	let g:winModeMappings = {
+				\ "\<Left>": 'h',
+				\ "\<Right>": 'l',
+				\ "\<Up>": 'k',
+				\ "\<Down>": 'j',
+				\ }
+endif
+
+function! s:winMode()
 	let current = win_getid()
 	let cnt = ''
+
+	echo '-- WIN --'
 	while 1
 		let c = getchar()
 
@@ -328,14 +338,8 @@ function! s:windowMode()
 		elseif 27 == c
 			call win_gotoid(current)
 			break
-		elseif "\<Left>" == c
-			let c = 'h'
-		elseif "\<Right>" == c
-			let c = 'l'
-		elseif "\<Up>" == c
-			let c = 'k'
-		elseif "\<Down>" == c
-			let c = 'j'
+		elseif has_key(g:winModeMappings, c)
+			let c = get(g:winModeMappings, c)
 		else
 			let c = nr2char(c)
 		endif
@@ -348,11 +352,13 @@ function! s:windowMode()
 		exe cnt."wincmd ".c
 		let cnt = ''
 		redraw
+		echo '-- WIN --'
 	endwhile
+	redraw
 	echo
 endfunction
 
-nnoremap <silent> <C-w><C-w> :call <SID>windowMode()<CR>
+nnoremap <silent> <C-w><C-w> :call <SID>winMode()<CR>
 
 """"""""""""""""""
 "  Autocommands  "
