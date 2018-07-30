@@ -69,9 +69,9 @@ highlight String ctermfg=142
 highlight Statement ctermfg=darkgreen
 highlight Type ctermfg=121
 highlight Typedef cterm=bold
-highlight LineNr cterm=none ctermfg=240
+highlight LineNr cterm=italic ctermfg=240
 highlight CursorLine cterm=none ctermbg=234
-highlight CursorLineNr cterm=bold ctermfg=250 ctermbg=234
+highlight CursorLineNr cterm=bold,italic ctermfg=250 ctermbg=234
 highlight Pmenu ctermbg=233 ctermfg=242
 highlight PmenuSel ctermbg=234 ctermfg=121
 highlight Todo ctermbg=green ctermfg=blue
@@ -329,6 +329,9 @@ function! s:winMode()
 	let current = win_getid()
 	let cnt = ''
 
+	let cursor = &t_ve
+	set t_ve=
+
 	echo '-- WIN --'
 	while 1
 		let c = getchar()
@@ -354,6 +357,7 @@ function! s:winMode()
 		redraw
 		echo '-- WIN --'
 	endwhile
+	let &t_ve = cursor
 	redraw
 	echo
 endfunction
