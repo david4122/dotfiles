@@ -1,6 +1,6 @@
 # Setup fzf
 # ---------
-if [[ ! "$PATH" == *$HOME/.vim/bundle/fzf/bin* ]]; then
+if [[ ! "$PATH" == "*$HOME/.vim/bundle/fzf/bin*" ]]; then
   export PATH="$PATH:$HOME/.vim/bundle/fzf/bin"
 fi
 export FZF_DEFAULT_OPTS='--preview "(head -$LINES {} || ls -la {} || echo {}) 2>/dev/null" --color fg:238,bg:233,hl:121,fg+:245,bg+:235,hl+:121,info:144,prompt:12,spinner:135,pointer:135,marker:118 --no-bold'
@@ -33,4 +33,16 @@ fzf_tmux_pane_switcher() {
 			--preview-window=up:60% \
 		| cut -d"$sep" -f1 \
 		| xargs tmux switch-client -t 2>/dev/null
+}
+
+fzf_mc_hotlist() {
+	local entry
+	entry=$(awk '/GROUP/{GROUP=$2} /ENTRY/{print GROUP, $2, $4}' ~/.config/mc/hotlist | fzf --reverse --height 15 | cut -d\  -f3)
+	[ -n "$entry" ] && echo "$entry" && mc ${entry//\"/} .
+}
+
+fzf_mc_netrc() {
+	local entry
+	entry=$(awk '{printf "[%s]@%s\n", $4, $2}' ~/.netrc | fzf --reverse --height 15)
+	[ -n "$entry" ] && echo "${entry##*\@}" && mc "ftp://${entry##*\@}/" .
 }
