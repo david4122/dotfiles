@@ -266,43 +266,6 @@ endfunction
 autocmd BufEnter * call <SID>restoreWinView()
 autocmd BufLeave * call <SID>saveWinView()
 
-function! s:completeParams()
-	if !exists('v:completed_item.menu') || empty(v:completed_item.menu)
-		return
-	endif
-
-	let sepIdx = stridx(v:completed_item.menu, '|')
-	let args = split(strpart(v:completed_item.menu, 0, sepIdx - 1), '\(\>, \| \[\(, \)\@=\|]\+\)')
-	let index = 0
-	let stack = 0
-	while index < len(args)
-		if empty(trim(args[index]))
-			continue
-		endif
-		if strgetchar(args[index], 0) == char2nr(',')
-			let arg = strpart(args[index], 2)
-			let args[index] = '${'.(index+stack*2+1).':, ${'.(index+stack*2+2).':'.arg.'}'
-			let stack = stack + 1
-		else
-			let args[index] = '${'.(index+stack*2+1).':'.args[index].'}'
-			if index != 0
-				let args[index] = ', '.args[index]
-			endif
-		endif
-		let index = index + 1
-	endwhile
-	let template = join(args, '')
-	for i in range(stack)
-		let template = template.'}'
-	endfor
-	if !empty(template)
-		let template = template.')$0'
-		call UltiSnips#Anon(template)
-	endif
-endfunction
-
-autocmd CompleteDone *.php call <SID>completeParams()
-
 if !exists('g:winModeMappigs')
 	let g:winModeMappings = {
 				\ "\<Left>": 'h',
@@ -524,12 +487,61 @@ nnoremap <kEnter> <Left>:VCoolor<CR>
 set diffopt+=vertical
 
 " Ultisnips
-let g:UltiSnipsExpandTrigger = "<Tab>"
+let g:UltiSnipsExpandTrigger = "<Nul>"
 let g:UltiSnipsJumpForwardTrigger = "<Tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<S-Tab>"
 if !exists('UltiSnipsSnippetDirectories')
 	let g:UltiSnipsSnippetDirectories = ['UltiSnips', '~/.vim/UltiSnips']
 endif
+
+let g:ulti_expand_or_jump_res = 0
+
+function s:tryExpandSnippet()
+	call UltiSnips#ExpandSnippetOrJump()
+	return g:ulti_expand_or_jump_res
+endfunction
+
+function! s:buildCompleteArgsSnippet(args)
+	let index = 0
+	let stack = 0
+	while index < len(a:args)
+		if strgetchar(a:args[index], 0) == char2nr(',')
+			let arg = strpart(a:args[index], 2)
+			let a:args[index] = '${'.(index+stack*2+1).':, ${'.(index+stack*2+2).':'.arg.'}'
+			let stack = stack + 1
+		else
+			let a:args[index] = '${'.(index+stack*2+1).':'.a:args[index].'}'
+			if index != 0
+				let a:args[index] = ', '.a:args[index]
+			endif
+		endif
+		let index = index + 1
+	endwhile
+	let template = join(a:args, '')
+	for i in range(stack)
+		let template = template.'}'
+	endfor
+	if !empty(template)
+		let template = template.')$0'
+		return template
+	endif
+endfunction
+
+function! s:tabComplete()
+	if <SID>tryExpandSnippet() == 0
+		if exists('v:completed_item.menu') && !empty(v:completed_item.menu)
+			let sepIdx = stridx(v:completed_item.menu, '|')
+			let args = split(strpart(v:completed_item.menu, 0, sepIdx - 1), '\(\>, \| \[\(, \)\@=\|]\+\)')
+			let snippet = <SID>buildCompleteArgsSnippet(args)
+			call UltiSnips#Anon(snippet)
+		else
+			return "\<Tab>"
+		endif
+	endif
+	return ''
+endf
+
+inoremap <Tab> <C-r>=<SID>tabComplete()<CR>
 
 " emmet
 let g:user_emmet_leader_key = '<C-e>'
