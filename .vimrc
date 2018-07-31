@@ -159,19 +159,6 @@ command! -bar -bang Dw write<bang> | Db
 
 command! CpPath let @+ = fnamemodify(@%, ':h') | echo @+
 
-function! BreakLines()
-	let &l:tw = winwidth('%') - 10
-	let a:winview = winsaveview()
-	exe "normal! gq"
-	call winrestview(a:winview)
-endfunction
-
-function! RemoveTrailingWS()
-	let a:winview = winsaveview()
-	%s/\s\+$//ge
-	call winrestview(a:winview)
-endfunction
-
 function! s:openedInCurrentTab(bufname)
 	let a:bufnr = bufnr(a:bufname)
 	return index(tabpagebuflist(), a:bufnr) >= 0
