@@ -278,6 +278,7 @@ endif
 function! s:winMode()
 	let current = win_getid()
 	let cnt = ''
+	let lastcmd = ''
 
 	let cursor = &t_ve
 	set t_ve=
@@ -287,10 +288,10 @@ function! s:winMode()
 		let cursor_bg_back = 'none'
 	endif
 	highlight CursorLine ctermfg=black ctermbg=green
-	redraw
 
-	echo '-- WIN --'
 	while 1
+		redraw
+		echo '-- WIN --'
 		let c = getchar()
 
 		if 13 == c
@@ -298,6 +299,9 @@ function! s:winMode()
 		elseif 27 == c
 			call win_gotoid(current)
 			break
+		elseif 46 == c
+			exe lastcmd
+			continue
 		elseif has_key(g:winModeMappings, c)
 			let c = get(g:winModeMappings, c)
 		else
@@ -309,10 +313,9 @@ function! s:winMode()
 			continue
 		endif
 
-		exe cnt."wincmd ".c
+		let lastcmd = cnt."wincmd ".c
+		exe lastcmd
 		let cnt = ''
-		redraw
-		echo '-- WIN --'
 	endwhile
 
 	let &t_ve = cursor
