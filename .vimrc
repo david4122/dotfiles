@@ -332,6 +332,13 @@ function! s:winMode()
 	let cursor = &t_ve
 	set t_ve=
 
+	let cursor_bg_back = synIDattr(synIDtrans(hlID('CursorLine')), 'bg')
+	if empty(cursor_bg_back)
+		let cursor_bg_back = 'none'
+	endif
+	highlight CursorLine ctermfg=black ctermbg=green
+	redraw
+
 	echo '-- WIN --'
 	while 1
 		let c = getchar()
@@ -357,7 +364,10 @@ function! s:winMode()
 		redraw
 		echo '-- WIN --'
 	endwhile
+
 	let &t_ve = cursor
+	exe 'highlight CursorLine ctermfg=none ctermbg='.cursor_bg_back
+
 	redraw
 	echo
 endfunction
