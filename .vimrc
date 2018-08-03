@@ -309,7 +309,7 @@ function! s:winMode()
 		endif
 
 		if c =~ '\d'
-			let cnt = cnt.c
+			let cnt .= c
 			continue
 		endif
 
@@ -504,29 +504,31 @@ function s:tryExpandSnippet()
 	return g:ulti_expand_or_jump_res
 endfunction
 
-function! s:buildCompleteArgsSnippet(args)
+function! s:buildArgsCompletionSnippet(args)
 	let index = 0
 	let stack = 0
 	while index < len(a:args)
+		let snipIndex = stack*2+index+1
 		if strgetchar(a:args[index], 0) == char2nr(',')
 			let arg = strpart(a:args[index], 2)
-			let a:args[index] = '${'.(index+stack*2+1).':, ${'.(index+stack*2+2).':'.arg.'}'
-			let stack = stack + 1
+			let a:args[index] = '${'.(snipIndex).':, ${'.(snipIndex+1).':'.arg.'}'
+			let stack += 1
 		else
-			let a:args[index] = '${'.(index+stack*2+1).':'.a:args[index].'}'
+			let a:args[index] = '${'.(snipIndex).':'.a:args[index].'}'
 			if index != 0
 				let a:args[index] = ', '.a:args[index]
 			endif
 		endif
-		let index = index + 1
+		let index += 1
 	endwhile
-	let template = join(a:args, '')
-	for i in range(stack)
-		let template = template.'}'
-	endfor
-	if !empty(template)
-		let template = template.')$0'
-		return template
+
+	let snippet = join(a:args, '')
+	if !empty(snippet)
+		for i in range(stack)
+			let snippet .= '}'
+		endfor
+		let snippet .= ')$0'
+		return snippet
 	endif
 endfunction
 
@@ -535,14 +537,13 @@ function! s:tabComplete()
 		if exists('v:completed_item.menu') && !empty(v:completed_item.menu)
 			let sepIdx = stridx(v:completed_item.menu, '|')
 			let args = split(strpart(v:completed_item.menu, 0, sepIdx - 1), '\(\>, \| \[\(, \)\@=\|]\+\)')
-			let snippet = <SID>buildCompleteArgsSnippet(args)
-			call UltiSnips#Anon(snippet)
+			call UltiSnips#Anon(<SID>buildCompleteArgsSnippet(args))
 		else
 			return "\<Tab>"
 		endif
 	endif
 	return ''
-endf
+endfunction
 
 inoremap <Tab> <C-r>=<SID>tabComplete()<CR>
 
