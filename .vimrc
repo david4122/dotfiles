@@ -198,7 +198,7 @@ function! s:tabComplete()
 		if exists('v:completed_item.menu') && !empty(v:completed_item.menu)
 			let sepIdx = stridx(v:completed_item.menu, '|')
 			let args = split(strpart(v:completed_item.menu, 0, sepIdx - 1), '\(\>, \| \[\(, \)\@=\|]\+\)')
-			call UltiSnips#Anon(<SID>buildCompleteArgsSnippet(args))
+			call UltiSnips#Anon(<SID>buildArgsCompletionSnippet(args))
 		else
 			return "\<Tab>"
 		endif
@@ -516,6 +516,7 @@ function! s:winMode()
 		let cursor_bg_back = 'none'
 	endif
 	highlight CursorLine ctermfg=black ctermbg=green
+	echohl ModeMsg
 
 	while 1
 		redraw
@@ -548,7 +549,7 @@ function! s:winMode()
 
 	let &t_ve = cursor
 	exe 'highlight CursorLine ctermfg=none ctermbg='.cursor_bg_back
-
+	echohl Normal
 	redraw
 	echo
 endfunction
