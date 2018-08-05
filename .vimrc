@@ -1,6 +1,4 @@
-"""""""""""""
-"  Plugins  "
-"""""""""""""
+" Plugins {{{1
 call plug#begin('~/.vim/bundle')
 
 Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --clang-completer'}
@@ -261,9 +259,7 @@ nnoremap <silent> <leader>h :if &hlsearch \|
 		\ endif<CR>
 
 
-""""""""""""""
-"  Settings  "
-""""""""""""""
+" Settings {{{1
 set nocompatible
 set number
 set tabstop=4
@@ -325,9 +321,7 @@ filetype indent on
 
 runtime macros/matchit.vim
 
-""""""""""""""
-"  Mappings  "
-""""""""""""""
+" Mappings {{{1
 inoremap <A-Left> <C-o>:bp<CR>
 inoremap <A-Right> <C-o>:bn<CR>
 inoremap <A-Up> <C-o><C-e>
@@ -379,9 +373,7 @@ if has('terminal')
 	tnoremap <kEnd> <End>
 endif
 
-""""""""""""""""""""""""""""
-"  Commands and functions  "
-""""""""""""""""""""""""""""
+" Commands and functions {{{1
 command! -bar -bang Db if buflisted(@#) | b# | else | bp | endif | bd<bang> #
 command! -bar -bang Dw write<bang> | Db
 
@@ -556,9 +548,7 @@ endfunction
 
 nnoremap <silent> <C-w><C-w> :call <SID>winMode()<CR>
 
-""""""""""""""""""
-"  Autocommands  "
-""""""""""""""""""
+" Autocommands {{{1
 autocmd WinEnter,BufWinEnter * setlocal cursorline
 autocmd WinLeave * setlocal nocursorline
 
@@ -569,9 +559,7 @@ autocmd BufRead anacrontab setf crontab
 autocmd BufRead .htaccess set commentstring=#\ %s
 autocmd FileType smarty set commentstring={*\ %s\ *}
 
-""""""""""""""""""
-"  Color scheme  "
-""""""""""""""""""
+" Color scheme {{{1
 set background=dark
 highlight String ctermfg=142
 highlight Type ctermfg=121
@@ -606,7 +594,7 @@ highlight Comment cterm=italic ctermfg=darkgray
 
 autocmd BufEnter * syntax match Method "\(\.\|->\)\@<=\s*\w\+\s*(\@="
 highlight Method cterm=italic
-
+" }}}
 
 if system('tput colors') =~ '256'
 	" Fix problems with Tagbar
