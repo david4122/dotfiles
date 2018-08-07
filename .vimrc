@@ -605,3 +605,5 @@ endif
 if filereadable('~/.vimrc.local')
 	source ~/.vimrc.local
 endif
+
+" vim: fdm=marker
