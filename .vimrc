@@ -304,6 +304,7 @@ set scrolloff=2
 set sidescrolloff=5
 set title
 set lazyredraw
+set cpoptions=AcFsBn
 
 set listchars=tab:⇢\ ,nbsp:•,eol:¬
 set list
@@ -374,8 +375,8 @@ if has('terminal')
 endif
 
 " Commands and functions {{{1
-command! -bar -bang Db if buflisted(@#) | b# | else | bp | endif | bd<bang> #
-command! -bar -bang Dw write<bang> | Db
+command! -bar -bang Db if buflisted(@#) | b# | else | bp | endif | try | bd<bang> # | catch | b# | echoerr v:exception | endtry
+command! -bar -bang -nargs=? -complete=file Dw keepalt write<bang> <args> | Db
 
 command! CpPath let @+ = fnamemodify(@%, ':h') | echo @+
 
@@ -430,7 +431,7 @@ endfor
 function! s:inQuotesOrBrackets(multiline)
 	if a:multiline
 		let a:chrs = matchstr(
-					\ getline(line('.')-1)."\n".getline('.')."\n".getline(line('.')+1),
+					\ join(getline(line('.')-1, line('.')+1)),
 					\ '.\s*\n\s\+\n\s*.')
 		let a:chrs = substitute(a:chrs, '[ \t\n]', '', 'g')
 		if strlen(a:chrs) == 0
