@@ -75,9 +75,9 @@ if !&diff && !exists('g:quick_mode') || !g:quick_mode
 	autocmd VimEnter,VimResized * call <SID>toggleRightPane()
 
 	function! s:swapUndotreeTagbar()
-		let a:tagbar_buffer = filter(getbufinfo(),
+		let tagbar_buffer = filter(getbufinfo(),
 					\ "v:val['name'] =~ 'Tagbar' && <SID>openedInCurrentTab(v:val['name'])")
-		if len(a:tagbar_buffer) > 0
+		if len(tagbar_buffer) > 0
 			TagbarClose
 			UndotreeShow
 			let t:right_pane_content = 'undotree'
@@ -386,8 +386,8 @@ command! -bar -bang -nargs=? -complete=file Dw keepalt write<bang> <args> | Db
 command! CpPath let @+ = fnamemodify(@%, ':h') | echo @+
 
 function! s:openedInCurrentTab(bufname)
-	let a:bufnr = bufnr(a:bufname)
-	return index(tabpagebuflist(), a:bufnr) >= 0
+	let bufnr = bufnr(a:bufname)
+	return index(tabpagebuflist(), bufnr) >= 0
 endfunction
 
 function! s:iunmapMoving(key)
@@ -403,8 +403,8 @@ endfunction
 let g:closing = {'{':'}', '[':']', '(':')'}
 
 function! s:insertOnce(chr)
-	let a:nextChar = matchstr(getline('.'), '\%'.(col('.')).'c.')
-	if a:chr != a:nextChar
+	let nextChar = matchstr(getline('.'), '\%'.(col('.')).'c.')
+	if a:chr != nextChar
 		return a:chr
 	else
 		return "\<Right>"
@@ -435,20 +435,20 @@ endfor
 
 function! s:inQuotesOrBrackets(multiline)
 	if a:multiline
-		let a:chrs = matchstr(
+		let chrs = matchstr(
 					\ join(getline(line('.')-1, line('.')+1), "\n"),
 					\ '.\s*\n\s\+\n\s*.')
-		let a:chrs = substitute(a:chrs, '[ \t\n]', '', 'g')
-		if strlen(a:chrs) == 0
+		let chrs = substitute(chrs, '[ \t\n]', '', 'g')
+		if strlen(chrs) == 0
 			return 0
 		endif
 	else
-		let a:chrs = matchstr(getline('.'), '.\%'.(col('.')).'c.')
+		let chrs = matchstr(getline('.'), '.\%'.(col('.')).'c.')
 	endif
-	return get(g:closing, nr2char(strgetchar(a:chrs, 0)), '\0')
-				\ == nr2char(strgetchar(a:chrs, 1))
-				\ || (strgetchar(a:chrs, 0) == strgetchar(a:chrs, 1)
-				\ && index(g:quotes, nr2char(strgetchar(a:chrs, 0))) >= 0)
+	return get(g:closing, nr2char(strgetchar(chrs, 0)), '\0')
+				\ == nr2char(strgetchar(chrs, 1))
+				\ || (strgetchar(chrs, 0) == strgetchar(chrs, 1)
+				\ && index(g:quotes, nr2char(strgetchar(chrs, 0))) >= 0)
 endfunction
 
 function! s:removePairs()
