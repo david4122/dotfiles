@@ -436,7 +436,7 @@ endfor
 function! s:inQuotesOrBrackets(multiline)
 	if a:multiline
 		let a:chrs = matchstr(
-					\ join(getline(line('.')-1, line('.')+1)),
+					\ join(getline(line('.')-1, line('.')+1), "\n"),
 					\ '.\s*\n\s\+\n\s*.')
 		let a:chrs = substitute(a:chrs, '[ \t\n]', '', 'g')
 		if strlen(a:chrs) == 0
