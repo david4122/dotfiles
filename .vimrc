@@ -1,56 +1,52 @@
 " Plugins {{{1
 call plug#begin('~/.vim/bundle')
 
-Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --clang-completer'}
 Plug 'ap/vim-css-color'
 Plug 'blueyed/smarty.vim', {'for': 'smarty'}
 Plug 'chrisbra/csv.vim', {'for': 'csv'}
 Plug 'easymotion/vim-easymotion'
-Plug 'edkolev/promptline.vim'
 Plug 'honza/vim-snippets'
 Plug 'joonty/vdebug', {'on': 'VdebugStart'}
 Plug 'junegunn/fzf', {'do': './install --all'}
 Plug 'junegunn/fzf.vim'
 Plug 'kabbamine/vcoolor.vim', {'on': ['VCoolor', 'VCoolIns']}
-Plug 'majutsushi/tagbar'
 Plug 'mattn/emmet-vim', {'for': ['html', 'php', 'smarty']}
-Plug 'mbbill/undotree'
-Plug 'mhinz/vim-signify'
 Plug 'osyo-manga/vim-anzu'
-Plug 'ryanoasis/vim-devicons'
 Plug 'sirver/ultisnips'
 Plug 'tfnico/vim-gradle', {'for': 'java'}
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-surround'
-Plug 'valloric/matchtagalways', {'for': ['html', 'xml', 'php', 'smarty']}
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'Valloric/matchtagalways', {'for': ['html', 'xml', 'php', 'smarty']}
 Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php']}
-Plug 'vim-syntastic/syntastic'
 Plug 'nanotech/jellybeans.vim'
-Plug 'vimwiki/vimwiki'
+
+if !&diff && !exists('g:quick_mode') || !g:quick_mode
+	Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --clang-completer'}
+	Plug 'mhinz/vim-signify'
+	Plug 'vim-syntastic/syntastic'
+	Plug 'majutsushi/tagbar'
+	Plug 'mbbill/undotree'
+	Plug 'vimwiki/vimwiki'
+	Plug 'edkolev/promptline.vim'
+endif
+
+" do not enable airline if term doesn't support colors
+if system('tput colors') =~ '256'
+	Plug 'vim-airline/vim-airline'
+	Plug 'vim-airline/vim-airline-themes'
+	Plug 'ryanoasis/vim-devicons'
+
+	set fillchars=vert:\ 
+	" fix tagbar status line
+	autocmd VimEnter * AirlineRefresh
+endif
 
 call plug#end()
 
-" disable airline if term doesn't support colors
-if system('tput colors') !~ '256'
-	let g:loaded_airline = 1
-	let g:webdevicons_enable = 0
-else
-	set fillchars=vert:\ 
-endif
-
-if &diff || (exists('g:quick_mode') && g:quick_mode)
-	nnoremap ;; :qa<CR>
-	set signcolumn=no
-	let g:loaded_youcompleteme = 1
-	let g:loaded_signify = 1
-	let g:loaded_syntastic_plugin = 1
-else
-	set relativenumber
-
+" Plugins' setup {{{2
+if !&diff && !exists('g:quick_mode') || !g:quick_mode
 	" Tagbar
 	let g:tagbar_width = 50
 	let g:tagbar_singleclick = 1
@@ -115,6 +111,15 @@ else
 	endif
 
 	nnoremap <C-f> :YcmCompleter FixIt<CR>
+	
+	" Promptline
+	let g:promptline_preset = {
+				\'a': ['\u@\h', promptline#slices#python_virtualenv()],
+				\'b': ['\t', promptline#slices#jobs()],
+				\'c': [promptline#slices#cwd({'dir_limit': 10})],
+				\'y': [promptline#slices#vcs_branch()],
+				\'warn': [promptline#slices#last_exit_code()]}
+
 endif
 
 " Airline
@@ -225,14 +230,6 @@ let g:dbext_default_history_file = '~/.vim/dbext_history'
 autocmd BufEnter Result setlocal nobuflisted
 autocmd BufEnter Result set winfixheight
 
-" Promptline
-let g:promptline_preset = {
-	\'a': ['\u@\h', promptline#slices#python_virtualenv()],
-	\'b': ['\t', promptline#slices#jobs()],
-	\'c': [promptline#slices#cwd({'dir_limit': 10})],
-	\'y': [promptline#slices#vcs_branch()],
-	\'warn': [promptline#slices#last_exit_code()]}
-
 " EasyMotion
 highlight EasyMotionTarget cterm=bold ctermfg=yellow
 
@@ -322,6 +319,13 @@ filetype indent on
 
 runtime macros/matchit.vim
 
+if &diff || (exists('g:quick_mode') && g:quick_mode)
+	nnoremap ;; :qa<CR>
+	set signcolumn=no
+else
+	set relativenumber
+endif
+
 " Mappings {{{1
 inoremap <A-Left> <C-o>:bp<CR>
 inoremap <A-Right> <C-o>:bn<CR>
@@ -331,7 +335,7 @@ inoremap <silent> <S-Up> <ESC>:m-2<CR>==a
 inoremap <silent> <S-Down> <ESC>:m+1<CR>==a
 inoremap <S-Left> <C-d>
 inoremap <S-Right> <C-t>
-inoremap <C-d> <C-o>:wa<CR>
+inoremap <C-d> <C-o>:w<CR>
 inoremap <C-l> <C-\><C-o>:exe "normal! mfYp`fa"<CR>
 inoremap <C-b> <C-o>:make %<CR>
 inoremap <expr> <Up> (pumvisible() ? "\<C-y>\<Up>" : "\<Up>")
@@ -345,7 +349,7 @@ nnoremap <S-Left> <<
 nnoremap <S-Right> >>
 nnoremap <silent> <S-Up> :m-2<CR>==
 nnoremap <silent> <S-Down> :m+1<CR>==
-nnoremap <C-d> :wa<CR>
+nnoremap <C-d> :w<CR>
 nnoremap <C-b> :make %<CR>
 nnoremap <C-j> :Tags<CR>
 nnoremap Y y$
@@ -361,9 +365,9 @@ nnoremap [e :cprev<CR>
 nnoremap ]l :lnext<CR>
 nnoremap [l :lprev<CR>
 
-vnoremap <C-y> "+y
 vnoremap <S-Left> <gv
 vnoremap <S-Right> >gv
+vnoremap <C-y> "+y
 
 if has('terminal')
 	if exists('##TerminalOpen')
@@ -375,7 +379,8 @@ if has('terminal')
 endif
 
 " Commands and functions {{{1
-command! -bar -bang Db if buflisted(@#) | b# | else | bp | endif | try | bd<bang> # | catch | b# | echoerr v:exception | endtry
+command! -bar -bang Db if buflisted(@#) | b# | else | bp | endif | 
+		\ try | bd<bang> # | catch | b# | echoerr v:exception | endtry
 command! -bar -bang -nargs=? -complete=file Dw keepalt write<bang> <args> | Db
 
 command! CpPath let @+ = fnamemodify(@%, ':h') | echo @+
@@ -596,11 +601,6 @@ highlight Comment cterm=italic ctermfg=darkgray
 autocmd BufEnter * syntax match Method "\(\.\|->\)\@<=\s*\w\+\s*(\@="
 highlight Method cterm=italic
 " }}}
-
-if system('tput colors') =~ '256'
-	" Fix problems with Tagbar
-	autocmd VimEnter * AirlineRefresh
-endif
 
 if filereadable('~/.vimrc.local')
 	source ~/.vimrc.local
