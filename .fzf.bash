@@ -20,7 +20,7 @@ fzf_tmux_pane_switcher() {
 	local format current sep=$'\t'
 	local reset="\033[0m" active="\033[38;5;184m" pane="\033[37m" window="\033[38;5;121m"
 
-	format="#{session_id}:#{window_id}.#{pane_id}$sep[#{window_active}#{pane_active}]$sep#{session_name}: #{window_name} [ #{pane_current_command} ] - #{pane_title}" 
+	format="#{session_id}:#{window_id}.#{pane_id}$sep[#{window_active}#{pane_active}]$sep#{session_name}: #{window_name} [ #{pane_current_command} ] - #{pane_title}"
 	current=$(tmux display-message -p "$format")
 
 	tmux lsp -aF "$format" \

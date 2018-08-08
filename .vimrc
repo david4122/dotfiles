@@ -1,3 +1,11 @@
+
+if &diff
+	let g:quick_mode = 1
+elseif !exists('g:quick_mode')
+	let g:quick_mode = 0
+endif
+let s:colors_supported = system('tput colors') =~ '256'
+
 " Plugins {{{1
 call plug#begin('~/.vim/bundle')
 
@@ -22,7 +30,7 @@ Plug 'Valloric/matchtagalways', {'for': ['html', 'xml', 'php', 'smarty']}
 Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php']}
 Plug 'nanotech/jellybeans.vim'
 
-if !&diff && !exists('g:quick_mode') || !g:quick_mode
+if !g:quick_mode
 	Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --clang-completer'}
 	Plug 'mhinz/vim-signify'
 	Plug 'vim-syntastic/syntastic'
@@ -32,21 +40,16 @@ if !&diff && !exists('g:quick_mode') || !g:quick_mode
 	Plug 'edkolev/promptline.vim'
 endif
 
-" do not enable airline if term doesn't support colors
-if system('tput colors') =~ '256'
+if s:colors_supported
 	Plug 'vim-airline/vim-airline'
 	Plug 'vim-airline/vim-airline-themes'
 	Plug 'ryanoasis/vim-devicons'
-
-	set fillchars=vert:\ 
-	" fix tagbar status line
-	autocmd VimEnter * AirlineRefresh
 endif
 
 call plug#end()
 
 " Plugins' setup {{{2
-if !&diff && !exists('g:quick_mode') || !g:quick_mode
+if !g:quick_mode
 	" Tagbar
 	let g:tagbar_width = 50
 	let g:tagbar_singleclick = 1
@@ -111,7 +114,7 @@ if !&diff && !exists('g:quick_mode') || !g:quick_mode
 	endif
 
 	nnoremap <C-f> :YcmCompleter FixIt<CR>
-	
+
 	" Promptline
 	let g:promptline_preset = {
 				\'a': ['\u@\h', promptline#slices#python_virtualenv()],
@@ -122,30 +125,33 @@ if !&diff && !exists('g:quick_mode') || !g:quick_mode
 
 endif
 
-" Airline
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#show_buffers = 1
-let g:airline_theme = 'jellybeans'
+if s:colors_supported
+	" Airline
+	let g:airline_powerline_fonts = 1
+	let g:airline#extensions#tabline#enabled = 1
+	let g:airline#extensions#tabline#show_buffers = 1
+	let g:airline_theme = 'jellybeans'
+	" fix tagbar status line
+	autocmd VimEnter * AirlineRefresh
 
-" unicode symbols
-if !exists('g:airline_symbols')
-	let g:airline_symbols = {}
+	" unicode symbols
+	if !exists('g:airline_symbols')
+		let g:airline_symbols = {}
+	endif
+	let g:airline_symbols.space = "\ua0"
+	let g:airline_symbols.crypt = '🔒'
+	" let g:airline_symbols.linenr = '␊'
+	" let g:airline_symbols.linenr = '␤'
+	let g:airline_symbols.linenr = '¶'
+	let g:airline_symbols.maxlinenr = '☰'
+	let g:airline_symbols.branch = '⎇'
+	" let g:airline_symbols.paste = 'ρ'
+	" let g:airline_symbols.paste = 'Þ'
+	let g:airline_symbols.paste = '∥'
+	let g:airline_symbols.spell = 'Ꞩ'
+	let g:airline_symbols.notexists = '∄'
+	let g:airline_symbols.whitespace = 'Ξ'
 endif
-let g:airline_symbols.space = "\ua0"
-let g:airline_symbols.crypt = '🔒'
-" let g:airline_symbols.linenr = '␊'
-" let g:airline_symbols.linenr = '␤'
-let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.maxlinenr = '☰'
-let g:airline_symbols.branch = '⎇'
-" let g:airline_symbols.paste = 'ρ'
-" let g:airline_symbols.paste = 'Þ'
-let g:airline_symbols.paste = '∥'
-let g:airline_symbols.spell = 'Ꞩ'
-let g:airline_symbols.notexists = '∄'
-let g:airline_symbols.whitespace = 'Ξ'
-
 " VCoolor
 inoremap <kEnter> <Left><C-o>:VCoolor<CR>
 nnoremap <kEnter> <Left>:VCoolor<CR>
@@ -319,7 +325,7 @@ filetype indent on
 
 runtime macros/matchit.vim
 
-if &diff || (exists('g:quick_mode') && g:quick_mode)
+if g:quick_mode
 	nnoremap ;; :qa<CR>
 	set signcolumn=no
 else
@@ -386,7 +392,7 @@ if has('terminal')
 endif
 
 " Commands and functions {{{1
-command! -bar -bang Db if buflisted(@#) | b# | else | bp | endif | 
+command! -bar -bang Db if buflisted(@#) | b# | else | bp | endif |
 		\ try | bd<bang> # | catch | b# | echoerr v:exception | endtry
 command! -bar -bang -nargs=? -complete=file Dw keepalt write<bang> <args> | Db
 
@@ -607,6 +613,10 @@ highlight Comment cterm=italic ctermfg=darkgray
 
 autocmd BufEnter * syntax match Method "\(\.\|->\)\@<=\s*\w\+\s*(\@="
 highlight Method cterm=italic
+
+if s:colors_supported
+	set fillchars=vert:\ 
+endif
 " }}}
 
 if filereadable('~/.vimrc.local')
