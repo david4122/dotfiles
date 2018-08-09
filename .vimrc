@@ -74,8 +74,11 @@ if !g:quick_mode
 		endif
 	endfunction
 
-	autocmd VimEnter * let t:right_pane_content = 'tagbar'
-	autocmd VimEnter,VimResized * call <SID>toggleRightPane()
+	augroup rightPane
+		autocmd!
+		autocmd VimEnter * let t:right_pane_content = 'tagbar'
+		autocmd VimEnter,VimResized * call <SID>toggleRightPane()
+	augroup END
 
 	function! s:swapUndotreeTagbar()
 		let tagbar_buffer = filter(getbufinfo(),
@@ -94,9 +97,9 @@ if !g:quick_mode
 	nnoremap <silent> <C-u> :call <SID>swapUndotreeTagbar()<CR>
 
 	" Signify
-	autocmd BufEnter * highlight SignifySignAdd ctermbg=235 ctermfg=green
-	autocmd BufEnter * highlight SignifySignDelete ctermbg=235 ctermfg=blue
-	autocmd BufEnter * highlight SignifySignChange ctermbg=235 ctermfg=lightgray
+	highlight SignifySignAdd ctermbg=235 ctermfg=green
+	highlight SignifySignDelete ctermbg=235 ctermfg=blue
+	highlight SignifySignChange ctermbg=235 ctermfg=lightgray
 	let g:signify_sign_change = '~'
 
 	" Syntastic
@@ -502,8 +505,11 @@ function! s:restoreWinView()
 	endif
 endfunction
 
-autocmd BufEnter * call <SID>restoreWinView()
-autocmd BufLeave * call <SID>saveWinView()
+augroup winRestore
+	autocmd!
+	autocmd BufEnter * call <SID>restoreWinView()
+	autocmd BufLeave * call <SID>saveWinView()
+augroup END
 
 if !exists('g:winModeMappigs')
 	let g:winModeMappings = {
@@ -568,15 +574,18 @@ endfunction
 nnoremap <silent> <C-w><C-w> :call <SID>winMode()<CR>
 
 " Autocommands {{{1
-autocmd WinEnter,BufWinEnter * setlocal cursorline
-autocmd WinLeave * setlocal nocursorline
+augroup vimrc
+	autocmd!
+	autocmd WinEnter,BufWinEnter * setlocal cursorline
+	autocmd WinLeave * setlocal nocursorline
 
-autocmd BufEnter *.php compiler! php
-autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
+	autocmd BufEnter *.php compiler! php
+	autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
 
-autocmd BufRead anacrontab setf crontab
-autocmd BufRead .htaccess set commentstring=#\ %s
-autocmd FileType smarty set commentstring={*\ %s\ *}
+	autocmd BufRead anacrontab setf crontab
+	autocmd BufRead .htaccess set commentstring=#\ %s
+	autocmd FileType smarty set commentstring={*\ %s\ *}
+augroup END
 
 " Color scheme {{{1
 set background=dark
@@ -611,7 +620,7 @@ highlight StatusLineNC cterm=none ctermbg=233 ctermfg=none
 highlight MatchParen cterm=bold ctermbg=none ctermfg=yellow
 highlight Comment cterm=italic ctermfg=darkgray
 
-autocmd BufEnter * syntax match Method "\(\.\|->\)\@<=\s*\w\+\s*(\@="
+syntax match Method "\(\.\|->\)\@<=\s*\w\+\s*(\@="
 highlight Method cterm=italic
 
 if s:colors_supported
