@@ -28,7 +28,6 @@ Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-surround'
 Plug 'Valloric/matchtagalways', {'for': ['html', 'xml', 'php', 'smarty']}
 Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php']}
-Plug 'edkolev/promptline.vim', {'on': 'PromptlineSnapshot'}
 
 if !g:quick_mode
 	Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --clang-completer'}
@@ -37,6 +36,7 @@ if !g:quick_mode
 	Plug 'majutsushi/tagbar'
 	Plug 'mbbill/undotree'
 	Plug 'vimwiki/vimwiki'
+	Plug 'edkolev/promptline.vim'
 endif
 
 if s:colors_supported
