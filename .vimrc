@@ -28,7 +28,7 @@ Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-surround'
 Plug 'Valloric/matchtagalways', {'for': ['html', 'xml', 'php', 'smarty']}
 Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php']}
-Plug 'nanotech/jellybeans.vim'
+Plug 'edkolev/promptline.vim', {'on': 'PromptlineSnapshot'}
 
 if !g:quick_mode
 	Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --clang-completer'}
@@ -37,7 +37,6 @@ if !g:quick_mode
 	Plug 'majutsushi/tagbar'
 	Plug 'mbbill/undotree'
 	Plug 'vimwiki/vimwiki'
-	Plug 'edkolev/promptline.vim'
 endif
 
 if s:colors_supported
@@ -574,7 +573,54 @@ endfunction
 
 nnoremap <silent> <C-w><C-w> :call <SID>winMode()<CR>
 
-" Autocommands {{{1
+" Color scheme {{{1
+set background=dark
+highlight String ctermfg=142
+highlight Type ctermfg=121
+highlight Typedef cterm=bold
+highlight Todo ctermfg=blue ctermbg=green
+highlight Constant cterm=bold
+highlight SpecialKey ctermfg=237
+highlight NonText ctermfg=239
+highlight MatchParen cterm=bold ctermfg=yellow ctermbg=none
+highlight Comment cterm=italic ctermfg=darkgray
+highlight StatusLine cterm=none ctermfg=121 ctermbg=233
+highlight StatusLineNC cterm=none ctermfg=none ctermbg=233
+highlight Folded ctermfg=121 ctermbg=234
+highlight FoldColum ctermfg=darkgray ctermbg=234
+highlight SignColumn ctermbg=235
+highlight VertSplit cterm=none ctermbg=233
+
+highlight LineNr cterm=italic ctermfg=240
+highlight CursorLine cterm=none ctermbg=234
+highlight CursorLineNr cterm=bold,italic ctermfg=250 ctermbg=234
+
+highlight Pmenu ctermfg=242 ctermbg=233
+highlight PmenuSel ctermfg=121 ctermbg=234
+highlight PmenuSbar ctermbg=233
+highlight PmenuThumb ctermbg=yellow
+
+highlight DiffAdd ctermbg=22
+highlight DiffDelete ctermbg=235
+highlight DiffChange ctermbg=17
+highlight DiffText cterm=none ctermfg=white ctermbg=130
+
+syntax match Method "\(\.\|->\)\@<=\s*\w\+\s*(\@="
+highlight Method cterm=italic
+
+augroup colorscheme
+	autocmd!
+	autocmd VimEnter,BufNew *.java highlight javaAnnotation ctermfg=blue
+	autocmd VimEnter,BufNew *.php highlight phpMethodsVar cterm=italic
+	autocmd VimEnter,BufNew *.php highlight DbgBreakptLine ctermbg=brown
+	autocmd VimEnter,BufNew *.php highlight DbgBreakptSign ctermbg=brown
+augroup END
+
+if s:colors_supported
+	set fillchars=vert:\ 
+endif
+
+" Misc {{{1
 augroup vimrc
 	autocmd!
 	autocmd WinEnter,BufWinEnter * setlocal cursorline
@@ -587,46 +633,6 @@ augroup vimrc
 	autocmd BufRead .htaccess set commentstring=#\ %s
 	autocmd FileType smarty set commentstring={*\ %s\ *}
 augroup END
-
-" Color scheme {{{1
-set background=dark
-highlight String ctermfg=142
-highlight Type ctermfg=121
-highlight Typedef cterm=bold
-highlight LineNr cterm=italic ctermfg=240
-highlight CursorLine cterm=none ctermbg=234
-highlight CursorLineNr cterm=bold,italic ctermfg=250 ctermbg=234
-highlight Pmenu ctermbg=233 ctermfg=242
-highlight PmenuSel ctermbg=234 ctermfg=121
-highlight PmenuSbar ctermbg=233
-highlight PmenuThumb ctermbg=yellow
-highlight Todo ctermbg=green ctermfg=blue
-highlight Constant cterm=bold
-highlight javaAnnotation ctermfg=blue
-highlight Folded ctermbg=234 ctermfg=121
-highlight FoldColumn ctermbg=236 ctermfg=252
-highlight SpecialKey ctermfg=237
-highlight NonText ctermfg=239
-highlight VertSplit cterm=none ctermbg=233
-highlight DiffDelete ctermbg=235
-highlight DiffText cterm=none ctermbg=130 ctermfg=white
-highlight DiffChange ctermbg=17
-highlight DiffAdd ctermbg=22
-highlight SignColumn ctermbg=235
-highlight phpMethodsVar cterm=italic
-highlight DbgBreakptLine ctermbg=brown
-highlight DbgBreakptSign ctermbg=brown
-highlight StatusLine cterm=none ctermfg=121 ctermbg=233
-highlight StatusLineNC cterm=none ctermbg=233 ctermfg=none
-highlight MatchParen cterm=bold ctermbg=none ctermfg=yellow
-highlight Comment cterm=italic ctermfg=darkgray
-
-syntax match Method "\(\.\|->\)\@<=\s*\w\+\s*(\@="
-highlight Method cterm=italic
-
-if s:colors_supported
-	set fillchars=vert:\ 
-endif
 " }}}
 
 if filereadable('~/.vimrc.local')
