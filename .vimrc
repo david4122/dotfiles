@@ -108,8 +108,8 @@ if !g:quick_mode
 
 	" YouCompleteMe
 	if !exists('g:loaded_youcompleteme') || !g:loaded_youcompleteme
-		let ycm_key_list_select_completion = ['`']
-		let ycm_key_list_previous_completion = ['~']
+		let g:ycm_key_list_select_completion = ['`']
+		let g:ycm_key_list_previous_completion = ['~']
 		let g:ycm_complete_in_strings = 1
 		let g:ycm_collect_identifiers_from_comments_and_strings = 1
 		let g:ycm_always_populate_location_list = 1
@@ -347,8 +347,12 @@ inoremap <A-Left> <C-o>:bp<CR>
 inoremap <A-Right> <C-o>:bn<CR>
 inoremap <A-Up> <C-o><C-e>
 inoremap <A-Down> <C-o><C-y>
-inoremap <silent> <S-Up> <ESC>:m-2<CR>==a
-inoremap <silent> <S-Down> <ESC>:m+1<CR>==a
+inoremap <S-Up> <ESC>:m-2<CR>==a
+inoremap <S-Down> <ESC>:m+1<CR>==a
+inoremap <A-o> <C-o>o
+inoremap <A-S-o> <C-o>O
+inoremap <A-S-i> <C-o>I
+inoremap <A-S-a> <C-o>A
 inoremap <S-Left> <C-d>
 inoremap <S-Right> <C-t>
 inoremap <C-d> <C-o>:w<CR>
@@ -370,11 +374,6 @@ nnoremap <C-b> :make %<CR>
 nnoremap <C-j> :Tags<CR>
 nnoremap Y y$
 
-nnoremap <C-w><C-Up> 5<C-w>+
-nnoremap <C-w><C-Down> 5<C-w>-
-nnoremap <C-w><C-Left> 5<C-w><
-nnoremap <C-w><C-Right> 5<C-w>>
-
 nnoremap ]e :cnext<CR>
 nnoremap [e :cprev<CR>
 
@@ -383,6 +382,8 @@ nnoremap [l :lprev<CR>
 
 vnoremap <S-Left> <gv
 vnoremap <S-Right> >gv
+vnoremap <silent> <s-Down> :m'>+1<CR>gv=gv
+vnoremap <silent> <s-Up> :m'<-2<CR>gv=gv
 vnoremap <C-y> "+y
 
 if has('terminal')
