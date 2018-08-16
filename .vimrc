@@ -356,9 +356,10 @@ inoremap <S-Left> <C-d>
 inoremap <S-Right> <C-t>
 inoremap <C-d> <C-o>:w<CR>
 inoremap <C-l> <C-\><C-o>:exe "normal! mfYp`fa"<CR>
-inoremap <C-b> <C-o>:make %<CR>
 inoremap <expr> <Up> (pumvisible() ? "\<C-y>\<Up>" : "\<Up>")
 inoremap <expr> <Down> (pumvisible() ? "\<C-y>\<Down>" : "\<Down>")
+inoremap <expr> <C-t> (pumvisible() ? "\<C-y>\<C-y>" : "\<C-y>")
+inoremap <expr> <C-e> (pumvisible() ? "\<C-y>\<C-e>" : "\<C-e>")
 
 nnoremap <A-Left> :bp<CR>
 nnoremap <A-Right> :bn<CR>
@@ -369,7 +370,6 @@ nnoremap <S-Right> >>
 nnoremap <silent> <S-Up> :m-2<CR>==
 nnoremap <silent> <S-Down> :m+1<CR>==
 nnoremap <C-d> :w<CR>
-nnoremap <C-b> :make %<CR>
 nnoremap <C-j> :Tags<CR>
 nnoremap Y y$
 
@@ -384,6 +384,7 @@ vnoremap <S-Right> >gv
 vnoremap <silent> <s-Down> :m'>+1<CR>gv=gv
 vnoremap <silent> <s-Up> :m'<-2<CR>gv=gv
 vnoremap <C-y> "+y
+vnoremap <CR> y
 
 if has('terminal')
 	if exists('##TerminalOpen')
@@ -587,7 +588,7 @@ highlight Comment cterm=italic ctermfg=darkgray
 highlight StatusLine cterm=none ctermfg=121 ctermbg=233
 highlight StatusLineNC cterm=none ctermfg=none ctermbg=233
 highlight Folded ctermfg=121 ctermbg=234
-highlight FoldColum ctermfg=darkgray ctermbg=234
+highlight FoldColumn ctermfg=darkgray ctermbg=234
 highlight SignColumn ctermbg=235
 highlight VertSplit cterm=none ctermbg=233
 
