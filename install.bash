@@ -6,9 +6,6 @@ mkdir $HOME/dotfiles_backup || exit 1
 echo "Initializing submodules..."
 git submodule update --init --recursive
 
-echo "Adding aliases..."
-cat .bash_aliases >> $HOME/.bash_aliases
-
 (cd stderred && make) || exit 1
 
 echo "Configuring .bashrc..."
@@ -19,7 +16,7 @@ export LD_PRELOAD="$(pwd)/stderred/build/libstderred.so\${LS_PRELOAD:+:\$LD_PREL
 export STDERRED_ESC_CODE=\$(printf "\\e[38;2;255;85;85m")
 EOF
 
-files=(.vimrc .tmux.conf .vim .tmux .inputrc)
+files=(.vimrc .tmux.conf .vim .tmux .inputrc .bash_aliases)
 for file in ${files[@]}; do
 	if [ -f $HOME/$file ]; then
 		echo "Backing up $file.."
