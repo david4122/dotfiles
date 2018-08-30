@@ -1,5 +1,6 @@
 alias la='ls -laFh --color'
 alias ll='ls -laFh --color=always | less -RXF'
+alias ls='ls --color'
 alias c='clear'
 alias dlsong='youtube-dl --extract-audio --audio-format m4a --output "%(title)s.%(ext)s" --no-playlist'
 # alias grep='grep --color=always -n'
