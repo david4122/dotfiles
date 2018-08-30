@@ -133,6 +133,7 @@ if s:colors_supported
 	let g:airline#extensions#tabline#enabled = 1
 	let g:airline#extensions#tabline#show_buffers = 1
 	let g:airline_theme = 'jellybeans'
+
 	" fix tagbar status line
 	autocmd VimEnter * AirlineRefresh
 
@@ -154,6 +155,7 @@ if s:colors_supported
 	let g:airline_symbols.notexists = '∄'
 	let g:airline_symbols.whitespace = 'Ξ'
 endif
+
 " VCoolor
 inoremap <kEnter> <Left><C-o>:VCoolor<CR>
 nnoremap <kEnter> <Left>:VCoolor<CR>
@@ -226,6 +228,12 @@ let g:user_emmet_leader_key = '<C-e>'
 let g:mta_use_matchparen_group = 0
 let g:mta_set_default_matchtag_color = 0
 highlight MatchTag cterm=underline,bold ctermbg=none ctermfg=none
+let g:mta_filetypes = {
+			\ 'html': 1,
+			\ 'php': 1,
+			\ 'xhtml': 1,
+			\ 'xml': 1
+			\ }
 
 " dbext
 if filereadable('dbdata.vim')
@@ -235,8 +243,8 @@ if filereadable('dbdata.vim')
 endif
 
 let g:dbext_default_history_file = '~/.vim/dbext_history'
-autocmd BufEnter Result setlocal nobuflisted
-autocmd BufEnter Result set winfixheight
+autocmd BufNewFile Result setlocal nobuflisted
+autocmd BufNewFile Result set winfixheight
 
 " EasyMotion
 highlight EasyMotionTarget cterm=bold ctermfg=yellow
@@ -245,16 +253,15 @@ highlight EasyMotionTarget cterm=bold ctermfg=yellow
 let g:fzf_layout = {'window' : 'botright 15split'}
 let g:fzf_history_dir = '~/.vim/.fzf_hist'
 
-nnoremap <C-p> :Buffers<CR>
-nnoremap <C-n> :Files<CR>
-
 command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>,
 			\ <bang>0 ? fzf#vim#with_preview('up:60%') : fzf#vim#with_preview('right:50%:hidden', '?'),
 			\ <bang>0)
 
 command! -bang -nargs=? -complete=dir Files
-			\ call fzf#vim#files(<q-args>, {'source': 'ag --hidden --ignore .git -g ""'}, <bang>0)
+			\ call fzf#vim#files(<q-args>, {'source': "find . -type f -not -path '*/.git/*' 2>/dev/null"}, <bang>0)
 
+nnoremap <C-p> :Buffers<CR>
+nnoremap <C-n> :Files<CR>
 
 " Anzu
 nnoremap <silent> <leader>h :if &hlsearch \|
@@ -305,7 +312,7 @@ set smarttab
 set formatoptions+=j
 set showcmd
 set ttimeoutlen=50
-set scrolloff=2
+set scrolloff=4
 set sidescrolloff=5
 set title
 set lazyredraw
@@ -370,7 +377,7 @@ nnoremap <S-Right> >>
 nnoremap <silent> <S-Up> :m-2<CR>==
 nnoremap <silent> <S-Down> :m+1<CR>==
 nnoremap <C-d> :w<CR>
-nnoremap <C-j> :Tags<CR>
+nnoremap <silent> <C-j> :if len(tagfiles()) > 0 \| exe "Tags" \| else \| exe "BTags" \| endif<CR>
 nnoremap Y y$
 
 nnoremap ]e :cnext<CR>
@@ -385,6 +392,7 @@ vnoremap <silent> <s-Down> :m'>+1<CR>gv=gv
 vnoremap <silent> <s-Up> :m'<-2<CR>gv=gv
 vnoremap <C-y> "+y
 vnoremap <CR> y
+vnoremap <leader>e y:@"
 
 if has('terminal')
 	if exists('##TerminalOpen')
@@ -591,6 +599,7 @@ highlight Folded ctermfg=121 ctermbg=234
 highlight FoldColumn ctermfg=darkgray ctermbg=234
 highlight SignColumn ctermbg=235
 highlight VertSplit cterm=none ctermbg=233
+highlight TagbarHighlight cterm=underline,bold ctermfg=brown
 
 highlight LineNr cterm=italic ctermfg=240
 highlight CursorLine cterm=none ctermbg=234
@@ -624,13 +633,14 @@ endif
 " Misc {{{1
 augroup vimrc
 	autocmd!
+	" cursorline only in current window
 	autocmd WinEnter,BufWinEnter * setlocal cursorline
 	autocmd WinLeave * setlocal nocursorline
 
-	autocmd BufEnter *.php compiler! php
-	autocmd BufEnter *.py let &makeprg = 'python -m py_compile'
+	autocmd FileType php compiler php
+	autocmd FileType python let &makeprg = 'python -m py_compile'
 
-	autocmd BufRead anacrontab setf crontab
+	autocmd BufRead anacrontab setfiletype crontab
 	autocmd BufRead .htaccess set commentstring=#\ %s
 	autocmd FileType smarty set commentstring={*\ %s\ *}
 augroup END
