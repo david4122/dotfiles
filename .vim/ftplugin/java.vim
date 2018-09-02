@@ -52,7 +52,12 @@ if !exists('g:loaded_java') || !g:loaded_java
 	endfunction
 
 	function! s:addClass(classname)
-		exe "e src/main/java/".substitute(a:classname, '\.', '/', 'g').'.java'
+		let path = substitute(a:classname, '\.', '/', 'g').'.java'
+		let dir = fnamemodify(path, ':h')
+		if !isdirectory(dir)
+			call system('mkdir -p src/main/java/'.dir)
+		endif
+		exe 'e src/main/java/'.path
 		let sepIdx = strridx(a:classname, '.')
 		let package = a:classname[0:sepIdx-1]
 		let name = a:classname[sepIdx:]
