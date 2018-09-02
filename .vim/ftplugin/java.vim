@@ -1,5 +1,15 @@
 compiler javac
 
+let g:srcDir = './'
+if isdirectory('src')
+	let g:srcDir = 'src/main/java/'
+endif
+
+let g:compileDir = './'
+if isdirectory('bin')
+	let g:compileDir = 'bin/'
+endif
+
 if filereadable('build.gradle')
 	compiler gradle
 	inoremap <C-b> <C-o>:make build<CR>
@@ -12,8 +22,8 @@ if filereadable('build.gradle')
 				\ | endif
 
 	command! -bar Run make run
-elseif isdirectory('bin') && isdirectory('src')
-	set makeprg=javac\ -d\ bin\ $(find\ src\ -name\ '*.java')
+else
+	let &makeprg="javac -d ".g:compileDir." $(find ".g:srcDir." -name '*.java')"
 	noremap <C-b> :make<CR>
 	inoremap <C-b> <C-o>:make<CR>
 
@@ -23,22 +33,22 @@ elseif isdirectory('bin') && isdirectory('src')
 				\ | 	echoerr "There are unsaved files"
 				\ | endif
 
-	command! -bar -nargs=1 -complete=custom,<SID>completeClass Run silent! !(cd bin; java <args>)
+	command! -bar -nargs=1 -complete=custom,<SID>completeClass Run exe '!(cd '.g:compileDir.'; java <args>)'
 endif
 
 if !exists('g:loaded_java') || !g:loaded_java
 	let g:loaded_java = 1
 
 	function! s:completePackage(argLead, cmdLine, curPos)
-		let packages = split(system('ctags -R --java-kinds=p -f - src'), "\n")
+		let packages = split(system('ctags -R --java-kinds=p -f - '.g:srcDir), "\n")
 		let packages = map(packages, 'matchstr(v:val, ''\(package \)\@<=.\{-}\(;\$\)\@='')')
 		let packages = uniq(sort(packages))
-		return join(packages, ".\n").'.'
+		return len(packages) > 0 ? join(packages, ".\n").'.' : ''
 	endfunction
 
 	function! s:completeClass(argLead, cmdLine, curPos)
 		let classes = []
-		for file in globpath('src', '**/*.java', 0, 1)
+		for file in globpath(g:srcDir, '**/*.java', 0, 1)
 			let package = matchstr(system('ctags --java-kinds=p -f - '.file),  '\(package \)\@<=.\{-}\(;\)\@=')
 			if !empty(package)
 				let package.='.'
@@ -55,16 +65,17 @@ if !exists('g:loaded_java') || !g:loaded_java
 		let path = substitute(a:classname, '\.', '/', 'g').'.java'
 		let dir = fnamemodify(path, ':h')
 		if !isdirectory(dir)
-			call system('mkdir -p src/main/java/'.dir)
+			call system('mkdir -p '.g:srcDir.dir)
 		endif
-		exe 'e src/main/java/'.path
+		exe 'e '.g:srcDir.path
 		let sepIdx = strridx(a:classname, '.')
-		let package = a:classname[0:sepIdx-1]
-		let name = a:classname[sepIdx:]
-		call setline(1, 'package '.package.';')
-		call append(line('$'), '')
+		if sepIdx != -1
+			let package = a:classname[0:sepIdx-1]
+			call setline(1, 'package '.package.';')
+		endif
+		call append('$', '')
 		call cursor('$', 1)
 	endfunction
 
-	command! -nargs=1 -complete=custom,<SID>completePackage AddClass silent! call s:addClass(<q-args>)
+	command! -nargs=1 -complete=custom,<SID>completePackage AddClass call s:addClass(<q-args>)
 endif
