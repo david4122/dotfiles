@@ -388,8 +388,10 @@ nnoremap [l :lprev<CR>
 
 vnoremap <S-Left> <gv
 vnoremap <S-Right> >gv
-vnoremap <silent> <s-Down> :m'>+1<CR>gv=gv
-vnoremap <silent> <s-Up> :m'<-2<CR>gv=gv
+vnoremap <silent> <S-Down> :m'>+1<CR>gv=gv
+vnoremap <silent> <S-Up> :m'<-2<CR>gv=gv
+vnoremap <A-Up> <C-e>
+vnoremap <A-Down> <C-y>
 vnoremap <C-y> "+y
 vnoremap <CR> y
 vnoremap <leader>e y:@"

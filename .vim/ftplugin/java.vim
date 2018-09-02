@@ -4,34 +4,51 @@ if filereadable('build.gradle')
 	compiler gradle
 	inoremap <C-b> <C-o>:make build<CR>
 	nnoremap <C-b> :make build<CR>
+
+	command! -bar -bang Build if <bang>0 || len(filter(getbufinfo(), 'v:val.changed')) == 0
+				\ | 	make build
+				\ | else
+				\ | 	echoerr "There are unsaved files"
+				\ | endif
+
+	command! -bar Run make run
 elseif isdirectory('bin') && isdirectory('src')
 	set makeprg=javac\ -d\ bin\ $(find\ src\ -name\ '*.java')
-	noremap <C-b> :make $(find src -name '*.java')<CR><CR>
-	inoremap <C-b> <C-o>:make $(find src -name '*.java')<CR><CR>
+	noremap <C-b> :make<CR>
+	inoremap <C-b> <C-o>:make<CR>
+
+	command! -bar -bang Build if <bang>0 || len(filter(getbufinfo(), 'v:val.changed')) == 0
+				\ | 	make
+				\ | else
+				\ | 	echoerr "There are unsaved files"
+				\ | endif
+
+	command! -bar -nargs=1 -complete=custom,<SID>completeClass Run silent! !(cd bin; java <args>)
 endif
 
 if !exists('g:loaded_java') || !g:loaded_java
 	let g:loaded_java = 1
 
-	function! s:getPackage(buf)
-		for line in getbufline(a:buf, 1, '$')
-			let package = matchstr(line, '\(package \)\@<=.\{-}\(;\)\@=')
-			if !empty(package)
-				return package
-			endif
-		endfor
-		return ''
+	function! s:completePackage(argLead, cmdLine, curPos)
+		let packages = split(system('ctags -R --java-kinds=p -f - src'), "\n")
+		let packages = map(packages, 'matchstr(v:val, ''\(package \)\@<=.\{-}\(;\$\)\@='')')
+		let packages = uniq(sort(packages))
+		return join(packages, ".\n").'.'
 	endfunction
 
-	function! s:completePackage(argLead, cmdLine, curPos)
-		let packages = []
-		for buf in map(filter(getbufinfo({'buflisted': 1}), 'v:val.name =~ ".java$"'), 'v:val.bufnr')
-			let package = <SID>getPackage(buf)
+	function! s:completeClass(argLead, cmdLine, curPos)
+		let classes = []
+		for file in globpath('src', '**/*.java', 0, 1)
+			let package = matchstr(system('ctags --java-kinds=p -f - '.file),  '\(package \)\@<=.\{-}\(;\)\@=')
 			if !empty(package)
-				call add(packages, package)
+				let package.='.'
 			endif
+
+			for line in split(system('ctags --java-kinds=c -f - '.file), "\n")
+				call add(classes, package.matchstr(line, '\(class \)\@<=.\{-}\( {\)\@='))
+			endfor
 		endfor
-		return join(packages, ".\n")."."
+		return join(classes, "\n")
 	endfunction
 
 	function! s:addClass(classname)
@@ -44,5 +61,5 @@ if !exists('g:loaded_java') || !g:loaded_java
 		call cursor('$', 1)
 	endfunction
 
-	command! -nargs=1 -complete=custom,<SID>completePackage AddClass call s:addClass(<q-args>)
+	command! -nargs=1 -complete=custom,<SID>completePackage AddClass silent! call s:addClass(<q-args>)
 endif
