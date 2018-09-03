@@ -33,11 +33,15 @@ else
 				\ | 	echoerr "There are unsaved files"
 				\ | endif
 
-	command! -bar -nargs=1 -complete=custom,<SID>completeClass Run exe '!(cd '.g:compileDir.'; java <args>)'
+	command! -bar -nargs=+ -complete=custom,<SID>completeClass Run call <SID>run(<f-args>)
 endif
 
 if !exists('g:loaded_java') || !g:loaded_java
 	let g:loaded_java = 1
+
+	function! s:run(...)
+		exe '!java -classpath '.g:compileDir.' '.a:1.(exists('a:2') ? ' < '.a:2 : '')
+	endfunction
 
 	function! s:completePackage(argLead, cmdLine, curPos)
 		let packages = split(system('ctags -R --java-kinds=p -f - '.g:srcDir), "\n")
@@ -74,7 +78,9 @@ if !exists('g:loaded_java') || !g:loaded_java
 			call setline(1, 'package '.package.';')
 		endif
 		call append('$', '')
+		call append('$', '')
 		call cursor('$', 1)
+		startinsert
 	endfunction
 
 	command! -nargs=1 -complete=custom,<SID>completePackage AddClass call s:addClass(<q-args>)
