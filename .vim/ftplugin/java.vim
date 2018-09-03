@@ -33,7 +33,7 @@ else
 				\ | 	echoerr "There are unsaved files"
 				\ | endif
 
-	command! -bar -nargs=+ -complete=custom,<SID>completeClass Run call <SID>run(<f-args>)
+	command! -bar -nargs=+ -complete=custom,<SID>completeRun Run call <SID>run(<f-args>)
 endif
 
 if !exists('g:loaded_java') || !g:loaded_java
@@ -41,6 +41,14 @@ if !exists('g:loaded_java') || !g:loaded_java
 
 	function! s:run(...)
 		exe '!java -classpath '.g:compileDir.' '.a:1.(exists('a:2') ? ' < '.a:2 : '')
+	endfunction
+
+	function! s:completeRun(argLead, cmdLine,curPos)
+		if len(split(a:cmdLine, '\s\+')) > 1
+			return join(getcompletion(a:argLead, 'file'), "\n")
+		else
+			return <SID>completeClass(a:argLead, a:cmdLine, a:curPos)
+		endif
 	endfunction
 
 	function! s:completePackage(argLead, cmdLine, curPos)
