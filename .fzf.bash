@@ -38,11 +38,11 @@ fzf_tmux_pane_switcher() {
 mc_hotlist() {
 	local entry
 	entry=$(awk '/GROUP/{GROUP=$2} /ENTRY/{print GROUP, $2, $4}' ~/.config/mc/hotlist | fzf --reverse --height 15 | cut -d\  -f3)
-	[ -n "$entry" ] && echo "$entry" && mc ${entry//\"/} .
+	[ -n "$entry" ] && mc ${entry//\"/} .
 }
 
 mc_netrc() {
 	local entry
 	entry=$(awk '{printf "[%s]@%s\n", $4, $2}' ~/.netrc | fzf --reverse --height 15)
-	[ -n "$entry" ] && echo "${entry##*\@}" && mc "ftp://${entry##*\@}/" .
+	[ -n "$entry" ] && mc "ftp://${entry##*\@}/" .
 }
