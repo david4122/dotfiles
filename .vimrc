@@ -28,6 +28,7 @@ Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-surround'
 Plug 'Valloric/matchtagalways', {'for': ['html', 'xml', 'php', 'smarty']}
 Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php']}
+Plug 'terryma/vim-multiple-cursors'
 
 if !g:quick_mode
 	Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --clang-completer'}
@@ -115,7 +116,7 @@ if !g:quick_mode
 		let g:airline#extensions#ycm#enabled = 1
 	endif
 
-	nnoremap <C-f> :YcmCompleter FixIt<CR>
+	nnoremap <C-y> :YcmCompleter FixIt<CR>
 
 	" Promptline
 	let g:promptline_preset = {
@@ -261,7 +262,7 @@ command! -bang -nargs=? -complete=dir Files
 			\ call fzf#vim#files(<q-args>, {'source': "find . -type f -not -path '*/.git/*' 2>/dev/null"}, <bang>0)
 
 nnoremap <C-p> :Buffers<CR>
-nnoremap <C-n> :Files<CR>
+nnoremap <C-f> :Files<CR>
 
 " Anzu
 nnoremap <silent> <leader>h :if &hlsearch \|
