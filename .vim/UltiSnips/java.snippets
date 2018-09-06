@@ -1,3 +1,13 @@
 snippet pf "printf"
 System.out.printf("${1:%s}\n", $2);$0
 endsnippet
+
+snippet ntests "loop for multiple tests"
+Scanner sc = new Scanner(System.in);
+int ${1:testCases} = sc.nextInt();
+sc.nextLine();
+for(int ${2:test} = 0; $2 < $1; $2++) {
+	$3
+}$0
+sc.close();
+endsnippet

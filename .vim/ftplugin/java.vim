@@ -92,4 +92,15 @@ if !exists('g:loaded_java') || !g:loaded_java
 	endfunction
 
 	command! -nargs=1 -complete=custom,<SID>completePackage AddClass call s:addClass(<q-args>)
+
+	function! s:renameClass(new)
+		let oldName = fnamemodify(@%, ':t:r')
+		exe 'saveas '.g:srcDir.substitute(a:new, '\.', '/', 'g').'.java'
+		silent! !rm #
+		silent! bd #
+		exe '%s/\(class \)\@<='.oldName.'/'.a:new[strridx(a:new, '.')+1:].'/'
+		redraw!
+	endfunction
+
+	command! -nargs=1 -complete=custom,<SID>completePackage RenameClass call s:renameClass(<q-args>)
 endif
