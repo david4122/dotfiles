@@ -46,3 +46,16 @@ mc_netrc() {
 	entry=$(awk '{printf "[%s]@%s\n", $4, $2}' ~/.netrc | fzf --reverse --height 15)
 	[ -n "$entry" ] && mc "ftp://${entry##*\@}/" .
 }
+
+build_filelist() {
+	if [ -z "$1" ]; then
+		echo 'Usage: build_filelist [OUTPUT]' >&1
+		return 1
+	fi
+
+	while true; do
+		fname=$(fzf -m --preview="cat $1 || echo --------")
+		[ -z "$fname" ] && break
+		echo "$fname" >> "$1"
+	done
+}
