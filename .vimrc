@@ -224,6 +224,11 @@ inoremap <Tab> <C-r>=<SID>tabComplete()<CR>
 
 " emmet
 let g:user_emmet_leader_key = '<C-e>'
+let g:user_emmet_settings = {
+			\	'html': {
+			\		'block_all_childless': 1,
+			\	},
+			\ }
 
 " MatchTagAlways
 let g:mta_use_matchparen_group = 0
@@ -257,6 +262,11 @@ let g:fzf_history_dir = '~/.vim/.fzf_hist'
 command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>,
 			\ <bang>0 ? fzf#vim#with_preview('up:60%') : fzf#vim#with_preview('right:50%:hidden', '?'),
 			\ <bang>0)
+
+command! -nargs=* -bang Rg call fzf#vim#grep('rg --hidden --column --line-number --no-heading --color=always --smart-case '.
+				\ (<bang>0 ? '--no-ignore ' : '').shellescape(<q-args>),
+			\ 1,
+			\ fzf#vim#with_preview('right:50%:hidden', '?'))
 
 command! -bang -nargs=? -complete=dir Files
 			\ call fzf#vim#files(<q-args>, {'source': "find . -type f -not -path '*/.git/*' 2>/dev/null"}, <bang>0)
@@ -342,12 +352,12 @@ else
 	set relativenumber
 endif
 
-let c = char2nr('a')
-while c <= char2nr('z')
-	exe "set <A-".nr2char(c).">=\e".nr2char(c)
-	let c += 1
-endwhile
-unlet c
+" let c = char2nr('a')
+" while c <= char2nr('z')
+" 	exe "set <A-".nr2char(c).">=\e".nr2char(c)
+" 	let c += 1
+" endwhile
+" unlet c
 
 " Mappings {{{1
 inoremap <A-Left> <C-o>:bp<CR>

@@ -103,4 +103,10 @@ if !exists('g:loaded_java') || !g:loaded_java
 	endfunction
 
 	command! -nargs=1 -complete=custom,<SID>completePackage RenameClass call s:renameClass(<q-args>)
+
+	function! s:buildJar(filename)
+		exe '!(cd '.g:compileDir.'; jar -cvfm ../'.a:filename.' ../META-INF/MANIFEST.MF * ../resources)'
+	endfunction
+
+	command! -nargs=1 -complete=file BuildJar call s:buildJar(<f-args>)
 endif

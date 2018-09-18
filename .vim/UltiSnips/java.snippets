@@ -11,3 +11,17 @@ for(int ${2:test} = 0; $2 < $1; $2++) {
 }$0
 sc.close();
 endsnippet
+
+snippet equals "equals method"
+@Override
+public boolean equals(Object o) {
+	if(!(o instanceof ${1:`!p snip.rv = snip.basename`}))
+		return false;
+	$1 ${2:c} = ($1)o;
+	return $3;
+}$0
+endsnippet
+
+snippet im "import"
+import ${1:java}.${2:util}.$3;$0
+endsnippet
