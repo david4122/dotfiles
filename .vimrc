@@ -116,7 +116,7 @@ if !g:quick_mode
 		let g:airline#extensions#ycm#enabled = 1
 	endif
 
-	nnoremap <C-y> :YcmCompleter FixIt<CR>
+	nnoremap <leader>f :YcmCompleter FixIt<CR>
 
 	" Promptline
 	let g:promptline_preset = {
@@ -408,12 +408,10 @@ vnoremap <CR> y
 vnoremap <leader>e y:@"
 
 if has('terminal')
-	if exists('##TerminalOpen')
-		autocmd TerminalOpen * set nobuflisted
-	endif
-
 	tnoremap <kHome> <Home>
 	tnoremap <kEnd> <End>
+	tnoremap <A-Left> <C-\><C-n>:bp<CR>
+	tnoremap <A-Right> <C-\><C-n>:bn<CR>
 endif
 
 " Commands and functions {{{1
