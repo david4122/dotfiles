@@ -202,17 +202,28 @@ function! s:buildArgsCompletionSnippet(args)
 		for i in range(stack)
 			let snippet .= '}'
 		endfor
-		let snippet .= ')$0'
 		return snippet
 	endif
 endfunction
 
+function! s:defaultArgsGenerator(completed)
+	if(empty(a:completed.menu))
+		return []
+	endif
+	let sepIdx = stridx(a:completed.menu, '|')
+	return split(strpart(a:completed.menu, 0, sepIdx - 1), '\(\>, \| \[\(, \)\@=\|]\+\)')
+endfunction
+
 function! s:tabComplete()
 	if <SID>tryExpandSnippet() == 0
-		if exists('v:completed_item.menu') && !empty(v:completed_item.menu)
-			let sepIdx = stridx(v:completed_item.menu, '|')
-			let args = split(strpart(v:completed_item.menu, 0, sepIdx - 1), '\(\>, \| \[\(, \)\@=\|]\+\)')
-			call UltiSnips#Anon(<SID>buildArgsCompletionSnippet(args))
+		if exists('v:completed_item.menu') && !empty(v:completed_item)
+			let ArgsFunc = function(getbufvar(bufname('.'), 'completeArgsFunc', '<SID>defaultArgsGenerator'), [v:completed_item])
+			let args = ArgsFunc()
+			let snippet = <SID>buildArgsCompletionSnippet(args).')$0'
+			if v:completed_item.word !~ '('
+				let snippet = '('.snippet
+			endif
+			call UltiSnips#Anon(snippet)
 		else
 			return "\<Tab>"
 		endif

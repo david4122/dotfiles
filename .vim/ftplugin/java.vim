@@ -36,8 +36,19 @@ else
 	command! -bar -nargs=+ -complete=custom,<SID>completeRun Run call <SID>run(<f-args>)
 endif
 
+let b:completeArgsFunc = 'JavaGenerateArgs'
+
 if !exists('g:loaded_java') || !g:loaded_java
 	let g:loaded_java = 1
+
+	function! JavaGenerateArgs(completed)
+		if empty(a:completed.abbr)
+			return []
+		endif
+		let args = matchstr(a:completed.abbr, '\((\)\@<=.\{-}\()\)\@=')
+		let args = split(args, ',')
+		return args
+	endfunction
 
 	function! s:run(...)
 		exe '!java -classpath '.g:compileDir.' '.a:1.(exists('a:2') ? ' < '.a:2 : '')
