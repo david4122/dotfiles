@@ -216,13 +216,17 @@ endfunction
 
 function! s:tabComplete()
 	if <SID>tryExpandSnippet() == 0
-		if exists('v:completed_item.menu') && !empty(v:completed_item)
+		if exists('v:completed_item.menu') && !empty(keys(v:completed_item))
 			let ArgsFunc = function(getbufvar(bufname('.'), 'completeArgsFunc', '<SID>defaultArgsGenerator'), [v:completed_item])
 			let args = ArgsFunc()
-			let snippet = <SID>buildArgsCompletionSnippet(args).')$0'
+			if len(args) == 0
+				return "\<Tab>"
+			endif
+			let snippet = <SID>buildArgsCompletionSnippet(args)
 			if v:completed_item.word !~ '('
 				let snippet = '('.snippet
 			endif
+			let snippet .= ')$0'
 			call UltiSnips#Anon(snippet)
 		else
 			return "\<Tab>"
