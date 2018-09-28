@@ -37,14 +37,24 @@ fzf_tmux_pane_switcher() {
 
 mc_hotlist() {
 	local entry
+	set -o history
 	entry=$(awk '/GROUP/{GROUP=$2} /ENTRY/{print GROUP, $2, $4}' ~/.config/mc/hotlist | fzf --reverse --height 15 | cut -d\  -f3)
-	[ -n "$entry" ] && mc ${entry//\"/} .
+	if [ -n "$entry" ]; then
+		cmd="mc '${entry//\"/}' ."
+		history -s "$cmd"
+		eval "$cmd"
+	fi
 }
 
 mc_netrc() {
 	local entry
+	set -o history
 	entry=$(awk '{printf "[%s]@%s\n", $4, $2}' ~/.netrc | fzf --reverse --height 15)
-	[ -n "$entry" ] && mc "ftp://${entry##*\@}/" .
+	if [ -n "$entry" ]; then 
+		cmd="mc 'ftp://${entry##*\@}/' ."
+		history -s "$cmd"
+		eval "$cmd"
+	fi
 }
 
 build_filelist() {
