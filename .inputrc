@@ -23,5 +23,3 @@ set keyseq-timeout 50
 "\e[4~": end-of-line
 "\C-p": history-search-backward
 "\C-n": history-search-forward
-"\C-w": "\eBcW"
-"\C-h": "\ebcw"
