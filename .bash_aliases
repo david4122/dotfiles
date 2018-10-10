@@ -7,5 +7,6 @@ alias dlsong='youtube-dl --extract-audio --audio-format m4a --output "%(title)s.
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
+alias .....='cd ../../../..'
 alias fixpermissions='find -type d -exec chmod 755 {} \; && find -type f -exec chmod 644 {} \;'
 alias qvim='vim --cmd "let g:quick_mode = 1" -X'
