@@ -278,10 +278,10 @@ command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>,
 			\ <bang>0 ? fzf#vim#with_preview('up:60%') : fzf#vim#with_preview('right:50%:hidden', '?'),
 			\ <bang>0)
 
-command! -nargs=* -bang Rg call fzf#vim#grep('rg --hidden --column --line-number --no-heading --color=always --smart-case '.
+command! -nargs=* -bang Rg call fzf#vim#grep('rg --hidden --column --line-number --no-heading --color=always --smart-case --colors "path:fg:yellow" --colors "path:style:bold" '.
 				\ (<bang>0 ? '--no-ignore ' : '').shellescape(<q-args>),
 			\ 1,
-			\ fzf#vim#with_preview('right:50%:hidden', '?'))
+			\ {'options': extend(fzf#vim#with_preview('right:50%:hidden', '?').options, ['--color', $FZF_COLOR_SCHEME])})
 
 command! -bang -nargs=? -complete=dir Files
 			\ call fzf#vim#files(<q-args>, {'source': "find . -type f -not -path '*/.git/*' 2>/dev/null"}, <bang>0)
