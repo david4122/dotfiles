@@ -52,7 +52,7 @@ mc_netrc() {
 	local entry
 	set -o history
 	entry=$(awk '{printf "[%s]@%s\n", $4, $2}' ~/.netrc | fzf --reverse --height 15)
-	if [ -n "$entry" ]; then 
+	if [ -n "$entry" ]; then
 		cmd="mc 'ftp://${entry##*\@}/' ."
 		history -s "$cmd"
 		eval "$cmd"
