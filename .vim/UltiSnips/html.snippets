@@ -1,7 +1,15 @@
-snippet hiddenDiv "insert hidden div"
+snippet hiddenDiv "insert hidden div" i
 <div style="display:none" id="${1:debug}">$2</div>$0
 endsnippet
 
 snippet clear "clear: both"
 <div style="clear: both"></div>
+endsnippet
+
+snippet menu "menu-expand button"
+<div id="${1:menu-expand}">
+	<div id="$3top" class="${2:bar}"></div>
+	<div id="$3middle" class="$2"></div>
+	<div id="$3bottom" class="$2"></div>
+</div>$0
 endsnippet

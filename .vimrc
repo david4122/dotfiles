@@ -278,23 +278,38 @@ command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>,
 			\ <bang>0 ? fzf#vim#with_preview('up:60%') : fzf#vim#with_preview('right:50%:hidden', '?'),
 			\ <bang>0)
 
-command! -nargs=* -bang Rg call fzf#vim#grep('rg --hidden --column --line-number --no-heading --color=always --smart-case --colors "path:fg:yellow" --colors "path:style:bold" '.
-				\ (<bang>0 ? '--no-ignore ' : '').shellescape(<q-args>),
+let g:fzf_rg_options = [
+			\ '--hidden',
+			\ '--column',
+			\ '--line-number',
+			\ '--no-heading',
+			\ '--color=always',
+			\ '--smart-case',
+			\ '--colors "path:fg:yellow"',
+			\ '--colors "path:style:bold"' ]
+
+command! -nargs=* -bang Rg call fzf#vim#grep(
+			\ 'rg '.join(fzf_rg_options).(<bang>0 ? ' --no-ignore ' : ' ').shellescape(<q-args>),
 			\ 1,
-			\ {'options': extend(fzf#vim#with_preview('right:50%:hidden', '?').options, ['--color', $FZF_COLOR_SCHEME])})
+			\ fzf#vim#with_preview({'options': ['--color', $FZF_COLOR_SCHEME]}, 'right:50%:hidden', '?'))
 
 command! -bang -nargs=? -complete=dir Files
-			\ call fzf#vim#files(<q-args>, {'source': "find . -type f -not -path '*/.git/*' 2>/dev/null"}, <bang>0)
+			\ call fzf#vim#files(<q-args>,
+			\ {'source': "find . -type f -not -path '*/.git/*' 2>/dev/null"},
+			\ <bang>0)
 
 nnoremap <C-p> :Buffers<CR>
 nnoremap <C-f> :Files<CR>
 
+autocmd  FileType fzf set laststatus=0 noshowmode noruler
+			\| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+
 " Anzu
-nnoremap <silent> <leader>h :if &hlsearch \|
-			\ AnzuClearSearchStatus \| set nohlsearch \|
-		\ else \|
-			\ set hlsearch \| AnzuUpdateSearchStatus \|
-		\ endif<CR>
+nnoremap <silent> <leader>h :if &hlsearch
+			\ \|	 AnzuClearSearchStatus \| set nohlsearch
+			\ \| else
+			\ \|	set hlsearch \| AnzuUpdateSearchStatus
+			\ \| endif<CR>
 
 
 " Settings {{{1
@@ -430,8 +445,9 @@ if has('terminal')
 endif
 
 " Commands and functions {{{1
-command! -bar -bang Db if buflisted(@#) | b# | else | bp | endif |
-		\ try | bd<bang> # | catch | b# | echoerr v:exception | endtry
+" prevent closing the window
+command! -bar -bang Db if buflisted(@#) | b# | else | bp | endif
+		\| try | bd<bang> # | catch | b# | echoerr v:exception | endtry
 command! -bar -bang -nargs=? -complete=file Dw keepalt write<bang> <args> | Db
 
 command! CpPath let @+ = fnamemodify(@%, ':h') | echo @+

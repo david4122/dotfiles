@@ -1,8 +1,11 @@
+nnoremap [[ [m
+nnoremap ]] ]m
+
 compiler javac
 
 let g:srcDir = './'
 if isdirectory('src')
-	let g:srcDir = 'src/main/java/'
+	let g:srcDir = 'src/'
 endif
 
 let g:compileDir = './'
