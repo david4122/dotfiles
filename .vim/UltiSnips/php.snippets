@@ -6,11 +6,11 @@ if($_SERVER['REMOTE_ADDR'] === '${1:`curl ipinfo.io/ip`}'){
 }$0
 endsnippet
 
-snippet dmp "var_dump"
+snippet dmp "var_dump" i
 var_dump($1);$0
 endsnippet
 
-snippet hdmp "var_dump in php tags"
+snippet hdmp "var_dump in php tags" i
 <?php var_dump($1); ?>
 endsnippet
 
@@ -18,7 +18,7 @@ snippet bar "insert html bar"
 echo "\n<br>####################<br>\n";
 endsnippet
 
-snippet fullurl "get page url"
+snippet fullurl "get page url" i
 ($_SERVER['HTTPS'] ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']
 endsnippet
 
@@ -27,6 +27,6 @@ error_reporting(${1:E_ALL});
 ini_set('display_errors', 'On');
 endsnippet
 
-snippet olt "one line tags"
+snippet olt "one line tags" i
 <?php $1 ?>$0
 endsnippet
