@@ -26,6 +26,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
 Plug 'Valloric/matchtagalways', {'for': ['html', 'xml', 'php', 'smarty']}
 Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php']}
 Plug 'terryma/vim-multiple-cursors'
@@ -301,8 +302,12 @@ command! -bang -nargs=? -complete=dir Files
 nnoremap <C-p> :Buffers<CR>
 nnoremap <C-f> :Files<CR>
 
-autocmd  FileType fzf set laststatus=0 noshowmode noruler
-			\| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+augroup vimrcFzf
+	autocmd!
+	autocmd  FileType fzf set laststatus=0 noshowmode noruler
+				\| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+	autocmd FileType fzf tnoremap <C-w> <C-w>.
+augroup END
 
 " Anzu
 nnoremap <silent> <leader>h :if &hlsearch
@@ -435,7 +440,7 @@ vnoremap <A-Up> <C-e>
 vnoremap <A-Down> <C-y>
 vnoremap <C-y> "+y
 vnoremap <CR> y
-vnoremap <leader>e y:@"
+vnoremap <leader>e y:@"<CR>
 
 if has('terminal')
 	tnoremap <kHome> <Home>
@@ -626,7 +631,7 @@ nnoremap <silent> <C-w><C-w> :call <SID>winMode()<CR>
 
 " Color scheme {{{1
 set background=dark
-highlight String ctermfg=142
+highlight String ctermfg=lightblue
 highlight Type ctermfg=121
 highlight Typedef cterm=bold
 highlight Todo ctermfg=blue ctermbg=green
@@ -637,6 +642,7 @@ highlight MatchParen cterm=bold ctermfg=yellow ctermbg=none
 highlight Comment cterm=italic ctermfg=darkgray
 highlight StatusLine cterm=none ctermfg=121 ctermbg=233
 highlight StatusLineNC cterm=none ctermfg=none ctermbg=233
+highlight WildMenu ctermbg=121
 highlight Folded ctermfg=121 ctermbg=234
 highlight FoldColumn ctermfg=darkgray ctermbg=234
 highlight SignColumn ctermbg=235
@@ -657,15 +663,16 @@ highlight DiffDelete ctermbg=235
 highlight DiffChange ctermbg=17
 highlight DiffText cterm=none ctermfg=white ctermbg=130
 
-syntax match Method "\(\.\|->\)\@<=\s*\w\+\s*(\@="
-highlight Method cterm=italic
-
 augroup colorscheme
 	autocmd!
 	autocmd VimEnter,BufNew *.java highlight javaAnnotation ctermfg=blue
 	autocmd VimEnter,BufNew *.php highlight phpMethodsVar cterm=italic
 	autocmd VimEnter,BufNew *.php highlight DbgBreakptLine ctermbg=brown
 	autocmd VimEnter,BufNew *.php highlight DbgBreakptSign ctermbg=brown
+
+	autocmd VimEnter * highlight Method cterm=italic
+	autocmd VimEnter * syntax match Method "\(\.\)\@<=[a-zA-Z][a-zA-Z0-9]*\((\)\@="
+
 augroup END
 
 if s:colors_supported
