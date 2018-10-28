@@ -37,7 +37,6 @@ if !g:quick_mode
 	Plug 'vim-syntastic/syntastic'
 	Plug 'majutsushi/tagbar'
 	Plug 'mbbill/undotree'
-	Plug 'vimwiki/vimwiki'
 	Plug 'edkolev/promptline.vim'
 endif
 
@@ -98,9 +97,6 @@ if !g:quick_mode
 	nnoremap <silent> <C-u> :call <SID>swapUndotreeTagbar()<CR>
 
 	" Signify
-	highlight SignifySignAdd ctermbg=235 ctermfg=green
-	highlight SignifySignDelete ctermbg=235 ctermfg=blue
-	highlight SignifySignChange ctermbg=235 ctermfg=lightgray
 	let g:signify_sign_change = '~'
 
 	" Syntastic
@@ -249,7 +245,6 @@ let g:user_emmet_settings = {
 " MatchTagAlways
 let g:mta_use_matchparen_group = 0
 let g:mta_set_default_matchtag_color = 0
-highlight MatchTag cterm=underline,bold ctermbg=none ctermfg=none
 let g:mta_filetypes = {
 			\ 'html': 1,
 			\ 'php': 1,
@@ -267,9 +262,6 @@ endif
 let g:dbext_default_history_file = '~/.vim/dbext_history'
 autocmd BufNewFile Result setlocal nobuflisted
 autocmd BufNewFile Result set winfixheight
-
-" EasyMotion
-highlight EasyMotionTarget cterm=bold ctermfg=yellow
 
 " FZF
 let g:fzf_layout = {'window' : 'botright 15split'}
@@ -294,10 +286,9 @@ command! -nargs=* -bang Rg call fzf#vim#grep(
 			\ 1,
 			\ fzf#vim#with_preview({'options': ['--color', $FZF_COLOR_SCHEME]}, 'right:50%:hidden', '?'))
 
-command! -bang -nargs=? -complete=dir Files
-			\ call fzf#vim#files(<q-args>,
-			\ {'source': "find . -type f -not -path '*/.git/*' 2>/dev/null"},
-			\ <bang>0)
+command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>,
+			\	{'source': "find . -type f -not -path '*/\.git/*' 2>/dev/null"},
+			\	<bang>0)
 
 nnoremap <C-p> :Buffers<CR>
 nnoremap <C-f> :Files<CR>
@@ -425,6 +416,10 @@ nnoremap <silent> <S-Down> :m+1<CR>==
 nnoremap <C-d> :w<CR>
 nnoremap <silent> <C-j> :if len(tagfiles()) > 0 \| exe "Tags" \| else \| exe "BTags" \| endif<CR>
 nnoremap Y y$
+nnoremap <leader>e yy:@"<CR>
+
+nnoremap <silent> <leader>w :call search('[A-Z0-9]', 'z', line('.'))<CR>
+nnoremap <silent> <leader>W :call search('[A-Z0-9]', 'b', line('.'))<CR>
 
 nnoremap ]e :cnext<CR>
 nnoremap [e :cprev<CR>
@@ -441,6 +436,9 @@ vnoremap <A-Down> <C-y>
 vnoremap <C-y> "+y
 vnoremap <CR> y
 vnoremap <leader>e y:@"<CR>
+
+onoremap <silent> <leader>w /[A-Z0-9]<CR>
+onoremap <silent> <leader>W ?[A-Z0-9]<CR>
 
 if has('terminal')
 	tnoremap <kHome> <Home>
@@ -517,10 +515,8 @@ function! s:inQuotesOrBrackets(multiline)
 	else
 		let chrs = matchstr(getline('.'), '.\%'.(col('.')).'c.')
 	endif
-	return get(g:closing, nr2char(strgetchar(chrs, 0)), '\0')
-				\ == nr2char(strgetchar(chrs, 1))
-				\ || (strgetchar(chrs, 0) == strgetchar(chrs, 1)
-				\ && index(g:quotes, nr2char(strgetchar(chrs, 0))) >= 0)
+	return get(g:closing, nr2char(strgetchar(chrs, 0)), '\0') == nr2char(strgetchar(chrs, 1))
+				\ || (strgetchar(chrs, 0) == strgetchar(chrs, 1) && index(g:quotes, nr2char(strgetchar(chrs, 0))) >= 0)
 endfunction
 
 function! s:removePairs()
@@ -616,8 +612,8 @@ function! s:winMode()
 		endif
 
 		let lastcmd = cnt."wincmd ".c
-		exe lastcmd
 		let cnt = ''
+		exe lastcmd
 	endwhile
 
 	let &t_ve = cursor
@@ -642,12 +638,14 @@ highlight MatchParen cterm=bold ctermfg=yellow ctermbg=none
 highlight Comment cterm=italic ctermfg=darkgray
 highlight StatusLine cterm=none ctermfg=121 ctermbg=233
 highlight StatusLineNC cterm=none ctermfg=none ctermbg=233
-highlight WildMenu ctermbg=121
+highlight WildMenu cterm=inverse,bold ctermfg=121 ctermbg=233
 highlight Folded ctermfg=121 ctermbg=234
 highlight FoldColumn ctermfg=darkgray ctermbg=234
 highlight SignColumn ctermbg=235
 highlight VertSplit cterm=none ctermbg=233
 highlight TagbarHighlight cterm=underline,bold ctermfg=brown
+highlight MatchTag cterm=underline,bold ctermbg=none ctermfg=none
+highlight EasyMotionTarget cterm=bold ctermfg=yellow
 
 highlight LineNr cterm=italic ctermfg=240
 highlight CursorLine cterm=none ctermbg=234
@@ -662,6 +660,10 @@ highlight DiffAdd ctermbg=22
 highlight DiffDelete ctermbg=235
 highlight DiffChange ctermbg=17
 highlight DiffText cterm=none ctermfg=white ctermbg=130
+
+highlight SignifySignAdd ctermbg=235 ctermfg=green
+highlight SignifySignDelete ctermbg=235 ctermfg=blue
+highlight SignifySignChange ctermbg=235 ctermfg=lightgray
 
 augroup colorscheme
 	autocmd!
