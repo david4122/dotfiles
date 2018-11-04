@@ -417,6 +417,7 @@ nnoremap <C-d> :w<CR>
 nnoremap <silent> <C-j> :if len(tagfiles()) > 0 \| exe "Tags" \| else \| exe "BTags" \| endif<CR>
 nnoremap Y y$
 nnoremap <leader>e yy:@"<CR>
+nnoremap <leader>s :call append('.', systemlist(getline('.')))<CR>
 
 nnoremap <silent> <leader>w :call search('[A-Z0-9]', 'z', line('.'))<CR>
 nnoremap <silent> <leader>W :call search('[A-Z0-9]', 'b', line('.'))<CR>
@@ -436,6 +437,7 @@ vnoremap <A-Down> <C-y>
 vnoremap <C-y> "+y
 vnoremap <CR> y
 vnoremap <leader>e y:@"<CR>
+vnoremap <leader>s d:call append(line('.') - 1, systemlist(@"))<CR>
 
 onoremap <silent> <leader>w /[A-Z0-9]<CR>
 onoremap <silent> <leader>W ?[A-Z0-9]<CR>
