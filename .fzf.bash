@@ -37,6 +37,10 @@ fzf_tmux_pane_switcher() {
 		| xargs tmux switch-client -t 2>/dev/null
 }
 
+fzf_tmux_kill_session() {
+	tmux kill-session -t $(tmux ls | fzf | cut -d: -f1)
+}
+
 mc_hotlist() {
 	local entry
 	set -o history

@@ -14,6 +14,8 @@ if isdirectory('bin')
 endif
 
 if filereadable('build.gradle')
+	let g:srcDir = 'src/main/java/'
+
 	compiler gradle
 	inoremap <C-b> <C-o>:make build<CR>
 	nnoremap <C-b> :make build<CR>
@@ -57,7 +59,7 @@ if !exists('g:loaded_java') || !g:loaded_java
 		exe '!java -classpath '.g:compileDir.' '.a:1.(exists('a:2') ? ' < '.a:2 : '')
 	endfunction
 
-	function! s:completeRun(argLead, cmdLine,curPos)
+	function! s:completeRun(argLead, cmdLine, curPos)
 		if len(split(a:cmdLine, '\s\+')) > 1
 			return join(getcompletion(a:argLead, 'file'), "\n")
 		else

@@ -27,9 +27,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-Plug 'Valloric/matchtagalways', {'for': ['html', 'xml', 'php', 'smarty']}
+Plug 'valloric/matchtagalways', {'for': ['html', 'xml', 'php', 'smarty']}
 Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php']}
-Plug 'terryma/vim-multiple-cursors'
 
 if !g:quick_mode
 	Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --clang-completer'}
@@ -37,7 +36,6 @@ if !g:quick_mode
 	Plug 'vim-syntastic/syntastic'
 	Plug 'majutsushi/tagbar'
 	Plug 'mbbill/undotree'
-	Plug 'edkolev/promptline.vim'
 endif
 
 if s:colors_supported
@@ -114,14 +112,6 @@ if !g:quick_mode
 	endif
 
 	nnoremap <leader>f :YcmCompleter FixIt<CR>
-
-	" Promptline
-	let g:promptline_preset = {
-				\'a': ['\u@\h', promptline#slices#python_virtualenv()],
-				\'b': ['\t', promptline#slices#jobs()],
-				\'c': [promptline#slices#cwd({'dir_limit': 10})],
-				\'y': [promptline#slices#vcs_branch()],
-				\'warn': [promptline#slices#last_exit_code()]}
 
 endif
 
@@ -402,8 +392,8 @@ inoremap <C-d> <C-o>:w<CR>
 inoremap <C-l> <C-\><C-o>:exe "normal! mfYp`fa"<CR>
 inoremap <expr> <Up> (pumvisible() ? "\<C-y>\<Up>" : "\<Up>")
 inoremap <expr> <Down> (pumvisible() ? "\<C-y>\<Down>" : "\<Down>")
-inoremap <expr> <C-t> (pumvisible() ? "\<C-y>\<C-y>" : "\<C-y>")
-inoremap <expr> <C-e> (pumvisible() ? "\<C-y>\<C-e>" : "\<C-e>")
+inoremap <expr> <C-S-Down> (pumvisible() ? "\<C-y>\<C-y>" : "\<C-y>")
+inoremap <expr> <C-S-Up> (pumvisible() ? "\<C-y>\<C-e>" : "\<C-e>")
 
 nnoremap <A-Left> :bp<CR>
 nnoremap <A-Right> :bn<CR>
