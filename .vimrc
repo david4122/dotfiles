@@ -239,7 +239,8 @@ let g:mta_filetypes = {
 			\ 'html': 1,
 			\ 'php': 1,
 			\ 'xhtml': 1,
-			\ 'xml': 1
+			\ 'xml': 1,
+			\ 'fxml': 1
 			\ }
 
 " dbext
@@ -274,7 +275,10 @@ let g:fzf_rg_options = [
 command! -nargs=* -bang Rg call fzf#vim#grep(
 			\ 'rg '.join(fzf_rg_options).(<bang>0 ? ' --no-ignore ' : ' ').shellescape(<q-args>),
 			\ 1,
-			\ fzf#vim#with_preview({'options': ['--color', $FZF_COLOR_SCHEME]}, 'right:50%:hidden', '?'))
+			\ fzf#vim#with_preview(
+			\		{'options': ['--color', $FZF_COLOR_SCHEME,
+			\			'--prompt', 'Rg'.(empty(<q-args>) ? '' : ' (<args>)').'> ']},
+			\		'right:50%:hidden', '?'))
 
 command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>,
 			\	{'source': "find . -type f -not -path '*/\.git/*' 2>/dev/null"},
@@ -282,13 +286,9 @@ command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>,
 
 nnoremap <C-p> :Buffers<CR>
 nnoremap <C-f> :Files<CR>
+nnoremap <leader>r :exe ':Rg '.expand('<cword>')<CR>
 
-augroup vimrcFzf
-	autocmd!
-	autocmd  FileType fzf set laststatus=0 noshowmode noruler
-				\| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
-	autocmd FileType fzf tnoremap <C-w> <C-w>.
-augroup END
+vnoremap <leader>r y:exe 'Rg '.@"<CR>
 
 " Anzu
 nnoremap <silent> <leader>h :if &hlsearch
@@ -362,7 +362,6 @@ filetype indent on
 runtime macros/matchit.vim
 
 if g:quick_mode
-	nnoremap ;; :qa<CR>
 	set signcolumn=no
 else
 	set relativenumber
@@ -408,9 +407,10 @@ nnoremap <silent> <C-j> :if len(tagfiles()) > 0 \| exe "Tags" \| else \| exe "BT
 nnoremap Y y$
 nnoremap <leader>e yy:@"<CR>
 nnoremap <leader>s :call append('.', systemlist(getline('.')))<CR>
+nnoremap ;; <C-^>
 
-nnoremap <silent> <leader>w :call search('[A-Z0-9]', 'z', line('.'))<CR>
-nnoremap <silent> <leader>W :call search('[A-Z0-9]', 'b', line('.'))<CR>
+nnoremap <silent> <leader>w :call search('\C[^a-z]', 'z', line('.'))<CR>
+nnoremap <silent> <leader>W :call search('\C[^a-z]', 'b', line('.'))<CR>
 
 nnoremap ]e :cnext<CR>
 nnoremap [e :cprev<CR>
@@ -626,7 +626,7 @@ highlight Todo ctermfg=blue ctermbg=green
 highlight Constant cterm=bold
 highlight SpecialKey ctermfg=237
 highlight NonText ctermfg=239
-highlight MatchParen cterm=bold ctermfg=yellow ctermbg=none
+highlight MatchParen cterm=bold,underline ctermfg=yellow ctermbg=none
 highlight Comment cterm=italic ctermfg=darkgray
 highlight StatusLine cterm=none ctermfg=121 ctermbg=233
 highlight StatusLineNC cterm=none ctermfg=none ctermbg=233
@@ -686,6 +686,11 @@ augroup vimrc
 	autocmd BufRead anacrontab setfiletype crontab
 	autocmd BufRead .htaccess set commentstring=#\ %s
 	autocmd FileType smarty set commentstring={*\ %s\ *}
+
+	" hide status line in fzf window
+	autocmd  FileType fzf set laststatus=0 noshowmode noruler
+				\| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+	autocmd FileType fzf tnoremap <C-w> <C-w>.
 augroup END
 " }}}
 
