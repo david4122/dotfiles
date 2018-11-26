@@ -114,7 +114,10 @@ if !exists('g:loaded_java') || !g:loaded_java
 		exe 'saveas '.g:srcDir.substitute(a:new, '\.', '/', 'g').'.java'
 		silent! !rm #
 		silent! bd #
-		exe '%s/\(class \)\@<='.oldName.'/'.a:new[strridx(a:new, '.')+1:].'/'
+
+		let idx = strridx(a:new, '.')
+		exe '/class '.oldName.'/s/\(class \)\@<='.oldName.'/'.a:new[idx+1:].'/'
+		exe '1s/package .\{-};/package '.a:new[:idx-1].';/'
 		redraw!
 	endfunction
 
