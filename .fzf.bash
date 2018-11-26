@@ -26,9 +26,7 @@ fzf_tmux_pane_switcher() {
 	current=$(tmux display-message -p "$format")
 
 	tmux lsp -aF "$format" \
-		| grep -v "^${current%%$sep*}" \
-		| sort -rt"$sep" -k2 \
-		| sed "s/\[11]/`printf "$active*$reset"`/; s/\[10]/`printf "$window+$reset"`/; s/\[01]/`printf "$pane-$reset"`/; s/\[00]//" \
+		| sed "/${current%%$sep*}/d; s/\[11]/`printf "$active*$reset"`/; s/\[10]/`printf "$window+$reset"`/; s/\[01]/`printf "$pane-$reset"`/; s/\[00]//" \
 		| fzf +m --prompt 'jump to pane> ' --exit-0 --select-1 --ansi \
 			--cycle --delimiter="$sep" --with-nth=2,3 \
 			--preview='tmux capture-pane -pet {1} | tail -n $LINES' \
