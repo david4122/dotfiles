@@ -38,7 +38,7 @@ fzf_tmux_pane_switcher() {
 }
 
 fzf_tmux_kill_session() {
-	tmux kill-session -t $(tmux ls | fzf | cut -d: -f1)
+	tmux ls | fzf -m | cut -d: -f1 | xargs -n1 tmux kill-session -t
 }
 
 mc_hotlist() {
