@@ -153,7 +153,7 @@ set diffopt+=vertical
 
 " Ultisnips
 let g:UltiSnipsExpandTrigger = "<Nul>"
-let g:UltiSnipsJumpForwardTrigger = "<Tab>"
+let g:UltiSnipsJumpForwardTrigger = "<Nul>"
 let g:UltiSnipsJumpBackwardTrigger = "<S-Tab>"
 if !exists('UltiSnipsSnippetDirectories')
 	let g:UltiSnipsSnippetDirectories = ['UltiSnips', '~/.vim/UltiSnips']
@@ -223,6 +223,8 @@ function! s:tabComplete()
 endfunction
 
 inoremap <Tab> <C-r>=<SID>tabComplete()<CR>
+xnoremap <Tab> :call UltiSnips#SaveLastVisualSelection()<CR>gvs
+snoremap <Tab> <Esc>:call UltiSnips#ExpandSnippetOrJump()<CR>
 
 " emmet
 let g:user_emmet_leader_key = '<C-e>'
@@ -407,7 +409,7 @@ nnoremap <silent> <C-j> :if len(tagfiles()) > 0 \| exe "Tags" \| else \| exe "BT
 nnoremap Y y$
 nnoremap <leader>e yy:@"<CR>
 nnoremap <leader>s :call append('.', systemlist(getline('.')))<CR>
-nnoremap ;; <C-^>
+nnoremap ; <C-^>
 
 nnoremap <silent> <leader>w :call search('\C[^a-z]', 'z', line('.'))<CR>
 nnoremap <silent> <leader>W :call search('\C[^a-z]', 'b', line('.'))<CR>
