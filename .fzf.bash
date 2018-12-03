@@ -44,7 +44,7 @@ mc_hotlist() {
 	set -o history
 	entry=$(awk '/GROUP/{GROUP=$2} /ENTRY/{print GROUP, $2, $4}' ~/.config/mc/hotlist | fzf --reverse --height 15 | cut -d\  -f3)
 	if [ -n "$entry" ]; then
-		cmd="mc '${entry//\"/}' ."
+		cmd="mc . '${entry//\"/}'"
 		history -s "$cmd"
 		eval "$cmd"
 	fi
@@ -55,7 +55,7 @@ mc_netrc() {
 	set -o history
 	entry=$(awk '{printf "[%s]@%s\n", $4, $2}' ~/.netrc | fzf --reverse --height 15)
 	if [ -n "$entry" ]; then
-		cmd="mc 'ftp://${entry##*\@}/' ."
+		cmd="mc . 'ftp://${entry##*\@}/'"
 		history -s "$cmd"
 		eval "$cmd"
 	fi
