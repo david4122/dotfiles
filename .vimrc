@@ -347,7 +347,7 @@ set title
 set lazyredraw
 set cpoptions=AcFsBn
 
-set listchars=tab:⇢\ ,nbsp:•,eol:¬
+set listchars=tab:→\ ,nbsp:•,eol:¬
 set list
 
 let s:undo_dir = $HOME.'/.vim/undo'
@@ -409,7 +409,7 @@ nnoremap <silent> <C-j> :if len(tagfiles()) > 0 \| exe "Tags" \| else \| exe "BT
 nnoremap Y y$
 nnoremap <leader>e yy:@"<CR>
 nnoremap <leader>s :call append('.', systemlist(getline('.')))<CR>
-nnoremap ; <C-^>
+nnoremap <leader>a <C-^>
 
 nnoremap <silent> <leader>w :call search('\C[^a-z]', 'z', line('.'))<CR>
 nnoremap <silent> <leader>W :call search('\C[^a-z]', 'b', line('.'))<CR>
