@@ -5,3 +5,7 @@ snippet iflocal "if localhost"
 	$2
 {/if}$0
 endsnippet
+
+snippet fullurl "get page url" i
+{if $smarty.server.HTTPS}https{else}http{/if}://{$smarty.server.HTTP_HOST}{$smarty.server.REQUEST_URI}
+endsnippet
