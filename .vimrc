@@ -300,6 +300,8 @@ nnoremap <silent> <leader>h :if &hlsearch
 			\ \|	set hlsearch \| AnzuUpdateSearchStatus
 			\ \| endif<CR>
 
+" Autoformat
+let g:autoformat_remove_trailing_spaces = 0
 
 " Settings {{{1
 set nocompatible
