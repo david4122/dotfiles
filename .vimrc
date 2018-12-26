@@ -677,7 +677,7 @@ augroup colorscheme
 	autocmd VimEnter,BufNew *.php highlight DbgBreakptSign ctermbg=brown
 
 	autocmd VimEnter * highlight Method cterm=italic
-	autocmd VimEnter * syntax match Method "\(\.\)\@<=[a-zA-Z][a-zA-Z0-9]*\((\)\@="
+	autocmd VimEnter * syntax match Method "\(\.\)\@<=[a-zA-Z_][a-zA-Z0-9_]*("
 
 augroup END
 
