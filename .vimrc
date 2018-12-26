@@ -442,6 +442,10 @@ if has('terminal')
 	tnoremap <A-Right> <C-\><C-n>:bn<CR>
 endif
 
+if &diff
+	nnoremap <leader>d :windo normal! dd<CR>
+endif
+
 " Commands and functions {{{1
 " prevent closing the window
 command! -bar -bang Db if buflisted(@#) | b# | else | bp | endif
@@ -643,8 +647,13 @@ highlight MatchTag cterm=underline,bold ctermbg=none ctermfg=none
 highlight EasyMotionTarget cterm=bold ctermfg=yellow
 
 highlight LineNr cterm=italic ctermfg=240
-highlight CursorLine cterm=none ctermbg=234
 highlight CursorLineNr cterm=bold,italic ctermfg=250 ctermbg=234
+
+if &diff
+	highlight CursorLine cterm=underline
+else
+	highlight CursorLine cterm=none ctermbg=234
+endif
 
 highlight Pmenu ctermfg=242 ctermbg=233
 highlight PmenuSel ctermfg=121 ctermbg=234
@@ -679,9 +688,6 @@ endif
 " Misc {{{1
 augroup vimrc
 	autocmd!
-	" cursorline only in current window
-	autocmd WinEnter,BufWinEnter * setlocal cursorline
-	autocmd WinLeave * setlocal nocursorline
 
 	autocmd FileType php compiler php
 	autocmd FileType python let &makeprg = 'python -m py_compile'
@@ -695,6 +701,16 @@ augroup vimrc
 				\| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 	autocmd FileType fzf tnoremap <C-w> <C-w>.
 augroup END
+
+if &diff
+	set cursorline
+else
+	augroup vimrc
+		" cursorline only in current window
+		autocmd WinEnter,BufWinEnter * setlocal cursorline
+		autocmd WinLeave * setlocal nocursorline
+	augroup END
+endif
 " }}}
 
 if filereadable('~/.vimrc.local')
