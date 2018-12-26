@@ -12,30 +12,31 @@ call plug#begin('~/.vim/bundle')
 Plug 'ap/vim-css-color'
 Plug 'blueyed/smarty.vim', {'for': 'smarty'}
 Plug 'chrisbra/csv.vim', {'for': 'csv'}
-Plug 'easymotion/vim-easymotion'
 Plug 'honza/vim-snippets'
 Plug 'joonty/vdebug', {'on': 'VdebugStart'}
 Plug 'junegunn/fzf', {'do': './install --all'}
 Plug 'junegunn/fzf.vim'
 Plug 'kabbamine/vcoolor.vim', {'on': ['VCoolor', 'VCoolIns']}
-Plug 'mattn/emmet-vim', {'for': ['html', 'php', 'smarty']}
+Plug 'mattn/emmet-vim', {'for': ['html', 'php', 'smarty', 'php']}
 Plug 'osyo-manga/vim-anzu'
 Plug 'sirver/ultisnips'
-Plug 'tfnico/vim-gradle', {'for': 'java'}
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-obsession'
-Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-Plug 'valloric/matchtagalways', {'for': ['html', 'xml', 'php', 'smarty']}
-Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php']}
+Plug 'tpope/vim-surround'
+Plug 'valloric/matchtagalways', {'for': ['html', 'xml', 'php', 'smarty', 'fxml']}
 
 if !g:quick_mode
 	Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --clang-completer'}
-	Plug 'mhinz/vim-signify'
-	Plug 'vim-syntastic/syntastic'
+	Plug 'chiel92/vim-autoformat'
 	Plug 'majutsushi/tagbar'
 	Plug 'mbbill/undotree'
+	Plug 'mhinz/vim-signify'
+	Plug 'tfnico/vim-gradle', {'for': 'java'}
+	Plug 'tpope/vim-dispatch'
+	Plug 'tpope/vim-fugitive'
+	Plug 'tpope/vim-obsession'
+	Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php']}
+	Plug 'vim-syntastic/syntastic'
 endif
 
 if s:colors_supported
