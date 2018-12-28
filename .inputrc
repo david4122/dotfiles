@@ -7,7 +7,7 @@ set mark-symlinked-directories on
 set visible-stats on
 set enable-bracketed-paste on
 set skip-completed-text on
-set keyseq-timeout 50
+set keyseq-timeout 10
 
 "\C-i": menu-complete
 "\e[Z": menu-complete-backward

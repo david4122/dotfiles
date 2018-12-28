@@ -644,9 +644,11 @@ highlight Folded ctermfg=121 ctermbg=234
 highlight FoldColumn ctermfg=darkgray ctermbg=234
 highlight SignColumn ctermbg=235
 highlight VertSplit cterm=none ctermbg=233
+
 highlight TagbarHighlight cterm=underline,bold ctermfg=brown
 highlight MatchTag cterm=underline,bold ctermbg=none ctermfg=none
 highlight EasyMotionTarget cterm=bold ctermfg=yellow
+highlight YcmWarningSign ctermfg=121 ctermbg=235
 
 highlight LineNr cterm=italic ctermfg=240
 highlight CursorLineNr cterm=bold,italic ctermfg=250 ctermbg=234
@@ -679,7 +681,7 @@ augroup colorscheme
 	autocmd VimEnter,BufNew *.php highlight DbgBreakptSign ctermbg=brown
 
 	autocmd VimEnter * highlight Method cterm=italic
-	autocmd VimEnter * syntax match Method "\(\.\)\@<=[a-zA-Z_][a-zA-Z0-9_]*("
+	autocmd VimEnter * syntax match Method "\(\.\)\@<=[a-zA-Z_][a-zA-Z0-9_]*\((\)\@="
 
 augroup END
 
