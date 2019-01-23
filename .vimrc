@@ -707,6 +707,8 @@ augroup vimrc
 	autocmd  FileType fzf set laststatus=0 noshowmode noruler
 				\| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 	autocmd FileType fzf tnoremap <C-w> <C-w>.
+
+	autocmd FileType help nnoremap q :q<CR>
 augroup END
 
 if &diff
