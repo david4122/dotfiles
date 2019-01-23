@@ -45,6 +45,10 @@ if s:colors_supported
 	Plug 'ryanoasis/vim-devicons'
 endif
 
+if filereadable('build.gradle')
+	Plug 'tfnico/vim-gradle'
+endif
+
 call plug#end()
 
 " Plugins' setup {{{2
@@ -714,6 +718,21 @@ else
 		autocmd WinEnter,BufWinEnter * setlocal cursorline
 		autocmd WinLeave * setlocal nocursorline
 	augroup END
+endif
+
+if filereadable('build.gradle')
+	compiler gradle
+
+	inoremap <C-b> <C-o>:make build<CR>
+	nnoremap <C-b> :make build<CR>
+
+	command! -bar -bang Build if <bang>0 || len(filter(getbufinfo(), 'v:val.changed')) == 0
+				\ | 	make build
+				\ | else
+				\ | 	echoerr "There are unsaved files"
+				\ | endif
+
+	command! -bar Run make run
 endif
 " }}}
 

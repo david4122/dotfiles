@@ -15,20 +15,9 @@ endif
 
 if filereadable('build.gradle')
 	let g:srcDir = 'src/main/java/'
-
-	compiler gradle
-	inoremap <C-b> <C-o>:make build<CR>
-	nnoremap <C-b> :make build<CR>
-
-	command! -bar -bang Build if <bang>0 || len(filter(getbufinfo(), 'v:val.changed')) == 0
-				\ | 	make build
-				\ | else
-				\ | 	echoerr "There are unsaved files"
-				\ | endif
-
-	command! -bar Run make run
 else
 	let &makeprg="javac -d ".g:compileDir." $(find ".g:srcDir." -name '*.java')"
+
 	noremap <C-b> :make<CR>
 	inoremap <C-b> <C-o>:make<CR>
 
