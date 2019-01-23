@@ -2,7 +2,9 @@ extends html
 
 snippet iflocal "if REMOTE_ADDR is local ip"
 if($_SERVER['REMOTE_ADDR'] === '${1:`curl ipinfo.io/ip`}') {
+	echo '<pre>';
 	${2:var_dump($3);}
+	echo '</pre>';
 }$0
 endsnippet
 
