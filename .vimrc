@@ -17,7 +17,7 @@ Plug 'joonty/vdebug', {'on': 'VdebugStart'}
 Plug 'junegunn/fzf', {'do': './install --all'}
 Plug 'junegunn/fzf.vim'
 Plug 'kabbamine/vcoolor.vim', {'on': ['VCoolor', 'VCoolIns']}
-Plug 'mattn/emmet-vim', {'for': ['html', 'php', 'smarty', 'php']}
+Plug 'mattn/emmet-vim', {'for': ['html', 'php', 'smarty', 'php', 'xml', 'fxml']}
 Plug 'osyo-manga/vim-anzu'
 Plug 'sirver/ultisnips'
 Plug 'tpope/vim-commentary'
@@ -31,7 +31,6 @@ if !g:quick_mode
 	Plug 'majutsushi/tagbar'
 	Plug 'mbbill/undotree'
 	Plug 'mhinz/vim-signify'
-	Plug 'tfnico/vim-gradle', {'for': 'java'}
 	Plug 'tpope/vim-dispatch'
 	Plug 'tpope/vim-fugitive'
 	Plug 'tpope/vim-obsession'
