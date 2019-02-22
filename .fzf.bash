@@ -69,7 +69,7 @@ build_filelist() {
 	fi
 
 	while true; do
-		fname=$(fzf -m --preview="cat $1 || echo --------")
+		fname=$(fzf -m --preview="fzf -f {q} < $1")
 		[ -z "$fname" ] && break
 		echo "$fname" >> "$1"
 	done
