@@ -375,13 +375,6 @@ else
 	set relativenumber
 endif
 
-" let c = char2nr('a')
-" while c <= char2nr('z')
-" 	exe "set <A-".nr2char(c).">=\e".nr2char(c)
-" 	let c += 1
-" endwhile
-" unlet c
-
 " Mappings {{{1
 inoremap <A-Left> <C-o>:bp<CR>
 inoremap <A-Right> <C-o>:bn<CR>
