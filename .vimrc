@@ -4,7 +4,7 @@ if &diff
 elseif !exists('g:quick_mode')
 	let g:quick_mode = 0
 endif
-let s:colors_supported = system('tput colors') =~ '256'
+let g:colors_supported = system('tput colors') =~ '256'
 
 " Plugins {{{1
 call plug#begin('~/.vim/bundle')
@@ -38,7 +38,7 @@ if !g:quick_mode
 	Plug 'vim-syntastic/syntastic'
 endif
 
-if s:colors_supported
+if g:colors_supported
 	Plug 'vim-airline/vim-airline'
 	Plug 'vim-airline/vim-airline-themes'
 	Plug 'ryanoasis/vim-devicons'
@@ -119,7 +119,7 @@ if !g:quick_mode
 
 endif
 
-if s:colors_supported
+if g:colors_supported
 	" Airline
 	let g:airline_powerline_fonts = 1
 	let g:airline#extensions#tabline#enabled = 1
@@ -688,7 +688,7 @@ augroup colorscheme
 
 augroup END
 
-if s:colors_supported
+if g:colors_supported
 	set fillchars=vert:\ 
 endif
 
