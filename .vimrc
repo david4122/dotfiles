@@ -356,6 +356,10 @@ set cpoptions=AcFsBn
 set listchars=tab:→\ ,nbsp:•,eol:¬
 set list
 
+if &diff
+	set diffopt+=iwhite
+endif
+
 let s:undo_dir = $HOME.'/.vim/undo'
 if !isdirectory(s:undo_dir)
 	call system('mkdir '.s:undo_dir)
