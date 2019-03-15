@@ -12,6 +12,7 @@ call plug#begin('~/.vim/bundle')
 Plug 'ap/vim-css-color'
 Plug 'blueyed/smarty.vim', {'for': 'smarty'}
 Plug 'chrisbra/csv.vim', {'for': 'csv'}
+Plug 'dylanaraps/fff.vim'
 Plug 'honza/vim-snippets'
 Plug 'joonty/vdebug', {'on': 'VdebugStart'}
 Plug 'junegunn/fzf', {'do': './install --all'}
@@ -34,8 +35,9 @@ if !g:quick_mode
 	Plug 'tpope/vim-dispatch'
 	Plug 'tpope/vim-fugitive'
 	Plug 'tpope/vim-obsession'
-	Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php']}
+	Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php', 'sql']}
 	Plug 'vim-syntastic/syntastic'
+	Plug 'ludovicchabant/vim-gutentags'
 endif
 
 if g:colors_supported
