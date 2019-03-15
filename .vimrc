@@ -395,7 +395,6 @@ inoremap <A-S-a> <C-o>A
 inoremap <S-Left> <C-d>
 inoremap <S-Right> <C-t>
 inoremap <C-d> <C-o>:w<CR>
-inoremap <C-l> <C-\><C-o>:exe "normal! mfYp`fa"<CR>
 inoremap <expr> <Up> (pumvisible() ? "\<C-y>\<Up>" : "\<Up>")
 inoremap <expr> <Down> (pumvisible() ? "\<C-y>\<Down>" : "\<Down>")
 inoremap <expr> <C-S-Down> (pumvisible() ? "\<C-y>\<C-y>" : "\<C-y>")
@@ -413,7 +412,6 @@ nnoremap <C-d> :w<CR>
 nnoremap <silent> <C-j> :if len(tagfiles()) > 0 \| exe "Tags" \| else \| exe "BTags" \| endif<CR>
 nnoremap Y y$
 nnoremap <leader>e yy:@"<CR>
-nnoremap <leader>s :call append('.', systemlist(getline('.')))<CR>
 nnoremap <leader>a <C-^>
 
 nnoremap <silent> <leader>w :call search('\C[^a-z]', 'z', line('.'))<CR>
@@ -434,7 +432,6 @@ vnoremap <A-Down> <C-y>
 vnoremap <C-y> "+y
 vnoremap <CR> y
 vnoremap <leader>e y:@"<CR>
-vnoremap <leader>s d:call append(line('.') - 1, systemlist(@"))<CR>
 
 onoremap <silent> <leader>w /[A-Z0-9]<CR>
 onoremap <silent> <leader>W ?[A-Z0-9]<CR>
