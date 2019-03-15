@@ -2,9 +2,7 @@ extends html
 
 snippet iflocal "if REMOTE_ADDR is local ip"
 if($_SERVER['REMOTE_ADDR'] === '${1:`wget -qO- ipinfo.io/ip 2>/dev/null`}') {
-	echo '<pre>';
 	${2:var_dump($3);}
-	echo '</pre>';
 }$0
 endsnippet
 
@@ -31,4 +29,8 @@ endsnippet
 
 snippet olt "one line tags" i
 <?php $1 ?>$0
+endsnippet
+
+snippet uri "request uri" i
+$_SERVER['REQUEST_URI'];
 endsnippet
