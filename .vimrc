@@ -717,19 +717,15 @@ else
 	augroup END
 endif
 
+function! s:getMakeCmd()
+	return exists(':Make') ? 'Make' : 'make'
+endfunc
+
 if filereadable('build.gradle')
-	compiler gradle
+	autocmd BufEnter * compiler! gradle
 
-	inoremap <C-b> <C-o>:make build<CR>
-	nnoremap <C-b> :make build<CR>
-
-	command! -bar -bang Build if <bang>0 || len(filter(getbufinfo(), 'v:val.changed')) == 0
-				\ | 	make build
-				\ | else
-				\ | 	echoerr "There are unsaved files"
-				\ | endif
-
-	command! -bar Run make run
+	command! -bar -bang Build execute <SID>getMakeCmd().' build'
+	command! -bar Run execute <SID>getMakeCmd().' run'
 endif
 " }}}
 
