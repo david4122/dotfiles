@@ -9,3 +9,13 @@ endsnippet
 snippet fullurl "get page url" i
 {if $smarty.server.HTTPS}https{else}http{/if}://{$smarty.server.HTTP_HOST}{$smarty.server.REQUEST_URI}
 endsnippet
+
+snippet dmp "var_dump" i
+{${1:var}|@var_dump}
+endsnippet
+
+snippet if "if statement" i
+{if ${1:isset(${2:$x})}}
+	$0
+{/if}
+endsnippet

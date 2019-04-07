@@ -2,7 +2,7 @@ extends html
 
 snippet iflocal "if REMOTE_ADDR is local ip"
 if($_SERVER['REMOTE_ADDR'] === '${1:`wget -qO- ipinfo.io/ip 2>/dev/null`}') {
-	${2:var_dump($3);}
+	${2:var_dump('###', $3);}
 }$0
 endsnippet
 
