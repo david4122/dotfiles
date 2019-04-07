@@ -2,6 +2,7 @@
 .tmux
 .vim/.netrwhist
 Session.vim
+tags
 .fzf_hist
 .vim/bundle
 .vim/autoload
