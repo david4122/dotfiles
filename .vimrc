@@ -308,6 +308,12 @@ nnoremap <silent> <leader>h :if &hlsearch
 " Autoformat
 let g:autoformat_remove_trailing_spaces = 0
 
+" CSV
+autocmd BufRead *.csv let b:delimiter = ','
+
+" Gutentags
+let g:gutentags_project_root = ['tags', 'src']
+
 " Settings {{{1
 set nocompatible
 set number
