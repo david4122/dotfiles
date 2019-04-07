@@ -1,3 +1,6 @@
+
+set wildignore+=*.class,*.jar
+
 nnoremap [[ [m
 nnoremap ]] ]m
 
