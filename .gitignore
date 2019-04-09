@@ -1,4 +1,5 @@
 .vim/undo
+.vim/dbext_history
 .tmux
 .vim/.netrwhist
 Session.vim
