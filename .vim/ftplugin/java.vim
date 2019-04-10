@@ -16,8 +16,14 @@ if isdirectory('bin')
 	let g:compileDir = 'bin/'
 endif
 
+let g:testDir = './'
+if isdirectory('test/')
+	let g:testDir = 'test/'
+endif
+
 if filereadable('build.gradle')
 	let g:srcDir = 'src/main/java/'
+	let g:testDir = 'src/test/java/'
 else
 	let &makeprg="javac -d ".g:compileDir." $(find ".g:srcDir." -name '*.java')"
 
@@ -81,13 +87,13 @@ if !exists('g:loaded_java') || !g:loaded_java
 		return join(classes, "\n")
 	endfunction
 
-	function! s:addClass(classname)
+	function! s:addClass(prefix, classname)
 		let path = substitute(a:classname, '\.', '/', 'g').'.java'
 		let dir = fnamemodify(path, ':h')
 		if !isdirectory(dir)
-			call system('mkdir -p '.g:srcDir.dir)
+			call system('mkdir -p '.a:prefix.dir)
 		endif
-		exe 'e '.g:srcDir.path
+		exe 'e '.a:prefix.path
 		let sepIdx = strridx(a:classname, '.')
 		if sepIdx != -1
 			let package = a:classname[0:sepIdx-1]
@@ -99,7 +105,8 @@ if !exists('g:loaded_java') || !g:loaded_java
 		startinsert
 	endfunction
 
-	command! -nargs=1 -complete=custom,<SID>completePackage AddClass call s:addClass(<q-args>)
+	command! -nargs=1 -complete=custom,<SID>completePackage AddClass call s:addClass(g:srcDir, <q-args>)
+	command! -nargs=1 -complete=custom,<SID>completePackage AddTest call s:addClass(g:testDir, <q-args>)
 
 	function! s:renameClass(new)
 		let oldName = fnamemodify(@%, ':t:r')
@@ -120,4 +127,5 @@ if !exists('g:loaded_java') || !g:loaded_java
 	endfunction
 
 	command! -nargs=1 -complete=file BuildJar call s:buildJar(<f-args>)
+
 endif
