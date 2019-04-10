@@ -24,6 +24,7 @@ Plug 'blueyed/smarty.vim', {'for': 'smarty'}
 Plug 'chrisbra/csv.vim', {'for': 'csv'}
 Plug 'dylanaraps/fff.vim'
 Plug 'honza/vim-snippets'
+Plug 'jiangmiao/auto-pairs'
 Plug 'joonty/vdebug', {'on': 'VdebugStart'}
 Plug 'junegunn/fzf', {'do': './install --all'}
 Plug 'junegunn/fzf.vim'
@@ -475,87 +476,6 @@ function! s:openedInCurrentTab(bufname)
 	let bufnr = bufnr(a:bufname)
 	return index(tabpagebuflist(), bufnr) >= 0
 endfunction
-
-function! s:iunmapMoving(key)
-	exe "inoremap ".a:key."<Left> ".a:key."<Left>"
-	exe "inoremap ".a:key."<Right> ".a:key."<Right>"
-	exe "inoremap ".a:key."<Up> ".a:key."<Up>"
-	exe "inoremap ".a:key."<Down> ".a:key."<Down>"
-	exe "inoremap ".a:key."<kHome> ".a:key."<kHome>"
-	exe "inoremap ".a:key."<kEnd> ".a:key."<kEnd>"
-endfunction
-
-" Autoclosing brackets
-let g:closing = {'{':'}', '[':']', '(':')'}
-
-function! s:insertOnce(chr)
-	let nextChar = matchstr(getline('.'), '\%'.(col('.')).'c.')
-	if a:chr != nextChar
-		return a:chr
-	else
-		return "\<Right>"
-	endif
-endfunction
-
-for i in keys(g:closing)
-	exe "inoremap <expr> ".closing[i]." <SID>insertOnce('".closing[i]."')"
-	exe "inoremap ".i." ".i.closing[i]."<Left>"
-	call <SID>iunmapMoving(i)
-endfor
-
-" Handle quotes
-let g:quotes = ['"', "'"]
-
-function! s:insertQuotes(chr)
-	if <SID>insertOnce(a:chr) == a:chr
-		return a:chr.a:chr."\<Left>"
-	else
-		return "\<Right>"
-	endif
-endfunction
-
-for q in g:quotes
-	exe "inoremap <expr> ".q." <SID>insertQuotes(\"\\".q."\")"
-	call <SID>iunmapMoving(q)
-endfor
-
-function! s:inQuotesOrBrackets(multiline)
-	if a:multiline
-		let chrs = matchstr(
-					\ join(getline(line('.')-1, line('.')+1), "\n"),
-					\ '.\s*\n\s\+\n\s*.')
-		let chrs = substitute(chrs, '[ \t\n]', '', 'g')
-		if strlen(chrs) == 0
-			return 0
-		endif
-	else
-		let chrs = matchstr(getline('.'), '.\%'.(col('.')).'c.')
-	endif
-	return get(g:closing, nr2char(strgetchar(chrs, 0)), '\0') == nr2char(strgetchar(chrs, 1))
-				\ || (strgetchar(chrs, 0) == strgetchar(chrs, 1) && index(g:quotes, nr2char(strgetchar(chrs, 0))) >= 0)
-endfunction
-
-function! s:removePairs()
-	if <SID>inQuotesOrBrackets(0)
-		return "\<DEL>\<BS>"
-	elseif <SID>inQuotesOrBrackets(1)
-		return "\<ESC>\<Up>JJi\<BS>"
-	else
-		return "\<BS>"
-	endif
-endfunction
-
-inoremap <expr> <BS> <SID>removePairs()
-
-function! s:insertBlock()
-	if <SID>inQuotesOrBrackets(0)
-		return "\<CR>\<C-o>O"
-	else
-		return "\<CR>"
-	endif
-endfunction
-
-inoremap <expr> <CR> <SID>insertBlock()
 
 " Automatically restore view in the window
 function! s:saveWinView()
