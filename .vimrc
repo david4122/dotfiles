@@ -6,10 +6,11 @@ elseif !exists('g:quick_mode')
 endif
 let g:colors_supported = system('tput colors') =~ '256'
 
-if !exists('g:loaded_plug')
+if empty(glob('~/.vim/autoload/plug.vim'))
 	if executable('curl')
 		echom 'Downloading plugin manager...'
 		call system('curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
+		autocmd VimEnter * PlugInstall --sync
 	else
 		echoerr 'Could not install plugin manager: curl not installed'
 	endif
