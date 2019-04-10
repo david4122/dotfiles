@@ -325,6 +325,15 @@ autocmd BufRead *.csv let b:delimiter = ','
 " Gutentags
 let g:gutentags_project_root = ['tags', 'src']
 
+" AutoPairs
+let g:AutoPairs = {'(':')',
+			\ '[':']',
+			\ '{':'}',
+			\ "'":"'",
+			\ '"':'"',
+			\ '"""':'"""',
+			\ "'''":"'''"}
+
 " Settings {{{1
 set nocompatible
 set number
