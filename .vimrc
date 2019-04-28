@@ -299,9 +299,16 @@ command! -nargs=* -bang Rg call fzf#vim#grep(
 			\			'--prompt', 'Rg'.(empty(<q-args>) ? '' : ' (<args>)').'> ']},
 			\		'right:50%:hidden', '?'))
 
+let g:fzf_ignore = [
+			\ '*.class',
+			\ '*.jar',
+			\ '.git',
+			\ 'Session.vim',
+			\ 'tags' ]
+
 command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>,
-			\	{'source': "find . -type f -not -path '*/\.git/*' 2>/dev/null"},
-			\	<bang>0)
+			\ {'source': "find -name ".join(g:fzf_ignore, ' -prune -o -name ')." -prune -o -type f -print"},
+			\ <bang>0)
 
 nnoremap <C-p> :Buffers<CR>
 nnoremap <C-f> :Files<CR>
