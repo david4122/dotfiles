@@ -312,7 +312,7 @@ command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>,
 
 nnoremap <C-p> :Buffers<CR>
 nnoremap <C-f> :Files<CR>
-nnoremap <leader>r :exe ':Rg '.expand('<cword>')<CR>
+nnoremap <leader>r :exe 'Rg '.expand('<cword>')<CR>
 
 vnoremap <leader>r y:exe 'Rg '.@"<CR>
 
@@ -339,7 +339,8 @@ let g:AutoPairs = {'(':')',
 			\ "'":"'",
 			\ '"':'"',
 			\ '"""':'"""',
-			\ "'''":"'''"}
+			\ "'''":"'''",
+			\ "<":">"}
 
 " Settings {{{1
 set nocompatible
