@@ -74,3 +74,11 @@ build_filelist() {
 		echo "$fname" >> "$1"
 	done
 }
+
+goto_parent_folder() {
+	if [ -n "$1" ]; then
+		cd $(dirname $(find $1 | fzf))
+	else
+		cd $(dirname $(fzf))
+	fi
+}
