@@ -447,15 +447,18 @@ nnoremap <silent> <C-j> :if len(tagfiles()) > 0 \| exe "Tags" \| else \| exe "BT
 nnoremap Y y$
 nnoremap <leader>e yy:@"<CR>
 nnoremap <leader>a <C-^>
+nnoremap <leader>o :YcmCompleter OrganizeImports<CR>
 
 nnoremap <silent> <leader>w :call search('\C[^a-z]', 'z', line('.'))<CR>
 nnoremap <silent> <leader>W :call search('\C[^a-z]', 'b', line('.'))<CR>
 
 nnoremap ]e :cnext<CR>
 nnoremap [e :cprev<CR>
+nnoremap <leader>e :crewind<CR>
 
 nnoremap ]l :lnext<CR>
 nnoremap [l :lprev<CR>
+nnoremap <leader>l :lrewind<CR>
 
 vnoremap <S-Left> <gv
 vnoremap <S-Right> >gv
