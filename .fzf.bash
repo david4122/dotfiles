@@ -1,7 +1,10 @@
+
+export FZF_HOME="$HOME/repos/dotfiles/.vim/bundle/fzf"
+
 # Setup fzf
 # ---------
-if [[ ! "$PATH" == "*$HOME/.vim/bundle/fzf/bin*" ]]; then
-	export PATH="$PATH:$HOME/.vim/bundle/fzf/bin"
+if [[ ! "$PATH" == "*$FZF_HOME/bin*" ]]; then
+	export PATH="$PATH:$FZF_HOME/bin"
 fi
 
 export FZF_COLOR_SCHEME='fg:238,bg:233,hl:121,fg+:245,bg+:235,hl+:121,info:144,prompt:12,spinner:135,pointer:135,marker:118'
@@ -11,12 +14,12 @@ export FZF_COMPLETION_TRIGGER='``'
 
 # Auto-completion
 # ---------------
-[[ $- == *i* ]] && source "$HOME/.vim/bundle/fzf/shell/completion.bash" 2> /dev/null
+[[ $- == *i* ]] && source "$FZF_HOME/shell/completion.bash" 2> /dev/null
 complete -F _fzf_path_completion -o bashdefault la
 
 # Key bindings
 # ------------
-source "$HOME/.vim/bundle/fzf/shell/key-bindings.bash"
+source "$FZF_HOME/shell/key-bindings.bash"
 
 # Functions
 fzf_tmux_pane_switcher() {
