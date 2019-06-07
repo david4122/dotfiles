@@ -342,6 +342,8 @@ let g:AutoPairs = {'(':')',
 			\ "'''":"'''",
 			\ "<":">"}
 
+let g:AutoPairsMultilineClose = 0
+
 " Settings {{{1
 set nocompatible
 set number
@@ -448,9 +450,10 @@ nnoremap Y y$
 nnoremap <leader>e yy:@"<CR>
 nnoremap <leader>a <C-^>
 nnoremap <leader>o :YcmCompleter OrganizeImports<CR>
+nnoremap <leader>c :cclose<CR>
 
 nnoremap <silent> <leader>w :call search('\C[^a-z]', 'z', line('.'))<CR>
-nnoremap <silent> <leader>W :call search('\C[^a-z]', 'b', line('.'))<CR>
+nnoremap <silent> <leader>b :call search('\C[^a-z]', 'b', line('.'))<CR>
 
 nnoremap ]e :cnext<CR>
 nnoremap [e :cprev<CR>
@@ -680,8 +683,8 @@ endfunc
 if filereadable('build.gradle')
 	autocmd BufEnter * compiler! gradle
 
-	command! -bar -bang Build execute <SID>getMakeCmd().' build'
-	command! -bar Run execute <SID>getMakeCmd().' run'
+	command! -bar -bang Build execute <SID>getMakeCmd().' build --console plain'
+	command! -bar Run execute <SID>getMakeCmd().' run --console plain'
 endif
 " }}}
 

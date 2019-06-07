@@ -12,3 +12,5 @@ alias fixpermissions='find -type d -exec chmod 755 {} \; && find -type f -exec c
 alias qvim='vim --cmd "let g:quick_mode = 1" -X'
 alias fucking='sudo'
 alias fuckingNOW='sudo $(fc -ln -1)'
+
+alias java8='/usr/lib/jvm/java-8-openjdk-amd64/bin/java'
