@@ -4,6 +4,22 @@ set wildignore+=*.class,*.jar
 nnoremap [[ [m
 nnoremap ]] ]m
 
+noremap <C-b> :make<CR>
+inoremap <C-b> <C-o>:make<CR>
+
+" Colorscheme
+highlight javaAnnotation ctermfg=red
+highlight javaGenericType ctermfg=121
+highlight MethodDecl ctermfg=lightblue
+highlight javaConstructor cterm=bold
+highlight javaOperator ctermfg=yellow
+
+augroup colorscheme
+	autocmd Syntax java syntax match MethodDecl /\(\(public \|private \|protected \)\?\w[a-zA-Z0-9_<>]* \)\@<=\w[a-zA-Z0-9_]*\((.\{-})\s*{\)\@=/
+	autocmd Syntax java syntax match javaGenericType /<.\{-}>/ containedin=javaParenT,javaParenT1,javaParenT2
+	autocmd Syntax java syntax match javaConstructor /\(^\s*\(public \|private \|protected \)\)\@<=\w[a-zA-Z0-9_]*\((\)\@=/
+augroup END
+
 compiler javac
 
 let g:srcDir = './'

@@ -601,15 +601,18 @@ autocmd CursorMoved,CursorMovedI * match none
 
 " Color scheme {{{1
 set background=dark
-highlight String ctermfg=lightblue
-highlight Type ctermfg=121
+highlight Constant cterm=none ctermfg=lightblue
+highlight Operator ctermfg=red
+highlight SpecialChar ctermfg=blue
+highlight Type ctermfg=214
 highlight Typedef cterm=bold
 highlight Todo ctermfg=blue ctermbg=green
-highlight Constant cterm=bold
 highlight SpecialKey ctermfg=237
 highlight NonText ctermfg=239
 highlight MatchParen cterm=bold,underline ctermfg=yellow ctermbg=none
 highlight Comment cterm=italic ctermfg=darkgray
+highlight LineNr cterm=italic ctermfg=240
+highlight CursorLineNr cterm=bold,italic ctermfg=250 ctermbg=234
 highlight StatusLine cterm=none ctermfg=121 ctermbg=233
 highlight StatusLineNC cterm=none ctermfg=none ctermbg=233
 highlight WildMenu cterm=inverse,bold ctermfg=121 ctermbg=233
@@ -620,17 +623,7 @@ highlight VertSplit cterm=none ctermbg=233
 
 highlight TagbarHighlight cterm=underline,bold ctermfg=brown
 highlight MatchTag cterm=underline,bold ctermbg=none ctermfg=none
-highlight EasyMotionTarget cterm=bold ctermfg=yellow
 highlight YcmWarningSign ctermfg=121 ctermbg=235
-
-highlight LineNr cterm=italic ctermfg=240
-highlight CursorLineNr cterm=bold,italic ctermfg=250 ctermbg=234
-
-if &diff
-	highlight CursorLine cterm=underline
-else
-	highlight CursorLine cterm=none ctermbg=234
-endif
 
 highlight Pmenu ctermfg=242 ctermbg=233
 highlight PmenuSel ctermfg=121 ctermbg=234
@@ -646,16 +639,22 @@ highlight SignifySignAdd ctermbg=235 ctermfg=green
 highlight SignifySignDelete ctermbg=235 ctermfg=blue
 highlight SignifySignChange ctermbg=235 ctermfg=lightgray
 
+highlight phpMethodsVar cterm=italic
+highlight DbgBreakptLine ctermbg=brown
+highlight DbgBreakptSign ctermbg=brown
+highlight MethodCall cterm=italic ctermfg=lightgray
+
+if &diff
+	highlight CursorLine cterm=underline
+else
+	highlight CursorLine cterm=none ctermbg=234
+endif
+
 augroup colorscheme
 	autocmd!
-	autocmd VimEnter,BufNew *.java highlight javaAnnotation ctermfg=blue
-	autocmd VimEnter,BufNew *.php highlight phpMethodsVar cterm=italic
-	autocmd VimEnter,BufNew *.php highlight DbgBreakptLine ctermbg=brown
-	autocmd VimEnter,BufNew *.php highlight DbgBreakptSign ctermbg=brown
 
-	autocmd VimEnter * highlight Method cterm=italic
-	autocmd VimEnter * syntax match Method "\(\.\)\@<=[a-zA-Z_][a-zA-Z0-9_]*\((\)\@="
-
+	autocmd Syntax * syntax match MethodCall /\(\.\)\@<=[a-zA-Z_][a-zA-Z0-9_]\+\((\)\@=/ containedin=javaParenT,javaParenT1,javaParenT2
+	autocmd Syntax * syntax match Operator /\.\|=/ containedin=javaParenT,javaParenT1,javaParenT2
 augroup END
 
 if g:colors_supported
