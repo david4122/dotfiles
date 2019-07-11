@@ -595,6 +595,10 @@ endfunction
 
 nnoremap <silent> <C-w><C-w> :call <SID>winMode()<CR>
 
+highlight CurrentWord cterm=underline
+autocmd CursorHold,CursorHoldI * exe printf('match CurrentWord /\V\<%s\>/', escape(expand('<cword>'), '\/'))
+autocmd CursorMoved,CursorMovedI * match none
+
 " Color scheme {{{1
 set background=dark
 highlight String ctermfg=lightblue
