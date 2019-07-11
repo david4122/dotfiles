@@ -1,6 +1,7 @@
 
 set wildignore+=*.class,*.jar
 
+" Mappings
 nnoremap [[ [m
 nnoremap ]] ]m
 
@@ -40,11 +41,10 @@ endif
 if filereadable('build.gradle')
 	let g:srcDir = 'src/main/java/'
 	let g:testDir = 'src/test/java/'
+
+	command! -bar Compile execute GetMakeCmd().' compileJava --console plain'
 else
 	let &makeprg="javac -d ".g:compileDir." $(find ".g:srcDir." -name '*.java')"
-
-	noremap <C-b> :make<CR>
-	inoremap <C-b> <C-o>:make<CR>
 
 	command! -bar -bang Build if <bang>0 || len(filter(getbufinfo(), 'v:val.changed')) == 0
 				\ | 	make
