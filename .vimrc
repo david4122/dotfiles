@@ -447,10 +447,15 @@ nnoremap <silent> <S-Down> :m+1<CR>==
 nnoremap <C-d> :w<CR>
 nnoremap <silent> <C-j> :if len(tagfiles()) > 0 \| exe "Tags" \| else \| exe "BTags" \| endif<CR>
 nnoremap Y y$
-nnoremap <leader>e yy:@"<CR>
+nnoremap <leader>E yy:@"<CR>
 nnoremap <leader>a <C-^>
 nnoremap <leader>o :YcmCompleter OrganizeImports<CR>
 nnoremap <leader>c :cclose<CR>
+
+nnoremap <C-Left> <C-w><Left>
+nnoremap <C-Right> <C-w><Right>
+nnoremap <C-Up> <C-w><Up>
+nnoremap <C-Down> <C-w><Down>
 
 nnoremap <silent> <leader>w :call search('\C[^a-z]', 'z', line('.'))<CR>
 nnoremap <silent> <leader>b :call search('\C[^a-z]', 'b', line('.'))<CR>
@@ -471,16 +476,23 @@ vnoremap <A-Up> <C-e>
 vnoremap <A-Down> <C-y>
 vnoremap <C-y> "+y
 vnoremap <CR> y
-vnoremap <leader>e y:@"<CR>
+vnoremap <leader>E y:@"<CR>
 
-onoremap <silent> <leader>w /[A-Z0-9]<CR>
-onoremap <silent> <leader>W ?[A-Z0-9]<CR>
+onoremap <silent> <leader>w /\C[^a-z]<CR>
+onoremap <silent> <leader>W ?\C[^a-z]<CR>
 
 if has('terminal')
 	tnoremap <kHome> <Home>
 	tnoremap <kEnd> <End>
 	tnoremap <A-Left> <C-\><C-n>:bp<CR>
 	tnoremap <A-Right> <C-\><C-n>:bn<CR>
+
+	tnoremap <C-w> <C-w>.
+
+	tnoremap <C-Left> <C-w><Left>
+	tnoremap <C-Right> <C-w><Right>
+	tnoremap <C-Up> <C-w><Up>
+	tnoremap <C-Down> <C-w><Down>
 endif
 
 if &diff
@@ -491,7 +503,7 @@ endif
 " prevent closing the window
 command! -bar -bang Db if buflisted(@#) | b# | else | bp | endif
 		\| try | bd<bang> # | catch | b# | echoerr v:exception | endtry
-command! -bar -bang -nargs=? -complete=file Dw keepalt write<bang> <args> | Db
+command! -bar -bang -nargs=? -complete=file Dw keepalt write<bang> <args> | Db<bang>
 
 command! CpPath let @+ = fnamemodify(@%, ':h') | echo @+
 
@@ -527,8 +539,7 @@ if !exists('g:winModeMappigs')
 				\ "\<Left>": 'h',
 				\ "\<Right>": 'l',
 				\ "\<Up>": 'k',
-				\ "\<Down>": 'j',
-				\ }
+				\ "\<Down>": 'j' }
 endif
 
 function! s:winMode()
@@ -663,7 +674,7 @@ augroup vimrc
 				\| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 	autocmd FileType fzf tnoremap <C-w> <C-w>.
 
-	autocmd FileType help nnoremap q :q<CR>
+	autocmd FileType help nnoremap <buffer> q :q<CR>
 augroup END
 
 if &diff
@@ -676,15 +687,15 @@ else
 	augroup END
 endif
 
-function! s:getMakeCmd()
+function! GetMakeCmd()
 	return exists(':Make') ? 'Make' : 'make'
 endfunc
 
 if filereadable('build.gradle')
 	autocmd BufEnter * compiler! gradle
 
-	command! -bar -bang Build execute <SID>getMakeCmd().' build --console plain'
-	command! -bar Run execute <SID>getMakeCmd().' run --console plain'
+	command! -bar -bang Build execute GetMakeCmd().' build --console plain'
+	command! -bar Run execute GetMakeCmd().' run --console plain'
 endif
 " }}}
 
