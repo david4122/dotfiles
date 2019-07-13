@@ -595,9 +595,24 @@ endfunction
 
 nnoremap <silent> <C-w><C-w> :call <SID>winMode()<CR>
 
+let g:highlight_current_word = 1
+
+function! s:highlight_current_word()
+	if g:highlight_current_word
+		let w:current_word_match = matchadd('CurrentWord', printf('\V\<%s\>', escape(expand('<cword>'), '/\')), 100)
+	endif
+endfunction
+
+function s:remove_current_word_highlight()
+	if exists('w:current_word_match')
+		call matchdelete(w:current_word_match)
+		unlet w:current_word_match
+	endif
+endfunction
+
 highlight CurrentWord cterm=underline
-autocmd CursorHold,CursorHoldI * exe printf('match CurrentWord /\V\<%s\>/', escape(expand('<cword>'), '\/'))
-autocmd CursorMoved,CursorMovedI * match none
+autocmd CursorHold,CursorHoldI * call <SID>highlight_current_word()
+autocmd CursorMoved,CursorMovedI * call <SID>remove_current_word_highlight()
 
 " Color scheme {{{1
 set background=dark
