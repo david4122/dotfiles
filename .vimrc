@@ -669,7 +669,7 @@ augroup colorscheme
 	autocmd!
 
 	autocmd Syntax * syntax match MethodCall /\(\.\)\@<=[a-zA-Z_][a-zA-Z0-9_]\+\((\)\@=/ containedin=javaParenT,javaParenT1,javaParenT2
-	autocmd Syntax * syntax match Operator /\.\|=/ containedin=javaParenT,javaParenT1,javaParenT2
+	autocmd Syntax * syntax match Operator /\.\|=\|+\|-\|\*\|\// containedin=javaParenT,javaParenT1,javaParenT2
 augroup END
 
 if g:colors_supported
