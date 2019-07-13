@@ -479,7 +479,7 @@ vnoremap <CR> y
 vnoremap <leader>E y:@"<CR>
 
 onoremap <silent> <leader>w /\C[^a-z]<CR>
-onoremap <silent> <leader>W ?\C[^a-z]<CR>
+onoremap <silent> <leader>b ?\C[^a-z]<CR>
 
 if has('terminal')
 	tnoremap <kHome> <Home>
