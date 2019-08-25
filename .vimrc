@@ -26,11 +26,10 @@ Plug 'dylanaraps/fff.vim'
 Plug 'honza/vim-snippets'
 Plug 'jiangmiao/auto-pairs'
 Plug 'joonty/vdebug', {'on': 'VdebugStart'}
-Plug 'junegunn/fzf', {'do': './install --all'}
+Plug 'junegunn/fzf', {'do': './install --bin'}
 Plug 'junegunn/fzf.vim'
 Plug 'kabbamine/vcoolor.vim', {'on': ['VCoolor', 'VCoolIns']}
-Plug 'mattn/emmet-vim', {'for': ['html', 'php', 'smarty', 'php', 'xml', 'fxml']}
-Plug 'osyo-manga/vim-anzu'
+Plug 'mattn/emmet-vim', {'for': ['html', 'smarty', 'php', 'xml', 'fxml']}
 Plug 'sirver/ultisnips'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
@@ -259,8 +258,7 @@ let g:mta_filetypes = {
 			\ 'php': 1,
 			\ 'xhtml': 1,
 			\ 'xml': 1,
-			\ 'fxml': 1
-			\ }
+			\ 'fxml': 1 }
 
 " dbext
 if filereadable('dbdata.vim')
@@ -274,7 +272,7 @@ autocmd BufNewFile Result setlocal nobuflisted
 autocmd BufNewFile Result set winfixheight
 
 " FZF
-let g:fzf_layout = {'window' : 'botright 15split'}
+let g:fzf_layout = {'window' : 'split'}
 let g:fzf_history_dir = '~/.vim/.fzf_hist'
 
 command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>,
@@ -451,6 +449,7 @@ nnoremap <leader>E yy:@"<CR>
 nnoremap <leader>a <C-^>
 nnoremap <leader>o :YcmCompleter OrganizeImports<CR>
 nnoremap <leader>c :cclose<CR>
+nnoremap gp `[v`]
 
 nnoremap <C-Left> <C-w><Left>
 nnoremap <C-Right> <C-w><Right>
@@ -598,6 +597,7 @@ nnoremap <silent> <C-w><C-w> :call <SID>winMode()<CR>
 let g:highlight_current_word = 1
 
 function! s:highlight_current_word()
+	call <SID>remove_current_word_highlight()
 	if g:highlight_current_word
 		let w:current_word_match = matchadd('CurrentWord', printf('\V\<%s\>', escape(expand('<cword>'), '/\')), 100)
 	endif
@@ -693,6 +693,9 @@ augroup vimrc
 	autocmd FileType fzf tnoremap <C-w> <C-w>.
 
 	autocmd FileType help nnoremap <buffer> q :q<CR>
+
+	autocmd FileType qf setlocal norelativenumber
+	autocmd FileType qf setlocal scrolloff=0
 augroup END
 
 if &diff
