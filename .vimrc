@@ -636,6 +636,10 @@ highlight FoldColumn ctermfg=darkgray ctermbg=234
 highlight SignColumn ctermbg=235
 highlight VertSplit cterm=none ctermbg=233
 
+highlight QuickFixLine cterm=bold ctermbg=233
+highlight qfFileName ctermfg=green
+highlight qfLineNr cterm=italic ctermfg=208
+
 highlight TagbarHighlight cterm=underline,bold ctermfg=brown
 highlight MatchTag cterm=underline,bold ctermbg=none ctermfg=none
 highlight YcmWarningSign ctermfg=121 ctermbg=235
@@ -669,7 +673,8 @@ augroup colorscheme
 	autocmd!
 
 	autocmd Syntax * syntax match MethodCall /\(\.\)\@<=[a-zA-Z_][a-zA-Z0-9_]\+\((\)\@=/ containedin=javaParenT,javaParenT1,javaParenT2
-	autocmd Syntax * syntax match Operator /\.\|=\|+\|-\|\*\|\// containedin=javaParenT,javaParenT1,javaParenT2
+	autocmd Syntax * syntax match Operator /\.\|=\|+\|-\|\*\|?\|:\|->\|=\~/ containedin=javaParenT,javaParenT1,javaParenT2,vimFuncBody
+	autocmd Syntax * syntax match Operator /\(\/\)\@<!\/\(\/\)\@!/ containedin=javaParenT,javaParenT1,javaParenT2,vimFuncBody
 augroup END
 
 if g:colors_supported
