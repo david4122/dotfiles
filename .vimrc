@@ -1,4 +1,6 @@
 
+" TODO tab selects next arg / jumps to the end of method call
+
 if &diff
 	let g:quick_mode = 1
 elseif !exists('g:quick_mode')
@@ -37,7 +39,11 @@ Plug 'tpope/vim-surround'
 Plug 'valloric/matchtagalways', {'for': ['html', 'xml', 'php', 'smarty', 'fxml']}
 
 if !g:quick_mode
-	Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --clang-completer'}
+	if exists('g:no_ycm') && g:no_ycm
+		Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --cs-completer', 'on': 'YcmCompleter'}
+	else
+		Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --cs-completer'}
+	endif
 	Plug 'chiel92/vim-autoformat'
 	Plug 'majutsushi/tagbar'
 	Plug 'mbbill/undotree'
@@ -46,8 +52,9 @@ if !g:quick_mode
 	Plug 'tpope/vim-fugitive'
 	Plug 'tpope/vim-obsession'
 	Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php', 'sql']}
-	Plug 'vim-syntastic/syntastic'
+	" Plug 'vim-syntastic/syntastic'
 	Plug 'ludovicchabant/vim-gutentags'
+	Plug 'CoatiSoftware/vim-sourcetrail'
 endif
 
 if g:colors_supported
@@ -115,15 +122,14 @@ if !g:quick_mode
 
 	" Syntastic
 	" disable for Java files
-	let g:syntastic_java_checkers = []
+	" let g:syntastic_java_checkers = []
 
 	" YouCompleteMe
 	if !exists('g:loaded_youcompleteme') || !g:loaded_youcompleteme
 		let g:ycm_key_list_select_completion = ['`']
 		let g:ycm_key_list_previous_completion = ['~']
-		let g:ycm_complete_in_strings = 1
-		let g:ycm_collect_identifiers_from_comments_and_strings = 1
 		let g:ycm_always_populate_location_list = 1
+		" let g:ycm_auto_trigger = 0
 		let g:airline#extensions#ycm#enabled = 1
 	endif
 
@@ -272,7 +278,7 @@ autocmd BufNewFile Result setlocal nobuflisted
 autocmd BufNewFile Result set winfixheight
 
 " FZF
-let g:fzf_layout = {'window' : 'split'}
+let g:fzf_layout = {'window' : 'enew'}
 let g:fzf_history_dir = '~/.vim/.fzf_hist'
 
 command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>,
@@ -305,21 +311,14 @@ let g:fzf_ignore = [
 			\ 'tags' ]
 
 command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>,
-			\ {'source': "find -name ".join(g:fzf_ignore, ' -prune -o -name ')." -prune -o -type f -print"},
+			\ fzf#vim#with_preview({'source': "find -name ".join(g:fzf_ignore, ' -prune -o -name ')." -prune -o -type f -print"}),
 			\ <bang>0)
 
-nnoremap <C-p> :Buffers<CR>
-nnoremap <C-f> :Files<CR>
-nnoremap <leader>r :exe 'Rg '.expand('<cword>')<CR>
+nnoremap <silent> <C-p> :Buffers<CR>
+nnoremap <silent> <C-f> :Files<CR>
+nnoremap <silent> <leader>r :exe 'Rg '.expand('<cword>')<CR>
 
 vnoremap <leader>r y:exe 'Rg '.@"<CR>
-
-" Anzu
-nnoremap <silent> <leader>h :if &hlsearch
-			\ \|	 AnzuClearSearchStatus \| set nohlsearch
-			\ \| else
-			\ \|	set hlsearch \| AnzuUpdateSearchStatus
-			\ \| endif<CR>
 
 " Autoformat
 let g:autoformat_remove_trailing_spaces = 0
@@ -337,8 +336,7 @@ let g:AutoPairs = {'(':')',
 			\ "'":"'",
 			\ '"':'"',
 			\ '"""':'"""',
-			\ "'''":"'''",
-			\ "<":">"}
+			\ "'''":"'''"}
 
 let g:AutoPairsMultilineClose = 0
 
@@ -388,6 +386,7 @@ set sidescrolloff=5
 set title
 set lazyredraw
 set cpoptions=AcFsBn
+set noshowmode
 
 set listchars=tab:→\ ,nbsp:•,eol:¬
 set list
@@ -444,12 +443,14 @@ nnoremap <silent> <S-Up> :m-2<CR>==
 nnoremap <silent> <S-Down> :m+1<CR>==
 nnoremap <C-d> :w<CR>
 nnoremap <silent> <C-j> :if len(tagfiles()) > 0 \| exe "Tags" \| else \| exe "BTags" \| endif<CR>
+nnoremap <silent> <leader>t :if len(tagfiles()) > 0 \| exe "Tags ".expand('<cword>') \| else \| exe "BTags ".expand('<cword>') \| endif<CR>
 nnoremap Y y$
 nnoremap <leader>E yy:@"<CR>
 nnoremap <leader>a <C-^>
 nnoremap <leader>o :YcmCompleter OrganizeImports<CR>
 nnoremap <leader>c :cclose<CR>
 nnoremap gp `[v`]
+nnoremap <silent> <leader>h :set hlsearch!<CR>
 
 nnoremap <C-Left> <C-w><Left>
 nnoremap <C-Right> <C-w><Right>
@@ -635,6 +636,7 @@ highlight Folded ctermfg=121 ctermbg=234
 highlight FoldColumn ctermfg=darkgray ctermbg=234
 highlight SignColumn ctermbg=235
 highlight VertSplit cterm=none ctermbg=233
+highlight Visual ctermbg=black
 
 highlight QuickFixLine cterm=bold ctermbg=233
 highlight qfFileName ctermfg=green
@@ -661,7 +663,7 @@ highlight SignifySignChange ctermbg=235 ctermfg=lightgray
 highlight phpMethodsVar cterm=italic
 highlight DbgBreakptLine ctermbg=brown
 highlight DbgBreakptSign ctermbg=brown
-highlight MethodCall cterm=italic ctermfg=lightgray
+highlight MethodCall cterm=italic ctermfg=113
 
 if &diff
 	highlight CursorLine cterm=underline
@@ -672,9 +674,12 @@ endif
 augroup colorscheme
 	autocmd!
 
-	autocmd Syntax * syntax match MethodCall /\(\.\)\@<=[a-zA-Z_][a-zA-Z0-9_]\+\((\)\@=/ containedin=javaParenT,javaParenT1,javaParenT2
-	autocmd Syntax * syntax match Operator /\.\|=\|+\|-\|\*\|?\|:\|->\|=\~/ containedin=javaParenT,javaParenT1,javaParenT2,vimFuncBody
-	autocmd Syntax * syntax match Operator /\(\/\)\@<!\/\(\/\)\@!/ containedin=javaParenT,javaParenT1,javaParenT2,vimFuncBody
+	autocmd Syntax * syntax match MethodCall /\(new \)\@<!\<[a-zA-Z_][a-zA-Z0-9_]\+\((\)\@=/ containedin=javaParenT,javaParenT1,javaParenT2
+
+	" basic math operators
+	autocmd Syntax *.java,*.cs,*.cpp syntax match Operator /\.\|=\|+\|>\|<\|?\|:\|-/ containedin=javaParenT,javaParenT1,javaParenT2,vimFuncBody
+	" fix for comments
+	autocmd Syntax *.java,*.cs,*.cpp syntax match Operator /\(\/\)\@<!\/\(\/\|\*\)\@!/ containedin=javaParenT,javaParenT1,javaParenT2,vimFuncBody
 augroup END
 
 if g:colors_supported
@@ -685,6 +690,8 @@ endif
 augroup vimrc
 	autocmd!
 
+	autocmd VimResized * wincmd =
+
 	autocmd FileType php compiler php
 	autocmd FileType python let &makeprg = 'python -m py_compile'
 
@@ -693,9 +700,9 @@ augroup vimrc
 	autocmd FileType smarty set commentstring={*\ %s\ *}
 
 	" hide status line in fzf window
-	autocmd  FileType fzf set laststatus=0 noshowmode noruler
-				\| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
-	autocmd FileType fzf tnoremap <C-w> <C-w>.
+	" autocmd  FileType fzf set laststatus=0 noruler
+	" 			\| autocmd BufLeave <buffer> set laststatus=2 ruler
+	" autocmd FileType fzf tnoremap <C-w> <C-w>.
 
 	autocmd FileType help nnoremap <buffer> q :q<CR>
 

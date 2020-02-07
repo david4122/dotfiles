@@ -1,22 +1,21 @@
 
+" let $JAVA_TOOL_OPTIONS = '-Xmx512m -XX:MaxPermSize=32m -Xss1m'
+
 set wildignore+=*.class,*.jar
 
 " Mappings
 nnoremap [[ [m
 nnoremap ]] ]m
 
-noremap <C-b> :make<CR>
-inoremap <C-b> <C-o>:make<CR>
-
 " Colorscheme
 highlight javaAnnotation ctermfg=red
 highlight javaGenericType ctermfg=121
-highlight MethodDecl ctermfg=lightblue
+highlight MethodDecl ctermfg=111
 highlight javaConstructor cterm=bold
 highlight javaOperator ctermfg=yellow
 
 augroup colorscheme
-	autocmd Syntax java syntax match MethodDecl /\(\(public \|private \|protected \)\?\w[a-zA-Z0-9_<>]* \)\@<=\w[a-zA-Z0-9_]*\((.\{-})\s*{\)\@=/
+	autocmd Syntax java syntax match MethodDecl /\(^\s*\(public \|private \|protected \)\?\w[a-zA-Z0-9_<>]* \)\@<=\w[a-zA-Z0-9_]*\((.\{-})\)\@=/
 	autocmd Syntax java syntax match javaGenericType /<.\{-}>/ containedin=javaParenT,javaParenT1,javaParenT2
 	autocmd Syntax java syntax match javaConstructor /\(^\s*\(public \|private \|protected \)\)\@<=\w[a-zA-Z0-9_]*\((\)\@=/
 augroup END
@@ -38,11 +37,22 @@ if isdirectory('test/')
 	let g:testDir = 'test/'
 endif
 
+let g:resourceDir = './'
+if isdirectory('resources')
+	let g:resourceDir = './resources'
+endif
+
 if filereadable('build.gradle')
 	let g:srcDir = 'src/main/java/'
 	let g:testDir = 'src/test/java/'
+	let g:resourceDir = 'src/main/resources'
 
 	command! -bar Compile execute GetMakeCmd().' compileJava --console plain'
+
+	if !exists('g:lombok_available')
+		let g:lombok_available = systemlist("find ~/.gradle/caches -regextype posix-extended -regex '.*\/lombok-[0-9]+\.[0-9]+\.[0-9]+\.jar'")
+		let $JAVA_TOOL_OPTIONS .= " -javaagent:".g:lombok_available[0]
+	endif
 else
 	let &makeprg="javac -d ".g:compileDir." $(find ".g:srcDir." -name '*.java')"
 
@@ -121,9 +131,6 @@ if !exists('g:loaded_java') || !g:loaded_java
 		startinsert
 	endfunction
 
-	command! -nargs=1 -complete=custom,<SID>completePackage AddClass call s:addClass(g:srcDir, <q-args>)
-	command! -nargs=1 -complete=custom,<SID>completePackage AddTest call s:addClass(g:testDir, <q-args>)
-
 	function! s:renameClass(new)
 		let oldName = fnamemodify(@%, ':t:r')
 		exe 'saveas '.g:srcDir.substitute(a:new, '\.', '/', 'g').'.java'
@@ -136,12 +143,17 @@ if !exists('g:loaded_java') || !g:loaded_java
 		redraw!
 	endfunction
 
-	command! -nargs=1 -complete=custom,<SID>completePackage RenameClass call s:renameClass(<q-args>)
-
 	function! s:buildJar(filename)
 		exe '!(cd '.g:compileDir.'; jar -cvfm ../'.a:filename.' ../META-INF/MANIFEST.MF * ../resources)'
 	endfunction
 
+	command! -nargs=1 -complete=custom,<SID>completePackage AddClass call s:addClass(g:srcDir, <q-args>)
+	command! -nargs=1 -complete=custom,<SID>completePackage AddTest call s:addClass(g:testDir, <q-args>)
+	command! -nargs=1 AddResource exe 'e '.g:resourceDir.<f-args>
 	command! -nargs=1 -complete=file BuildJar call s:buildJar(<f-args>)
+	command! -nargs=1 -complete=custom,<SID>completePackage RenameClass call s:renameClass(<q-args>)
+
+	" Override fzf commands accordingly
+	nnoremap <silent> <C-p> :exe 'Buffers '.g:srcDir<CR>
 
 endif
