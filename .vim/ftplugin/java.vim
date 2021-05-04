@@ -51,7 +51,9 @@ if filereadable('build.gradle')
 
 	if !exists('g:lombok_available')
 		let g:lombok_available = systemlist("find ~/.gradle/caches -regextype posix-extended -regex '.*\/lombok-[0-9]+\.[0-9]+\.[0-9]+\.jar'")
-		let $JAVA_TOOL_OPTIONS .= " -javaagent:".g:lombok_available[0]
+		if len(g:lombok_available) > 0
+			let $JAVA_TOOL_OPTIONS .= " -javaagent:".g:lombok_available[0]
+		endif
 	endif
 else
 	let &makeprg="javac -d ".g:compileDir." $(find ".g:srcDir." -name '*.java')"
