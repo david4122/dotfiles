@@ -37,12 +37,14 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'valloric/matchtagalways', {'for': ['html', 'xml', 'php', 'smarty', 'fxml']}
+Plug 'udalov/kotlin-vim'
 
 if !g:quick_mode
+	let ycm_cmd = './install.py --java-completer --cs-completer --clangd-completer'
 	if exists('g:no_ycm') && g:no_ycm
-		Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --cs-completer', 'on': 'YcmCompleter'}
+		Plug 'Valloric/YouCompleteMe', {'do': ycm_cmd, 'on': 'YcmCompleter'}
 	else
-		Plug 'Valloric/YouCompleteMe', {'do': './install.py --java-completer --js-completer --cs-completer'}
+		Plug 'Valloric/YouCompleteMe', {'do': ycm_cmd}
 	endif
 	Plug 'chiel92/vim-autoformat'
 	Plug 'majutsushi/tagbar'
@@ -51,8 +53,8 @@ if !g:quick_mode
 	Plug 'tpope/vim-dispatch'
 	Plug 'tpope/vim-fugitive'
 	Plug 'tpope/vim-obsession'
-	Plug 'vim-scripts/dbext.vim', {'for': ['java', 'php', 'sql']}
-	" Plug 'vim-syntastic/syntastic'
+	Plug 'tpope/vim-dadbod'
+	Plug 'kristijanhusak/vim-dadbod-ui'
 	Plug 'ludovicchabant/vim-gutentags'
 	Plug 'CoatiSoftware/vim-sourcetrail'
 endif
@@ -63,7 +65,7 @@ if g:colors_supported
 	Plug 'ryanoasis/vim-devicons'
 endif
 
-if filereadable('build.gradle')
+if filereadable('build.gradle') || filereadable('build.gradle.kts')
 	Plug 'tfnico/vim-gradle'
 endif
 
@@ -120,10 +122,6 @@ if !g:quick_mode
 	" Signify
 	let g:signify_sign_change = '~'
 
-	" Syntastic
-	" disable for Java files
-	" let g:syntastic_java_checkers = []
-
 	" YouCompleteMe
 	if !exists('g:loaded_youcompleteme') || !g:loaded_youcompleteme
 		let g:ycm_key_list_select_completion = ['`']
@@ -131,6 +129,15 @@ if !g:quick_mode
 		let g:ycm_always_populate_location_list = 1
 		" let g:ycm_auto_trigger = 0
 		let g:airline#extensions#ycm#enabled = 1
+
+		let g:ycm_language_server = [
+					\	{
+					\		'name': 'kotlin',
+					\		'filetypes': ['kotlin'],
+					\		'cmdline': [ $HOME.'/repos/kotlin-language-server/server/build/install/server/bin/kotlin-language-server' ]
+					\	}
+					\ ]
+
 	endif
 
 	nnoremap <leader>f :YcmCompleter FixIt<CR>
@@ -266,17 +273,6 @@ let g:mta_filetypes = {
 			\ 'xml': 1,
 			\ 'fxml': 1 }
 
-" dbext
-if filereadable('dbdata.vim')
-	let g:dbext_default_profile = 'local'
-	let db_data = readfile('dbdata.vim')
-	let g:dbext_default_profile_local = join(db_data, ':')
-endif
-
-let g:dbext_default_history_file = '~/.vim/dbext_history'
-autocmd BufNewFile Result setlocal nobuflisted
-autocmd BufNewFile Result set winfixheight
-
 " FZF
 let g:fzf_layout = {'window' : 'enew'}
 let g:fzf_history_dir = '~/.vim/.fzf_hist'
@@ -340,6 +336,10 @@ let g:AutoPairs = {'(':')',
 
 let g:AutoPairsMultilineClose = 0
 
+" DBUI
+let g:db_ui_auto_execute_table_helpers = 1
+let g:db_ui_use_nerd_fonts = 1
+
 " Settings {{{1
 set nocompatible
 set number
@@ -348,7 +348,6 @@ set shiftwidth=4
 set softtabstop=4
 set mouse=a
 set noswapfile
-set hlsearch
 set incsearch
 set noswapfile
 set laststatus=2
@@ -387,6 +386,7 @@ set title
 set lazyredraw
 set cpoptions=AcFsBn
 set noshowmode
+set noexpandtab
 
 set listchars=tab:→\ ,nbsp:•,eol:¬
 set list
@@ -427,11 +427,13 @@ inoremap <A-S-i> <C-o>I
 inoremap <A-S-a> <C-o>A
 inoremap <S-Left> <C-d>
 inoremap <S-Right> <C-t>
-inoremap <C-d> <C-o>:w<CR>
+inoremap <C-d> <ESC>:w<CR>
 inoremap <expr> <Up> (pumvisible() ? "\<C-y>\<Up>" : "\<Up>")
 inoremap <expr> <Down> (pumvisible() ? "\<C-y>\<Down>" : "\<Down>")
 inoremap <expr> <C-S-Down> (pumvisible() ? "\<C-y>\<C-y>" : "\<C-y>")
 inoremap <expr> <C-S-Up> (pumvisible() ? "\<C-y>\<C-e>" : "\<C-e>")
+inoremap <expr> ` (pumvisible() ? "\<C-n>" : "`")
+inoremap <expr> ~ (pumvisible() ? "\<C-p>" : "~")
 
 nnoremap <A-Left> :bp<CR>
 nnoremap <A-Right> :bn<CR>
@@ -486,8 +488,6 @@ if has('terminal')
 	tnoremap <kEnd> <End>
 	tnoremap <A-Left> <C-\><C-n>:bp<CR>
 	tnoremap <A-Right> <C-\><C-n>:bn<CR>
-
-	tnoremap <C-w> <C-w>.
 
 	tnoremap <C-Left> <C-w><Left>
 	tnoremap <C-Right> <C-w><Right>
@@ -663,7 +663,7 @@ highlight SignifySignChange ctermbg=235 ctermfg=lightgray
 highlight phpMethodsVar cterm=italic
 highlight DbgBreakptLine ctermbg=brown
 highlight DbgBreakptSign ctermbg=brown
-highlight MethodCall cterm=italic ctermfg=113
+highlight MethodCall cterm=italic ctermfg=6
 
 if &diff
 	highlight CursorLine cterm=underline
@@ -683,7 +683,7 @@ augroup colorscheme
 augroup END
 
 if g:colors_supported
-	set fillchars=vert:\ 
+	set fillchars=vert:\  " space
 endif
 
 " Misc {{{1
@@ -698,11 +698,6 @@ augroup vimrc
 	autocmd BufRead anacrontab setfiletype crontab
 	autocmd BufRead .htaccess set commentstring=#\ %s
 	autocmd FileType smarty set commentstring={*\ %s\ *}
-
-	" hide status line in fzf window
-	" autocmd  FileType fzf set laststatus=0 noruler
-	" 			\| autocmd BufLeave <buffer> set laststatus=2 ruler
-	" autocmd FileType fzf tnoremap <C-w> <C-w>.
 
 	autocmd FileType help nnoremap <buffer> q :q<CR>
 
@@ -734,6 +729,10 @@ endif
 
 if filereadable('~/.vimrc.local')
 	source ~/.vimrc.local
+endif
+
+if filereadable('.proj.vim')
+	source .proj.vim
 endif
 
 " vim: fdm=marker
